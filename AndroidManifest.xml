@@ -1693,6 +1693,8 @@
                 android:resource="@id/security_settings" />
         </activity>
 
+        <activity android:name=".chameleonos.ExcludedAppsActivity" />
+
         <activity android:name=".profiles.NFCProfile"
                 android:theme="@android:style/Theme.NoDisplay">
             <intent-filter>
