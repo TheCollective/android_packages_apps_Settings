@@ -24,14 +24,17 @@ import static com.android.internal.util.cm.QSConstants.TILE_PROFILE;
 import static com.android.internal.util.cm.QSConstants.TILE_WIFIAP;
 import static com.android.internal.util.cm.QSConstants.TILE_LTE;
 import static com.android.internal.util.cm.QSConstants.TILE_TORCH;
+import static com.android.internal.util.cm.QSConstants.TILE_EXPANDEDDESKTOP;
 import static com.android.internal.util.cm.QSUtils.deviceSupportsBluetooth;
 import static com.android.internal.util.cm.QSUtils.deviceSupportsDockBattery;
 import static com.android.internal.util.cm.QSUtils.deviceSupportsImeSwitcher;
 import static com.android.internal.util.cm.QSUtils.deviceSupportsLte;
+import static com.android.internal.util.cm.QSUtils.deviceSupportsMobileData;
 import static com.android.internal.util.cm.QSUtils.deviceSupportsNfc;
 import static com.android.internal.util.cm.QSUtils.deviceSupportsUsbTether;
 import static com.android.internal.util.cm.QSUtils.deviceSupportsWifiDisplay;
 import static com.android.internal.util.cm.QSUtils.systemProfilesEnabled;
+import static com.android.internal.util.cm.QSUtils.expandedDesktopEnabled;
 
 import android.content.ContentResolver;
 import android.content.pm.PackageManager;
@@ -190,8 +193,7 @@ public class QuickSettings extends SettingsPreferenceFragment implements OnPrefe
         }
 
         // Don't show mobile data options if not supported
-        boolean isMobileData = pm.hasSystemFeature(PackageManager.FEATURE_TELEPHONY);
-        if (!isMobileData) {
+        if (!deviceSupportsMobileData(getActivity())) {
             QuickSettingsUtil.TILES.remove(TILE_MOBILEDATA);
             QuickSettingsUtil.TILES.remove(TILE_WIFIAP);
             QuickSettingsUtil.TILES.remove(TILE_NETWORKMODE);
@@ -248,6 +250,10 @@ public class QuickSettings extends SettingsPreferenceFragment implements OnPrefe
             QuickSettingsUtil.TILES.remove(TILE_TORCH);
         }
 
+        // Don't show the Expanded desktop tile if expanded desktop is disabled
+        if (!expandedDesktopEnabled(resolver)) {
+            QuickSettingsUtil.TILES.remove(TILE_EXPANDEDDESKTOP);
+        }
     }
 
     public boolean onPreferenceTreeClick(PreferenceScreen preferenceScreen, Preference preference) {

@@ -4484,29 +4484,7 @@
     <string name="mem_info">Memory</string>
     <!-- About phone screen, status item label -->
 
-    <!-- Anonymous Statistics #CM -->
-    <!-- About device screen, list item title. Takes the user to the screen about opting in or out of anonymous statistics. -->
-    <string name="anonymous_statistics_title">CyanogenMod statistics</string>
-    <string name="anonymous_statistics_summary">Help make CyanogenMod better by opting into anonymous statistics reporting</string>
-    <string name="anonymous_statistics_warning_title">About</string>
-    <string name="anonymous_statistics_warning">Opting into CyanogenMod Statistics will allow non-personal data to be submitted to the
-        developers of CyanogenMod to track unique installations across devices. The information submitted includes an unique identifier,
-        which does not compromise your privacy or personal data. The data is submitted during each boot.\n\nFor an example of the data that is submitted, tap on Preview Data.</string>
-    <string name="enable_reporting_title">Enable reporting</string>
-    <string name="preview_data_title">Preview data</string>
-    <string name="preview_data_summary">%s</string>
-    <string name="view_stats_title">View stats</string>
-    <string name="anonymous_learn_more">Learn more</string>
-
-    <!-- Anonymous Statistics - Notification -->
-    <string name="anonymous_notification_desc">Enable or Disable CyanogenMod Statistics</string>
-
-    <!-- Anonymous Statistics - Preview -->
-    <string name="preview_id_title">Unique ID</string>
-    <string name="preview_device_title">Device</string>
-    <string name="preview_version_title">Version</string>
-    <string name="preview_country_title">Country</string>
-    <string name="preview_carrier_title">Carrier</string>
+ 
 
     <!-- INTERFACE Settings  -->
     <!-- Settings main menu category heading. Interface (Launcher, Themes, System). [CHAR LIMIT=40] -->
@@ -5204,7 +5182,7 @@
     <string name="title_tile_usb_tether">USB Tether</string>
     <string name="title_tile_quiet_hours">Quiet hours</string>
     <string name="title_tile_volume">Volume</string>
-
+    <string name="title_tile_expanded_desktop">Expanded desktop</string>
     <string name="title_dynamic_tiles">Dynamic tiles</string>
     <string name="dynamic_tiles_note_title">Note</string>
     <string name="dynamic_tiles_note_summary">Dynamic tiles are not always visible and will only show up if triggered by a system event</string>
@@ -5423,24 +5401,52 @@
     <string name="cyanogenmod_waiver_title">Waiver</string>
     <string name="cyanogenmod_waiver_body">Changing this setting may be against your state or government laws.\n\nIn selecting \'OK\' below, you acknowledge this warning and waive, indemnify and hold harmless CyanogenMod and its contributors from all legal liabilities.</string>
 
-    <!-- Automatic brightness customization -->
+      <!-- Automatic brightness customization -->
     <string name="light_sensor_current_value">Current light sensor value: <xliff:g id="light_level">%d</xliff:g> lux</string>
     <string name="auto_brightness_dialog_title">Automatic brightness levels</string>
-    <string name="auto_brightness_level_format"><xliff:g id="start_level">%1$s</xliff:g> -\n<xliff:g id="end_level">%2$s</xliff:g> lux</string>
-    <string name="auto_brightness_brightness_format"><xliff:g id="percent">%s</xliff:g>%%</string>
+    <string name="auto_brightness_level_format"><xliff:g id="level">%1$d</xliff:g> lux</string>
+    <string name="auto_brightness_last_level_format"><xliff:g id="level">%1$d</xliff:g> -\n\u221e lux</string>
+    <string name="auto_brightness_brightness_format" translatable="false"><xliff:g id="percent">%s</xliff:g>%%</string>
     <string name="auto_brightness_adjust_button">Adjust</string>
+    <string name="auto_brightness_close_button">Close</string>
     <string name="auto_brightness_reset_button">Reset</string>
-    <string name="auto_brightness_lux_dialog_title">Ambient brightness range</string>
     <string name="auto_brightness_split_dialog_title">Split brightness level</string>
-    <string name="auto_brightness_start_lux">Range start (lux)</string>
-    <string name="auto_brightness_end_lux">Range end (lux)</string>
+    <string name="auto_brightness_level_dialog_title">Light level setup</string>
+    <string name="auto_brightness_lux">Ambient brightness (lux)</string>
+    <string name="auto_brightness_backlight">Screen brightness (%)</string>
     <string name="auto_brightness_reset_dialog_title">Reset levels?</string>
     <string name="auto_brightness_reset_confirmation">All brightness levels will be reset to their default settings.</string>
     <string name="auto_brightness_split_lux_format">Split position (between <xliff:g id="min">%1$d</xliff:g> and <xliff:g id="max">%2$d</xliff:g> lux)</string>
     <string name="auto_brightness_level_options">Light level options</string>
-    <string name="auto_brightness_menu_edit_lux">Ambient brightness range</string>
+    <string name="auto_brightness_menu_edit">Edit</string>
     <string name="auto_brightness_menu_split">Split</string>
     <string name="auto_brightness_menu_remove">Remove</string>
+    <string name="auto_brightness_preview">Preview</string>
+    <string name="auto_brightness_preview_dialog_title">Brightness curve preview</string>
+    <string name="auto_brightness_help_dialog_title">Help</string>
+    <string name="auto_brightness_help_text"><b>How is brightness calculated?</b>
+\n\n
+The brightness curve is calculated by performing a <i>cubic spline interpolation</i>
+on a given number of <i>control points</i>. It\'s not a \'bucket-type\' calculation where
+screen brightness will stay constant for a specific range of ambient brightness. That way,
+small changes in ambient brightness do not cause a large jump in screen brightness; however,
+it can be a little hard to predict the exact consequences of changing control points.\n
+To help with that, a preview of the calculated curve can be examined. Please note that the
+preview shows the curve in <i>logarithmic</i> scale, so that all control points can be shown
+distinctively. When using a linear scale, it wouldn\'t be possible to distinguish the tendentially
+more important control points in the lower range of ambient brightness.
+\n\n
+<b>How to edit the brightness curve?</b>
+\n\n
+Each line in the brightness list corresponds to one <i>control point</i> of the
+brightness curve. To edit the brightness level of the point, you can use the slider
+present in each line. The screen brightness will be changed accordingly while touching
+the slider to give a preview of the light level.\n
+Additional options are available by long-pressing a line. By selecting \'Edit\', you can
+both edit the ambient brightness level of the control point as well as manually input the
+desired screen brightness. Selecting \'Split\' allows you to to duplicate one line into
+two in order to insert additional control points. \'Remove\' deletes the selected line.
+    </string>
 
     <!-- Advanced reboot options -->
     <string name="advanced_reboot_title">Advanced reboot</string>
@@ -5532,4 +5538,52 @@
     <string name="navring_action_torch">Toggle torch</string>
     <string name="navring_action_google_now">Google Now</string>
     <string name="navring_choose_action_title">Choose action</string>
+        <!-- Stylus Gestures -->
+    <string name="gestures_settings_title">Stylus gestures</string>
+    <string name="category_spen_title">Stylus gestures</string>
+    <string name="enable_subcat_title">Stylus</string>
+    <string name="enable_spen_title_head">Enable stylus gestures</string>
+    <string name="enable_spen_summary_head">Launch custom actions with stylus button swipe gestures. Warning: apps will not be able to receive input fired by holding the stylus button</string>
+    <string name="gestures_subcat_title">Gestures</string>
+    <string name="gestures_left_spen_title_head">Left swipe</string>
+    <string name="gestures_left_spen_summary_head">Launch custom action on left swipe</string>
+    <string name="gestures_right_spen_title_head">Right swipe</string>
+    <string name="gestures_right_spen_summary_head">Launch custom action on right swipe</string>
+    <string name="gestures_up_spen_title_head">Up swipe</string>
+    <string name="gestures_up_spen_summary_head">Launch custom action on up swipe</string>
+    <string name="gestures_down_spen_title_head">Down swipe</string>
+    <string name="gestures_down_spen_summary_head">Launch custom action on down swipe</string>
+    <string name="gestures_long_spen_title_head">Long press</string>
+    <string name="gestures_long_spen_summary_head">Launch custom action on long press</string>
+    <string name="gestures_double_spen_title_head">Double tap</string>
+    <string name="gestures_double_spen_summary_head">Launch custom action on double tap</string>
+
+    <!-- Gestures Options -->
+    <string name="gestures_action_empty">No action</string>
+    <string name="gestures_action_home">Emulate home key</string>
+    <string name="gestures_action_back">Emulate back key</string>
+    <string name="gestures_action_menu">Emulate menu key</string>
+    <string name="gestures_action_search">Invoke search</string>
+    <string name="gestures_action_recent">Recent apps</string>
+
+    <!-- Stylus gestures -->
+    <string name="stylus_app_not_installed">%s is not installed</string>
+
+    <!-- Wi-Fi frequency selection for new IBSS -->
+    <string name="wifi_ibss_freq_title">Channel / Frequency</string>
+    <string name="wifi_channel">Channel</string>
+    <string name="wifi_mhz">MHz</string>
+
+    <!-- Category title for power sound notification specific Settings.
+         [CHAR LIMIT=40] -->
+    <string name="power_notifications_category_title">Power sounds</string>
+
+    <!-- Sound settings, power notifications enable/disable, setting check box label -->
+    <string name="power_notifications_enable_title">Enable</string>
+    <!-- Sound settings, power notifications vibrate enable/disable, setting check box label -->
+    <string name="power_notifications_vibrate_title">Vibrate</string>
+    <!-- Sound settings, power notifications ringtone selection, preference label -->
+    <string name="power_notifications_ringtone_title">Notification sound</string>
+    <!-- Sound settings, power notifications label for ringtone == none -->
+    <string name="power_notifications_ringtone_silent">Silent</string>
 </resources>
