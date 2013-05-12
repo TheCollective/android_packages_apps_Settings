@@ -244,11 +244,7 @@ public class QuickSettings extends SettingsPreferenceFragment implements OnPrefe
         if (!deviceSupportsLte(getActivity())) {
             QuickSettingsUtil.TILES.remove(TILE_LTE);
         }
-
-        // Dont show the torch tile if not supported
-        if (!getResources().getBoolean(R.bool.has_led_flash)) {
-            QuickSettingsUtil.TILES.remove(TILE_TORCH);
-        }
+        
 
         // Don't show the Expanded desktop tile if expanded desktop is disabled
         if (!expandedDesktopEnabled(resolver)) {
