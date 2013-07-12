@@ -405,19 +405,10 @@ public class InstalledAppDetails extends Fragment
     }
 
     private void initPrivacyGuardButton() {
-        if (mPrivacyGuardSwitch == null) {
-            return;
-        }
-
-        mPrivacyGuardSwitch.setChecked(mPm.getPrivacyGuardSetting(mAppEntry.info.packageName));
-
-        // disable privacy guard switch if the app is signed with the platform certificate
-        // to avoid the user shooting himself in the foot
-        if (isThisASystemPackage()) {
-            mPrivacyGuardSwitch.setEnabled(false);
-        } else {
-            mPrivacyGuardSwitch.setOnCheckedChangeListener(this);
-        }
+        // TODO: We probably want to disable this optional for the built-in apps
+        boolean enabled = mPm.getPrivacyGuardSetting(mAppEntry.info.packageName);
+        mPrivacyGuardSwitch.setChecked(enabled);
+        mPrivacyGuardSwitch.setOnCheckedChangeListener(this);
     }
 
     /** Called when the activity is first created. */
@@ -1220,17 +1211,10 @@ public class InstalledAppDetails extends Fragment
                     .setNegativeButton(R.string.dlg_cancel, null)
                     .create();
                 case DLG_PRIVACY_GUARD:
-                    final int messageResId;
-                    if ((getOwner().mAppEntry.info.flags & ApplicationInfo.FLAG_SYSTEM) != 0) {
-                        messageResId = R.string.privacy_guard_dlg_system_app_text;
-                    } else {
-                        messageResId = R.string.privacy_guard_dlg_text;
-                    }
-
                     return new AlertDialog.Builder(getActivity())
-                    .setTitle(R.string.privacy_guard_dlg_title)
+                    .setTitle(getActivity().getText(R.string.privacy_guard_dlg_title))
                     .setIconAttribute(android.R.attr.alertDialogIcon)
-                    .setMessage(messageResId)
+                    .setMessage(getActivity().getText(R.string.privacy_guard_dlg_text))
                     .setPositiveButton(R.string.dlg_ok,
                         new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
