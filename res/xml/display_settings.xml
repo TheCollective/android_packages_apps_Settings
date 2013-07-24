@@ -18,7 +18,7 @@
         android:title="@string/display_settings"
         xmlns:settings="http://schemas.android.com/apk/res/com.android.settings">
 
-	<PreferenceCategory
+    <PreferenceCategory
         android:key="category_animation_options"
         android:title="@string/display_category_animation_options_title" >
 
@@ -80,12 +80,20 @@
 
         <PreferenceCategory
             android:key="category_wakeup_options"
-            android:title="@string/display_category_wakeup_options_title"/>
+            android:title="@string/display_category_wakeup_options_title" >
 
-        <CheckBoxPreference
-            android:key="pref_volume_wake"
-            android:title="@string/pref_volume_wake_title"
-            android:summary="@string/pref_volume_wake_summary"
-            android:defaultValue="false" />
+            <CheckBoxPreference
+                android:key="pref_home_wake"
+                android:title="@string/pref_home_wake_title"
+                android:summary="@string/pref_home_wake_summary"
+                android:defaultValue="true" />
+
+            <CheckBoxPreference
+                android:key="pref_volume_wake"
+                android:title="@string/pref_volume_wake_title"
+                android:summary="@string/pref_volume_wake_summary"
+                android:defaultValue="false" />
+
+        </PreferenceCategory>
 
 </PreferenceScreen>
