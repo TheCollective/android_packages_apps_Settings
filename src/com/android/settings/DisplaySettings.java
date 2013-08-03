@@ -46,8 +46,6 @@ import android.util.Log;
 import com.android.internal.view.RotationPolicy;
 import com.android.settings.cyanogenmod.DisplayRotation;
 import com.android.settings.Utils;
-import com.android.settings.SettingsPreferenceFragment;
-import com.android.settings.R;
 
 import java.util.ArrayList;
 
@@ -63,11 +61,11 @@ public class DisplaySettings extends SettingsPreferenceFragment implements
     private static final String KEY_SCREEN_SAVER = "screensaver";
     private static final String KEY_WIFI_DISPLAY = "wifi_display";
     private static final String KEY_DISPLAY_ROTATION = "display_rotation";
+    private static final String KEY_LOCKSCREEN_ROTATION = "lockscreen_rotation";
     private static final String KEY_WAKEUP_CATEGORY = "category_wakeup_options";
     private static final String KEY_HOME_WAKE = "pref_home_wake";
     private static final String KEY_VOLUME_WAKE = "pref_volume_wake";
-    private static final String KEY_POWER_CRT_MODE = "system_power_crt_mode";
-    private static final String KEY_POWER_CRT_SCREEN_OFF = "system_power_crt_screen_off";
+    private static final String KEY_SCREEN_OFF_ANIMATION = "screen_off_animation";
 
     // Strings used for building the summary
     private static final String ROTATION_ANGLE_0 = "0";
@@ -87,15 +85,12 @@ public class DisplaySettings extends SettingsPreferenceFragment implements
     private final Configuration mCurConfig = new Configuration();
 
     private ListPreference mScreenTimeoutPreference;
-    private ListPreference mCrtMode;
     private Preference mScreenSaverPreference;
 
     private WifiDisplayStatus mWifiDisplayStatus;
     private Preference mWifiDisplayPreference;
 
-    private CheckBoxPreference mCrtOff;
-
-    private boolean mIsCrtOffChecked = false;
+    private CheckBoxPreference mScreenOffAnimation;
 
     private ContentObserver mAccelerometerRotationObserver =
             new ContentObserver(new Handler()) {
@@ -117,17 +112,25 @@ public class DisplaySettings extends SettingsPreferenceFragment implements
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ContentResolver resolver = getActivity().getContentResolver();
+        Resources res = getResources();
 
         addPreferencesFromResource(R.xml.display_settings);
-	    PreferenceScreen prefSet = getPreferenceScreen();
 
         mDisplayRotationPreference = (PreferenceScreen) findPreference(KEY_DISPLAY_ROTATION);
 
+        final CheckBoxPreference lockScreenRotation =
+                (CheckBoxPreference) findPreference(KEY_LOCKSCREEN_ROTATION);
+        if (lockScreenRotation != null) {
+            if (!res.getBoolean(com.android.internal.R.bool.config_enableLockScreenRotation)) {
+                getPreferenceScreen().removePreference(lockScreenRotation);
+            }
+        }
+
         mScreenSaverPreference = findPreference(KEY_SCREEN_SAVER);
-        if (mScreenSaverPreference != null
-                && getResources().getBoolean(
-                        com.android.internal.R.bool.config_dreamsSupported) == false) {
-            getPreferenceScreen().removePreference(mScreenSaverPreference);
+        if (mScreenSaverPreference != null) {
+            if (!res.getBoolean(com.android.internal.R.bool.config_dreamsSupported)) {
+                getPreferenceScreen().removePreference(mScreenSaverPreference);
+            }
         }
 
         mScreenTimeoutPreference = (ListPreference) findPreference(KEY_SCREEN_TIMEOUT);
@@ -160,7 +163,7 @@ public class DisplaySettings extends SettingsPreferenceFragment implements
         // Home button wake
         mHomeWake = (CheckBoxPreference) findPreference(KEY_HOME_WAKE);
         if (mHomeWake != null) {
-            if (!getResources().getBoolean(R.bool.config_show_homeWake)) {
+            if (!res.getBoolean(R.bool.config_show_homeWake)) {
                 wakeupCategory.removePreference(mHomeWake);
             } else {
                 mHomeWake.setChecked(Settings.System.getInt(resolver,
@@ -168,38 +171,32 @@ public class DisplaySettings extends SettingsPreferenceFragment implements
                 removeWakeupCategory = false;
             }
         }
+
+        // Volume rocker wake
         mVolumeWake = (CheckBoxPreference) findPreference(KEY_VOLUME_WAKE);
         if (mVolumeWake != null) {
-            if (!getResources().getBoolean(R.bool.config_show_volumeRockerWake)
+            if (!res.getBoolean(R.bool.config_show_volumeRockerWake)
                     || !Utils.hasVolumeRocker(getActivity())) {
-                getPreferenceScreen().removePreference(mVolumeWake);
-                getPreferenceScreen().removePreference((PreferenceCategory) findPreference(KEY_WAKEUP_CATEGORY));
+                wakeupCategory.removePreference(mVolumeWake);
             } else {
                 mVolumeWake.setChecked(Settings.System.getInt(resolver,
                         Settings.System.VOLUME_WAKE_SCREEN, 0) == 1);
+                removeWakeupCategory = false;
             }
-
-	// respect device default configuration
-        // true fades while false animates
-        boolean electronBeamFadesConfig = mContext.getResources().getBoolean(
-                com.android.internal.R.bool.config_animateScreenLights);
-
-        // use this to enable/disable crt on feature
-        mIsCrtOffChecked = Settings.System.getInt(getActivity().getContentResolver(),
-                Settings.System.SYSTEM_POWER_ENABLE_CRT_OFF,
-                electronBeamFadesConfig ? 0 : 1) == 1;
-
-        mCrtOff = (CheckBoxPreference) findPreference(KEY_POWER_CRT_SCREEN_OFF);
-        mCrtOff.setChecked(mIsCrtOffChecked);
-
-        mCrtMode = (ListPreference) prefSet.findPreference(KEY_POWER_CRT_MODE);
-        int crtMode = Settings.System.getInt(getActivity().getContentResolver(),
-                Settings.System.SYSTEM_POWER_CRT_MODE, 0);
-        mCrtMode.setValue(String.valueOf(crtMode));
-        mCrtMode.setSummary(mCrtMode.getEntry());
-        mCrtMode.setOnPreferenceChangeListener(this);
         }
 
+        // Remove the wake-up category if neither of the two items above are enabled
+        if (removeWakeupCategory) {
+            getPreferenceScreen().removePreference(wakeupCategory);
+        }
+
+        mScreenOffAnimation = (CheckBoxPreference) findPreference(KEY_SCREEN_OFF_ANIMATION);
+        if (res.getBoolean(com.android.internal.R.bool.config_screenOffAnimation)) {
+            mScreenOffAnimation.setChecked(Settings.System.getInt(resolver,
+                    Settings.System.SCREEN_OFF_ANIMATION, 1) == 1);
+        } else {
+            getPreferenceScreen().removePreference(mScreenOffAnimation);
+        }
     }
 
     private void updateDisplayRotationPreferenceDescription() {
@@ -431,20 +428,17 @@ public class DisplaySettings extends SettingsPreferenceFragment implements
 
     @Override
     public boolean onPreferenceTreeClick(PreferenceScreen preferenceScreen, Preference preference) {
-	if (preference == mHomeWake) {
-            Settings.System.putInt(getActivity().getContentResolver(), 
-			        Settings.System.HOME_WAKE_SCREEN,
+        if (preference == mHomeWake) {
+            Settings.System.putInt(getContentResolver(), Settings.System.HOME_WAKE_SCREEN,
                     mHomeWake.isChecked() ? 1 : 0);
             return true;
-    } else if (preference == mVolumeWake) {
-            Settings.System.putInt(getActivity().getContentResolver(),
-                    Settings.System.VOLUME_WAKE_SCREEN,
+        } else if (preference == mVolumeWake) {
+            Settings.System.putInt(getContentResolver(), Settings.System.VOLUME_WAKE_SCREEN,
                     mVolumeWake.isChecked() ? 1 : 0);
             return true;
-	} else if (preference == mCrtOff) {
-            Settings.System.putInt(getActivity().getContentResolver(),
-                    Settings.System.SYSTEM_POWER_ENABLE_CRT_OFF,
-                    mCrtOff.isChecked() ? 1 : 0);
+        } else if (preference == mScreenOffAnimation) {
+            Settings.System.putInt(getContentResolver(), Settings.System.SCREEN_OFF_ANIMATION,
+                    mScreenOffAnimation.isChecked() ? 1 : 0);
             return true;
         }
 
@@ -453,13 +447,6 @@ public class DisplaySettings extends SettingsPreferenceFragment implements
 
     public boolean onPreferenceChange(Preference preference, Object objValue) {
         final String key = preference.getKey();
-	if (preference == mCrtMode) {
-            int crtMode = Integer.valueOf((String) objValue);
-            int index = mCrtMode.findIndexOfValue((String) objValue);
-            Settings.System.putInt(getActivity().getContentResolver(),
-                    Settings.System.SYSTEM_POWER_CRT_MODE, crtMode);
-            mCrtMode.setSummary(mCrtMode.getEntries()[index]);
-        }
         if (KEY_SCREEN_TIMEOUT.equals(key)) {
             int value = Integer.parseInt((String) objValue);
             try {

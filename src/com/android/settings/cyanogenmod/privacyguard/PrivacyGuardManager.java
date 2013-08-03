@@ -28,6 +28,7 @@ import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.content.pm.Signature;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
@@ -93,6 +94,7 @@ public class PrivacyGuardManager extends Fragment
     public static final class AppInfo {
         String title;
         String packageName;
+        boolean enabled;
         boolean privacyGuardEnabled;
     }
 
@@ -206,14 +208,30 @@ public class PrivacyGuardManager extends Fragment
     */
     private List<AppInfo> loadInstalledApps() {
         List<AppInfo> apps = new ArrayList<AppInfo>();
-        List<PackageInfo> packages = mPm.getInstalledPackages(PackageManager.GET_PERMISSIONS);
+        List<PackageInfo> packages = mPm.getInstalledPackages(
+            PackageManager.GET_PERMISSIONS | PackageManager.GET_SIGNATURES);
         boolean showSystemApps = shouldShowSystemApps();
         boolean filterByPermission = shouldFilterByPermission();
+        Signature platformCert;
+
+        try {
+            PackageInfo sysInfo = mPm.getPackageInfo("android", PackageManager.GET_SIGNATURES);
+            platformCert = sysInfo.signatures[0];
+        } catch (PackageManager.NameNotFoundException e) {
+            platformCert = null;
+        }
 
         for (PackageInfo info : packages) {
             final ApplicationInfo appInfo = info.applicationInfo;
 
-            // skip system apps if they shall not be included
+            // hide apps signed with the platform certificate to avoid the user
+            // shooting himself in the foot
+            if (platformCert != null && info.signatures != null
+                    && platformCert.equals(info.signatures[0])) {
+                continue;
+            }
+
+            // skip all system apps if they shall not be included
             if (!showSystemApps && (appInfo.flags & ApplicationInfo.FLAG_SYSTEM) != 0) {
                 continue;
             }
@@ -228,14 +246,18 @@ public class PrivacyGuardManager extends Fragment
             AppInfo app = new AppInfo();
             app.title = appInfo.loadLabel(mPm).toString();
             app.packageName = info.packageName;
+            app.enabled = appInfo.enabled;
             app.privacyGuardEnabled = mPm.getPrivacyGuardSetting(app.packageName);
             apps.add(app);
         }
 
-        // sort the apps by title
+        // sort the apps by their enabled state, then by title
         Collections.sort(apps, new Comparator<AppInfo>() {
             @Override
             public int compare(AppInfo lhs, AppInfo rhs) {
+                if (lhs.enabled != rhs.enabled) {
+                    return lhs.enabled ? -1 : 1;
+                }
                 return lhs.title.compareToIgnoreCase(rhs.title);
             }
         });

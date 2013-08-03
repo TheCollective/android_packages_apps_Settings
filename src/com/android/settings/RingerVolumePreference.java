@@ -115,7 +115,8 @@ public class RingerVolumePreference extends VolumePreference {
             boolean muted = mAudioManager.isStreamMute(streamType);
 
             if (mCheckBoxes[i] != null) {
-                if (streamType == AudioManager.STREAM_RING &&
+                if (((streamType == AudioManager.STREAM_RING) ||
+                        (streamType == AudioManager.STREAM_NOTIFICATION)) &&
                         (mAudioManager.getRingerMode() == AudioManager.RINGER_MODE_VIBRATE)) {
                     mCheckBoxes[i].setImageResource(
                             com.android.internal.R.drawable.ic_audio_ring_notif_vibrate);
@@ -187,6 +188,7 @@ public class RingerVolumePreference extends VolumePreference {
 
         final CheckBox linkCheckBox = (CheckBox) view.findViewById(R.id.link_ring_and_volume);
         final CheckBox linkMuteStates = (CheckBox) view.findViewById(R.id.link_mutes);
+        final CheckBox volumeKeysControlRingStream = (CheckBox) view.findViewById(R.id.volume_keys_control_ring_stream);
 
         final View ringerSection = view.findViewById(R.id.ringer_section);
         final View notificationSection = view.findViewById(R.id.notification_section);
@@ -256,6 +258,24 @@ public class RingerVolumePreference extends VolumePreference {
                 }
 
             });
+
+            if (System.getInt(getContext().getContentResolver(),
+                    System.VOLUME_KEYS_CONTROL_RING_STREAM, 1) == 1) {
+                volumeKeysControlRingStream.setChecked(true);
+            } else {
+                volumeKeysControlRingStream.setChecked(false);
+            }
+
+            volumeKeysControlRingStream.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+
+                @Override
+                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                    Settings.System.putInt(buttonView.getContext().getContentResolver(),
+                            Settings.System.VOLUME_KEYS_CONTROL_RING_STREAM, isChecked ? 1 : 0);
+                }
+
+            });
+
         } else {
             ringerSection.setVisibility(View.GONE);
             linkVolumesSection.setVisibility(View.GONE);

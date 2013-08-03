@@ -16,26 +16,6 @@
 
 package com.android.settings.cyanogenmod;
 
-import static com.android.internal.util.cm.QSConstants.TILE_BLUETOOTH;
-import static com.android.internal.util.cm.QSConstants.TILE_MOBILEDATA;
-import static com.android.internal.util.cm.QSConstants.TILE_NETWORKMODE;
-import static com.android.internal.util.cm.QSConstants.TILE_NFC;
-import static com.android.internal.util.cm.QSConstants.TILE_PROFILE;
-import static com.android.internal.util.cm.QSConstants.TILE_WIFIAP;
-import static com.android.internal.util.cm.QSConstants.TILE_LTE;
-import static com.android.internal.util.cm.QSConstants.TILE_TORCH;
-import static com.android.internal.util.cm.QSConstants.TILE_EXPANDEDDESKTOP;
-import static com.android.internal.util.cm.QSUtils.deviceSupportsBluetooth;
-import static com.android.internal.util.cm.QSUtils.deviceSupportsDockBattery;
-import static com.android.internal.util.cm.QSUtils.deviceSupportsImeSwitcher;
-import static com.android.internal.util.cm.QSUtils.deviceSupportsLte;
-import static com.android.internal.util.cm.QSUtils.deviceSupportsMobileData;
-import static com.android.internal.util.cm.QSUtils.deviceSupportsNfc;
-import static com.android.internal.util.cm.QSUtils.deviceSupportsUsbTether;
-import static com.android.internal.util.cm.QSUtils.deviceSupportsWifiDisplay;
-import static com.android.internal.util.cm.QSUtils.systemProfilesEnabled;
-import static com.android.internal.util.cm.QSUtils.expandedDesktopEnabled;
-
 import android.content.ContentResolver;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
@@ -49,9 +29,9 @@ import android.preference.PreferenceCategory;
 import android.preference.PreferenceScreen;
 import android.provider.Settings;
 import android.text.TextUtils;
-import android.util.Log;
 
-import com.android.internal.telephony.Phone;
+import com.android.internal.util.cm.QSConstants;
+import com.android.internal.util.cm.QSUtils;
 import com.android.settings.R;
 import com.android.settings.SettingsPreferenceFragment;
 import com.android.settings.Utils;
@@ -64,7 +44,6 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class QuickSettings extends SettingsPreferenceFragment implements OnPreferenceChangeListener {
-    private static final String TAG = "QuickSettings";
 
     private static final String SEPARATOR = "OV=I=XseparatorX=I=VO";
     private static final String EXP_RING_MODE = "pref_ring_mode";
@@ -108,7 +87,6 @@ public class QuickSettings extends SettingsPreferenceFragment implements OnPrefe
         super.onActivityCreated(savedInstanceState);
 
         PreferenceScreen prefSet = getPreferenceScreen();
-        PackageManager pm = getPackageManager();
         ContentResolver resolver = getActivity().getContentResolver();
         mGeneralSettings = (PreferenceCategory) prefSet.findPreference(GENERAL_SETTINGS);
         mStaticTiles = (PreferenceCategory) prefSet.findPreference(STATIC_TILES);
@@ -157,7 +135,7 @@ public class QuickSettings extends SettingsPreferenceFragment implements OnPrefe
         mDynamicBugReport.setChecked(Settings.System.getInt(resolver, Settings.System.QS_DYNAMIC_BUGREPORT, 1) == 1);
         mDynamicDockBattery = (CheckBoxPreference) prefSet.findPreference(DYNAMIC_DOCK_BATTERY);
         if (mDynamicDockBattery != null) {
-            if (deviceSupportsDockBattery(getActivity())) {
+            if (QSUtils.deviceSupportsDockBattery(getActivity())) {
                 mDynamicDockBattery.setChecked(Settings.System.getInt(resolver, Settings.System.QS_DYNAMIC_DOCK_BATTERY, 1) == 1);
             } else {
                 mDynamicTiles.removePreference(mDynamicDockBattery);
@@ -166,7 +144,7 @@ public class QuickSettings extends SettingsPreferenceFragment implements OnPrefe
         }
         mDynamicIme = (CheckBoxPreference) prefSet.findPreference(DYNAMIC_IME);
         if (mDynamicIme != null) {
-            if (deviceSupportsImeSwitcher(getActivity())) {
+            if (QSUtils.deviceSupportsImeSwitcher(getActivity())) {
                 mDynamicIme.setChecked(Settings.System.getInt(resolver, Settings.System.QS_DYNAMIC_IME, 1) == 1);
             } else {
                 mDynamicTiles.removePreference(mDynamicIme);
@@ -175,7 +153,7 @@ public class QuickSettings extends SettingsPreferenceFragment implements OnPrefe
         }
         mDynamicUsbTether = (CheckBoxPreference) prefSet.findPreference(DYNAMIC_USBTETHER);
         if (mDynamicUsbTether != null) {
-            if (deviceSupportsUsbTether(getActivity())) {
+            if (QSUtils.deviceSupportsUsbTether(getActivity())) {
                 mDynamicUsbTether.setChecked(Settings.System.getInt(resolver, Settings.System.QS_DYNAMIC_USBTETHER, 1) == 1);
             } else {
                 mDynamicTiles.removePreference(mDynamicUsbTether);
@@ -184,71 +162,26 @@ public class QuickSettings extends SettingsPreferenceFragment implements OnPrefe
         }
         mDynamicWifi = (CheckBoxPreference) prefSet.findPreference(DYNAMIC_WIFI);
         if (mDynamicWifi != null) {
-            if (deviceSupportsWifiDisplay(getActivity())) {
+            if (QSUtils.deviceSupportsWifiDisplay(getActivity())) {
                 mDynamicWifi.setChecked(Settings.System.getInt(resolver, Settings.System.QS_DYNAMIC_WIFI, 1) == 1);
             } else {
                 mDynamicTiles.removePreference(mDynamicWifi);
                 mDynamicWifi = null;
             }
         }
+    }
 
-        // Don't show mobile data options if not supported
-        if (!deviceSupportsMobileData(getActivity())) {
-            QuickSettingsUtil.TILES.remove(TILE_MOBILEDATA);
-            QuickSettingsUtil.TILES.remove(TILE_WIFIAP);
-            QuickSettingsUtil.TILES.remove(TILE_NETWORKMODE);
-            if(mNetworkMode != null) {
+    @Override
+    public void onResume() {
+        super.onResume();
+        QuickSettingsUtil.updateAvailableTiles(getActivity());
+
+        if (mNetworkMode != null) {
+            if (QuickSettingsUtil.isTileAvailable(QSConstants.TILE_NETWORKMODE)) {
+                mStaticTiles.addPreference(mNetworkMode);
+            } else {
                 mStaticTiles.removePreference(mNetworkMode);
             }
-        } else {
-            // We have telephony support however, some phones run on networks not supported
-            // by the networkmode tile so remove both it and the associated options list
-            int network_state = -99;
-            try {
-                network_state = Settings.Global.getInt(resolver,
-                        Settings.Global.PREFERRED_NETWORK_MODE);
-            } catch (Settings.SettingNotFoundException e) {
-                Log.e(TAG, "Unable to retrieve PREFERRED_NETWORK_MODE", e);
-            }
-
-            switch (network_state) {
-                // list of supported network modes
-                case Phone.NT_MODE_WCDMA_PREF:
-                case Phone.NT_MODE_WCDMA_ONLY:
-                case Phone.NT_MODE_GSM_UMTS:
-                case Phone.NT_MODE_GSM_ONLY:
-                    break;
-                default:
-                    QuickSettingsUtil.TILES.remove(TILE_NETWORKMODE);
-                    mStaticTiles.removePreference(mNetworkMode);
-                    break;
-            }
-        }
-
-        // Don't show the bluetooth options if not supported
-        if (!deviceSupportsBluetooth()) {
-            QuickSettingsUtil.TILES.remove(TILE_BLUETOOTH);
-        }
-
-        // Dont show the profiles tile if profiles are disabled
-        if (!systemProfilesEnabled(resolver)) {
-            QuickSettingsUtil.TILES.remove(TILE_PROFILE);
-        }
-
-        // Dont show the NFC tile if not supported
-        if (!deviceSupportsNfc(getActivity())) {
-            QuickSettingsUtil.TILES.remove(TILE_NFC);
-        }
-
-        // Dont show the LTE tile if not supported
-        if (!deviceSupportsLte(getActivity())) {
-            QuickSettingsUtil.TILES.remove(TILE_LTE);
-        }
-        
-
-        // Don't show the Expanded desktop tile if expanded desktop is disabled
-        if (!expandedDesktopEnabled(resolver)) {
-            QuickSettingsUtil.TILES.remove(TILE_EXPANDEDDESKTOP);
         }
     }
 

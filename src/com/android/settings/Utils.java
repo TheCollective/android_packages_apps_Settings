@@ -24,11 +24,13 @@ import android.content.ContentResolver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.pm.ResolveInfo;
 import android.content.pm.UserInfo;
+import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.content.res.Resources.NotFoundException;
 import android.database.Cursor;
@@ -59,6 +61,7 @@ import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.DisplayInfo;
+import android.view.Surface;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
@@ -87,6 +90,11 @@ public class Utils {
      * Set the preference's title to the matching activity's label.
      */
     public static final int UPDATE_PREFERENCE_FLAG_SET_TITLE_TO_MATCHING_ACTIVITY = 1;
+
+    /**
+     * The opacity level of a disabled icon.
+     */
+    public static final float DISABLED_ALPHA = 0.4f;
 
     /**
      * Name of the meta-data item that should be set in the AndroidManifest.xml
@@ -461,7 +469,7 @@ public class Utils {
                     com.android.internal.R.dimen.preference_fragment_padding_bottom);
 
             final int effectivePaddingSide = ignoreSidePadding ? 0 : paddingSide;
-            list.setPadding(effectivePaddingSide, 0, effectivePaddingSide, paddingBottom);
+            list.setPaddingRelative(effectivePaddingSide, 0, effectivePaddingSide, paddingBottom);
         }
     }
 
@@ -685,5 +693,34 @@ public class Utils {
     /* returns whether the device has volume rocker or not. */
     public static boolean hasVolumeRocker(Context con) {
         return con.getResources().getBoolean(R.bool.has_volume_rocker);
+    }
+
+    /**
+     * Locks the activity orientation to the current device orientation
+     * @param act
+     */
+    public static void lockCurrentOrientation(Activity act) {
+        int currentRotation = act.getWindowManager().getDefaultDisplay().getRotation();
+        int frozenRotation = 0;
+        int orientation = act.getResources().getConfiguration().orientation;
+        switch(currentRotation) {
+            case Surface.ROTATION_0:
+                frozenRotation = orientation == Configuration.ORIENTATION_LANDSCAPE
+                    ? ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE : ActivityInfo.SCREEN_ORIENTATION_PORTRAIT;
+                break;
+            case Surface.ROTATION_90:
+                frozenRotation = orientation == Configuration.ORIENTATION_PORTRAIT
+                    ? ActivityInfo.SCREEN_ORIENTATION_REVERSE_PORTRAIT : ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE;
+                break;
+            case Surface.ROTATION_180:
+                frozenRotation = orientation == Configuration.ORIENTATION_LANDSCAPE
+                    ? ActivityInfo.SCREEN_ORIENTATION_REVERSE_LANDSCAPE : ActivityInfo.SCREEN_ORIENTATION_REVERSE_PORTRAIT;
+                break;
+            case Surface.ROTATION_270:
+                frozenRotation = orientation == Configuration.ORIENTATION_PORTRAIT
+                    ? ActivityInfo.SCREEN_ORIENTATION_PORTRAIT : ActivityInfo.SCREEN_ORIENTATION_REVERSE_LANDSCAPE;
+                break;
+        }
+        act.setRequestedOrientation(frozenRotation);
     }
 }

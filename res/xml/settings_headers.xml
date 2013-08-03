@@ -61,7 +61,7 @@
     <!-- INTERFACE -->
     <header android:id="@+id/interface_section"
         android:title="@string/header_category_interface" />
- 
+
     <!-- Launcher -->
     <header
         android:id="@+id/launcher_settings"
@@ -124,17 +124,6 @@
         android:fragment="com.android.settings.fuelgauge.PowerUsageSummary"
         android:icon="@drawable/ic_settings_battery"
         android:title="@string/power_usage_summary_title" />
-	
-<!-- Updater -->
-    <header 
-	android:id="@+id/updater_settings"
-	android:icon="@drawable/ic_settings_updater"
-	android:title="@string/udater_title">
-	<intent
-                android:action="android.intent.action.MAIN"
-                android:targetPackage="com.lithidsw.mrupdaterheadless"
-                android:targetClass="com.lithidsw.mrupdaterheadless.MainActivity" />
-    </header>	
 
     <!-- Application Settings -->
     <header
@@ -244,6 +233,13 @@
         android:fragment="com.android.settings.DevelopmentSettings"
         android:icon="@drawable/ic_settings_development"
         android:title="@string/development_settings_title" />
+
+    <!-- Superuser -->
+    <header
+        android:id="@+id/superuser"
+        android:fragment="com.android.settings.cyanogenmod.superuser.PolicyNativeFragment"
+        android:icon="@drawable/ic_action_permission"
+        android:title="@string/superuser" />
 
     <!-- Performance -->
     <header

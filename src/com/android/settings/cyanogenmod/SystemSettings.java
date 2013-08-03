@@ -18,7 +18,6 @@ package com.android.settings.cyanogenmod;
 
 import android.content.ContentResolver;
 import android.content.Context;
-import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.os.RemoteException;
@@ -27,6 +26,7 @@ import android.os.UserHandle;
 import android.preference.CheckBoxPreference;
 import android.preference.ListPreference;
 import android.preference.Preference;
+import android.preference.PreferenceCategory;
 import android.preference.PreferenceScreen;
 import android.provider.Settings;
 import android.util.Log;
@@ -35,9 +35,6 @@ import android.view.WindowManagerGlobal;
 
 import com.android.settings.R;
 import com.android.settings.SettingsPreferenceFragment;
-
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class SystemSettings extends SettingsPreferenceFragment  implements
         Preference.OnPreferenceChangeListener {
@@ -54,13 +51,16 @@ public class SystemSettings extends SettingsPreferenceFragment  implements
     private static final String KEY_QUICK_SETTINGS = "quick_settings_panel";
     private static final String KEY_NOTIFICATION_DRAWER = "notification_drawer";
     private static final String KEY_POWER_MENU = "power_menu";
+    private static final String KEY_PIE_CONTROL = "pie_control";
     private static final String KEY_EXPANDED_DESKTOP = "expanded_desktop";
     private static final String KEY_EXPANDED_DESKTOP_NO_NAVBAR = "expanded_desktop_no_navbar";
 
     private PreferenceScreen mNotificationPulse;
     private PreferenceScreen mBatteryPulse;
+    private PreferenceScreen mPieControl;
     private ListPreference mExpandedDesktopPref;
     private CheckBoxPreference mExpandedDesktopNoNavbarPref;
+
     private boolean mIsPrimary;
 
     @Override
@@ -75,6 +75,9 @@ public class SystemSettings extends SettingsPreferenceFragment  implements
         boolean removeKeys = false;
         boolean removeNavbar = false;
 
+        PreferenceCategory navbarCategory =
+                (PreferenceCategory) findPreference(KEY_NAVIGATION_BAR_CATEGORY);
+
         IWindowManager windowManager = IWindowManager.Stub.asInterface(
                 ServiceManager.getService(Context.WINDOW_SERVICE));
         try {
@@ -85,6 +88,13 @@ public class SystemSettings extends SettingsPreferenceFragment  implements
             }
         } catch (RemoteException e) {
             // Do nothing
+        }
+
+        if (removeKeys) {
+            prefScreen.removePreference(findPreference(KEY_HARDWARE_KEYS));
+        }
+        if (removeNavbar) {
+            prefScreen.removePreference(navbarCategory);
         }
 
         // Determine which user is logged in
@@ -100,27 +110,9 @@ public class SystemSettings extends SettingsPreferenceFragment  implements
                     mBatteryPulse = null;
                 }
             }
-
-            // Act on the above
-            if (removeKeys) {
-                prefScreen.removePreference(findPreference(KEY_HARDWARE_KEYS));
-            }
-            if (removeNavbar) {
-                prefScreen.removePreference(findPreference(KEY_NAVIGATION_BAR));
-                prefScreen.removePreference(findPreference(KEY_NAVIGATION_RING));
-                prefScreen.removePreference(findPreference(KEY_NAVIGATION_BAR_CATEGORY));
-            }
         } else {
             // Secondary user is logged in, remove all primary user specific preferences
             prefScreen.removePreference(findPreference(KEY_BATTERY_LIGHT));
-            prefScreen.removePreference(findPreference(KEY_HARDWARE_KEYS));
-            prefScreen.removePreference(findPreference(KEY_NAVIGATION_BAR));
-            prefScreen.removePreference(findPreference(KEY_NAVIGATION_RING));
-            prefScreen.removePreference(findPreference(KEY_NAVIGATION_BAR_CATEGORY));
-            prefScreen.removePreference(findPreference(KEY_STATUS_BAR));
-            prefScreen.removePreference(findPreference(KEY_QUICK_SETTINGS));
-            prefScreen.removePreference(findPreference(KEY_POWER_MENU));
-            prefScreen.removePreference(findPreference(KEY_NOTIFICATION_DRAWER));
         }
 
         // Preferences that applies to all users
@@ -132,6 +124,15 @@ public class SystemSettings extends SettingsPreferenceFragment  implements
                 mNotificationPulse = null;
             }
         }
+
+        // Pie controls
+        mPieControl = (PreferenceScreen) findPreference(KEY_PIE_CONTROL);
+        if (mPieControl != null && removeNavbar) {
+            // Remove on devices without a navbar to start with
+            prefScreen.removePreference(mPieControl);
+            mPieControl = null;
+        }
+
         // Expanded desktop
         mExpandedDesktopPref = (ListPreference) findPreference(KEY_EXPANDED_DESKTOP);
         mExpandedDesktopNoNavbarPref = (CheckBoxPreference) findPreference(KEY_EXPANDED_DESKTOP_NO_NAVBAR);
@@ -167,6 +168,10 @@ public class SystemSettings extends SettingsPreferenceFragment  implements
         if (mNotificationPulse != null) {
             updateLightPulseDescription();
         }
+        if (mPieControl != null) {
+            updatePieControlDescription();
+        }
+
         // Primary user only
         if (mIsPrimary && mBatteryPulse != null) {
             updateBatteryPulseDescription();
@@ -210,24 +215,13 @@ public class SystemSettings extends SettingsPreferenceFragment  implements
         }
      }
 
-  
-
-    private boolean removePreferenceIfPackageNotInstalled(Preference preference) {
-        String intentUri = ((PreferenceScreen) preference).getIntent().toUri(1);
-        Pattern pattern = Pattern.compile("component=([^/]+)/");
-        Matcher matcher = pattern.matcher(intentUri);
-
-        String packageName = matcher.find() ? matcher.group(1) : null;
-        if (packageName != null) {
-            try {
-                getPackageManager().getPackageInfo(packageName, 0);
-            } catch (NameNotFoundException e) {
-                Log.e(TAG, "package " + packageName + " not installed, hiding preference.");
-                getPreferenceScreen().removePreference(preference);
-                return true;
-            }
+    private void updatePieControlDescription() {
+        if (Settings.System.getInt(getActivity().getContentResolver(),
+                Settings.System.PIE_CONTROLS, 0) == 1) {
+            mPieControl.setSummary(getString(R.string.pie_control_enabled));
+        } else {
+            mPieControl.setSummary(getString(R.string.pie_control_disabled));
         }
-        return false;
     }
 
     private void updateExpandedDesktop(int value) {

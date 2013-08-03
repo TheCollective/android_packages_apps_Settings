@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- Copyright (C) 2007 The Android Open Source Project
-     Copyright (C) 2013 The CyanogenMod Project
 
      Licensed under the Apache License, Version 2.0 (the "License");
      you may not use this file except in compliance with the License.
@@ -14,9 +13,7 @@
      See the License for the specific language governing permissions and
      limitations under the License.
 -->
-
-<resources xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
     <!-- Strings for Dialog yes button -->
     <string name="yes">"Yes"</string>
 
@@ -36,7 +33,10 @@
     <!-- Device Info screen. Used for a status item's value when the proper value is not known -->
     <string name="device_info_default">Unknown</string>
     <!-- [CHAR LIMIT=NONE] Device Info screen. Countdown for user taps to enable development settings -->
-    <string name="show_dev_countdown">You are now <xliff:g id="step_count">%1$d</xliff:g> steps away from enabling development settings.</string>
+    <plurals name="show_dev_countdown">
+        <item quantity="one">You are now <xliff:g id="step_count">%1$d</xliff:g> step away from enabling development settings.</item>
+        <item quantity="other">You are now <xliff:g id="step_count">%1$d</xliff:g> steps away from enabling development settings.</item>
+    </plurals>
     <!-- [CHAR LIMIT=NONE] Device Info screen. Confirmation that developer settings are enabled -->
     <string name="show_dev_on">You have enabled development settings!</string>
     <!-- [CHAR LIMIT=NONE] Device Info screen. Okay we get it, stop pressing, you already have it on -->
@@ -51,7 +51,7 @@
     <string name="header_category_personal">PERSONAL</string>
     <!-- Settings main menu category heading. System (Updates, data, accessibility, about phone). [CHAR LIMIT=40] -->
     <string name="header_category_system">SYSTEM</string>
-    <string name="udater_title">MrUpdater</string>
+
     <!-- Phone info -->
     <!-- Phone Info screen. Button label to turn on the radio . Only shown in diagnostic screen, so precise translation is not needed. -->
     <string name="turn_on_radio">Turn on radio</string>
@@ -357,15 +357,6 @@
     <!-- Bluetooth phone book permission Alert Activity checkbox text [CHAR LIMIT=none] -->
     <string name="bluetooth_pb_remember_choice">Don\'t ask again</string>
 
-    <!-- Activity label of BluetoothMasPermissionActivity, also used as Strings in the permission dialog [CHAR LIMIT=none] -->
-    <string name="bluetooth_mas_request">"Message Access request"</string>
-
-    <!-- Bluetooth MAS permission Alert Activity text [CHAR LIMIT=none] -->
-    <string name="bluetooth_mas_acceptance_dialog_text">%1$s would like to access your messages. Give access to %2$s?</string>
-
-    <!-- Bluetooth MAS permission Alert Activity checkbox text [CHAR LIMIT=none] -->
-    <string name="bluetooth_mas_remember_choice">Don\'t ask again</string>
-
     <!-- Date & time settings screen title -->
     <string name="date_and_time">Date &amp; time settings</string>
     <!-- The title of the activity to pick a time zone. -->
@@ -580,7 +571,7 @@
 
     <!-- Button label for generic cancel action -->
     <string name="cancel">Cancel</string>
-    <string name="enable_quiettime">Enable QuietTime</string>
+
     <!-- Title of the Settings activity shown within the application itself. -->
     <string name="settings_label">Settings</string>
     <!-- Title of the Settings activity shown in the Launcher. [CHAR LIMIT=20] -->
@@ -594,7 +585,7 @@
     <!-- Wireless Settings screen title for things like Wi-Fi, bluetooth, airplane mode. -->
     <string name="wireless_networks_settings_title">Wireless &amp; networks</string>
     <!-- Main Settings screen settings summary text for the "Wireless controls" setting -->
-    <string name="radio_controls_summary">Manage Wi-Fi, Bluetooth, airplane mode, mobile networks, &amp; VPNs</string>
+    <string name="radio_controls_summary">Manage Wi\u2011Fi, Bluetooth, airplane mode, mobile networks, &amp; VPNs</string>
 
     <!-- mobile network settings screen, setting check box title -->
     <string name="roaming">Data roaming</string>
@@ -688,6 +679,10 @@
     <string name="show_user_info_on_lockscreen_label">Show user info on lock screen</string>
     <!-- Text shown for title of user info setting [CHAR LIMIT=20]-->
     <string name="user_info_settings_title">User info</string>
+    <!-- Text shown next to checkbox for showing profile info on LockScreen [CHAR LIMIT=50]-->
+    <string name="show_profile_info_on_lockscreen_label">Show profile info on lock screen</string>
+    <!-- Text shown for title of profile info setting [CHAR LIMIT=20]-->
+    <string name="profile_info_settings_title">Profile info</string>
     <!-- Main Settings screen setting option title for the item to take you to the location screen -->
     <string name="location_settings_title">Location access</string>
     <!-- Main Settings screen setting option title for the item to take you to the security screen -->
@@ -878,12 +873,6 @@
     <!-- Summary for "Configure lockscreen" when security password is enabled [CHAR LIMIT=45] -->
     <string name="unlock_set_unlock_mode_password">Password</string>
 
-    <!-- Sizes for pattern lockscreen -->
-    <string name="lock_pattern_size_3">3x3</string>
-    <string name="lock_pattern_size_4">4x4</string>
-    <string name="lock_pattern_size_5">5x5</string>
-    <string name="lock_pattern_size_6">6x6</string>
-
     <!-- Title for option to turn of password/pin/pattern unlock. [CHAR LIMIT=22] -->
     <string name="unlock_disable_lock_title">Turn off screen lock</string>
 
@@ -997,6 +986,37 @@
 
     <!-- Summary of preference to manage device policies -->
     <string name="manage_device_admin_summary">View or deactivate device administrators</string>
+
+    <!-- Notification access settings (part of Security) -->
+
+    <!-- Title of preference to manage notification listeners -->
+    <string name="manage_notification_access">Notification access</string>
+
+    <!-- Summary of preference to manage notification listeners, when none are enabled -->
+    <string name="manage_notification_access_summary_zero">Apps cannot read notifications</string>
+
+    <!-- Summary of preference to manage notification listeners, when one or more are enabled
+         and are therefore able to read the user's notifications -->
+    <plurals name="manage_notification_access_summary_nonzero">
+        <item quantity="one">%d app can read notifications</item>
+        <item quantity="other">%d apps can read notifications</item>
+    </plurals>
+
+    <!-- String to show in the list of notification listeners, when none is installed -->
+    <string name="no_notification_listeners">No notification listeners are installed.</string>
+
+    <!-- Title for a warning message about security implications of enabling a notification
+          listener, displayed as a dialog message. [CHAR LIMIT=NONE] -->
+    <string name="notification_listener_security_warning_title">Enable
+         <xliff:g id="service" example="NotificationReader">%1$s</xliff:g>?</string>
+    <!-- Summary for a warning message about security implications of enabling a notification
+          listener, displayed as a dialog message. [CHAR LIMIT=NONE] -->
+    <string name="notification_listener_security_warning_summary">
+        <xliff:g id="notification_listener_name">%1$s</xliff:g> will be able to 
+        read all notifications posted by the system or any installed app, which may include personal
+        information such as contact names and the text of messages sent to you. It will also be able
+        to dismiss these notifications or touch action buttons within them.
+    </string>
 
     <!-- Bluetooth settings -->
     <!-- Bluetooth settings check box title on Main Settings screen -->
@@ -1184,7 +1204,7 @@
     <!-- Wifi Display settings. Text displayed when Wifi display is off and device list is empty [CHAR LIMIT=80]-->
     <string name="wifi_display_settings_empty_list_wifi_display_off">To see devices, turn wireless display on.</string>
     <!-- Wifi Display settings. Text displayed when Wifi Display is off and device list is empty [CHAR LIMIT=80]-->
-    <string name="wifi_display_settings_empty_list_wifi_display_disabled">Wireless display is disabled because Wi-Fi is off.</string>
+    <string name="wifi_display_settings_empty_list_wifi_display_disabled">Wireless display is disabled because Wi\u2011Fi is off.</string>
     <!-- Wifi Display settings. The title of the action button that initiates a search for nearby devices [CHAR LIMIT=20] -->
     <string name="wifi_display_search_for_devices">Search for displays</string>
     <!-- Wifi Display settings. The title of the action button while a search for nearby devices is in progress [CHAR LIMIT=20] -->
@@ -1245,10 +1265,6 @@
     <string name="android_beam_label">Android Beam</string>
     <!-- Explanation of the Android Beam feature in the Android Beam settings panel. The use of "beam" here is as a verb and not considered trademarked. [CHAR LIMIT=NONE] -->
     <string name="android_beam_explained">When this feature is turned on, you can beam app content to another NFC-capable device by holding the devices close together. For example, you can beam Browser pages, YouTube videos, People contacts, and more.\n\nJust bring the devices together (typically back to back) and then touch your screen. The app determines what gets beamed.</string>
-    <string name="nfc_polling_mode_title">NFC polling mode</string>
-    <string name="nfc_polling_mode_screen_off">Screen off</string>
-    <string name="nfc_polling_mode_screen_locked">Screen on, locked</string>
-    <string name="nfc_polling_mode_screen_unlocked">Screen on, unlocked (default)</string>
 
     <!-- Network service discovery settings -->
     <!-- Used in the 1st-level settings screen to turn on NSD -->
@@ -1258,23 +1274,23 @@
 
     <!-- Wi-Fi Settings --> <skip />
     <!-- Used in the 1st-level settings screen to turn on Wi-Fi -->
-    <string name="wifi_quick_toggle_title">Wi-Fi</string>
+    <string name="wifi_quick_toggle_title">Wi\u2011Fi</string>
     <!-- Used in the 1st-level settings screen as the turn-on summary -->
-    <string name="wifi_quick_toggle_summary">Turn on Wi-Fi</string>
+    <string name="wifi_quick_toggle_summary">Turn on Wi\u2011Fi</string>
     <!-- Used in the 1st-level settings screen to go to the 2nd-level settings screen  [CHAR LIMIT=20]-->
-    <string name="wifi_settings">Wi-Fi</string>
+    <string name="wifi_settings">Wi\u2011Fi</string>
     <!-- Title of the Wi-fi settings screen -->
-    <string name="wifi_settings_category">Wi-Fi settings</string>
+    <string name="wifi_settings_category">Wi\u2011Fi settings</string>
     <!-- Title of the Wi-fi settings entry in the left top level menu -->
-    <string name="wifi_settings_title">Wi-Fi</string>
+    <string name="wifi_settings_title">Wi\u2011Fi</string>
     <!-- Summary text of the Wi-fi settings screen -->
     <string name="wifi_settings_summary">Set up &amp; manage wireless access points</string>
     <!-- Used in the 1st-level settings screen to turn on Wi-Fi  [CHAR LIMIT=60] -->
-    <string name="wifi_setup_wizard_title">Select Wi-Fi</string>
+    <string name="wifi_setup_wizard_title">Select Wi\u2011Fi</string>
     <!-- Summary text when turning Wi-Fi or bluetooth on -->
-    <string name="wifi_starting">Turning Wi-Fi on\u2026</string>
+    <string name="wifi_starting">Turning Wi\u2011Fi on\u2026</string>
     <!-- Summary text when turning Wi-Fi or bluetooth off -->
-    <string name="wifi_stopping">Turning off Wi-Fi\u2026</string>
+    <string name="wifi_stopping">Turning off Wi\u2011Fi\u2026</string>
     <!-- Summary text when Wi-Fi or bluetooth has error -->
     <string name="wifi_error">Error</string>
     <!-- Toast message when Wi-Fi or bluetooth is disallowed in airplane mode -->
@@ -1288,19 +1304,29 @@
     <!-- Checkbox title for option to toggle poor network detection -->
     <string name="wifi_poor_network_detection">Avoid poor connections</string>
     <!-- Checkbox summary for option to toggle poor network detection -->
-    <string name="wifi_poor_network_detection_summary">Don\'t use a Wi-Fi network unless it has a good Internet connection</string>
+    <string name="wifi_poor_network_detection_summary">Don\'t use a Wi\u2011Fi network unless it has a good Internet connection</string>
+    <!-- Checkbox title for option to scan always available setting -->
+    <string name="wifi_scan_always_available">Scanning always available</string>
+    <!-- Checkbox summary for option to toggle scan always available setting -->
+    <string name="wifi_scan_always_available_summary">Let Google\'s location service and other apps scan for networks, even when Wi-Fi is off</string>
+    <!-- Preference title for option to install certificates -->
+    <string name="wifi_install_credentials">Install certificates</string>
+    <string name="wifi_scan_notify_text_location_on">To improve location accuracy and for other purposes, Google and other apps may scan for nearby networks, even when Wi-Fi is off. If you don\'t want this to happen, go to Advanced &gt; Scanning always available.</string>
+    <string name="wifi_scan_notify_text_location_off">Apps may scan for nearby networks, even when Wi-Fi is off. If you don\'t want this to happen, go to Advanced &gt; Scanning always available.</string>
+    <!-- Wifi scan always mode checkbox text -->
+    <string name="wifi_scan_notify_remember_choice">Don\'t show again</string>
     <!-- Setting title for setting the wifi sleep policy. Do we keep Wi-Fi active when the screen turns off? -->
-    <string name="wifi_setting_sleep_policy_title">Keep Wi-Fi on during sleep</string>
+    <string name="wifi_setting_sleep_policy_title">Keep Wi\u2011Fi on during sleep</string>
     <!-- Generic error message when the sleep policy could not be set. -->
     <string name="wifi_setting_sleep_policy_error">There was a problem changing the setting</string>
     <!-- Checkbox title for option to toggle suspend power optimizations -->
-    <string name="wifi_suspend_optimizations">Wi-Fi optimization</string>
+    <string name="wifi_suspend_optimizations">Wi\u2011Fi optimization</string>
     <!-- Checkbox summary for option to toggle suspend power optimizations -->
-    <string name="wifi_suspend_optimizations_summary">Minimize battery usage when Wi-Fi is on</string>
+    <string name="wifi_suspend_optimizations_summary">Minimize battery usage when Wi\u2011Fi is on</string>
     <!-- Action bar text message to manually add a wifi network [CHAR LIMIT=20]-->
     <string name="wifi_add_network">Add network</string>
     <!-- Header for the list of wifi networks-->
-    <string name="wifi_access_points">Wi-Fi networks</string>
+    <string name="wifi_access_points">Wi\u2011Fi networks</string>
     <!-- Menu option to do WPS Push Button [CHAR LIMIT=25]-->
     <string name="wifi_menu_wps_pbc">WPS Push Button</string>
     <!-- Content description for menu button in Wifi setup. Not shown on the screen. [CHAR LIMIT=NONE] -->
@@ -1308,7 +1334,7 @@
     <!-- Menu option to do WPS Pin Entry [CHAR LIMIT=25]-->
     <string name="wifi_menu_wps_pin">WPS Pin Entry</string>
     <!-- Menu option to launch Wi-Fi Direct settings [CHAR LIMIT=20]-->
-    <string name="wifi_menu_p2p">Wi-Fi Direct</string>
+    <string name="wifi_menu_p2p">Wi\u2011Fi Direct</string>
     <!-- Menu option to scan Wi-Fi networks -->
     <string name="wifi_menu_scan">Scan</string>
     <!-- Menu option to Wi-Fi advanced settings -->
@@ -1320,9 +1346,11 @@
     <!-- Menu option to modify a Wi-Fi network configuration -->
     <string name="wifi_menu_modify">Modify network</string>
     <!-- Wi-Fi settings. text displayed when Wi-Fi is off and network list is empty [CHAR LIMIT=50]-->
-    <string name="wifi_empty_list_wifi_off">To see available networks, turn Wi-Fi on.</string>
+    <string name="wifi_empty_list_wifi_off">To see available networks, turn Wi\u2011Fi on.</string>
     <!-- Wi-Fi settings. text displayed when Wi-Fi is on and network list is empty [CHAR LIMIT=50]-->
-    <string name="wifi_empty_list_wifi_on">Searching for Wi-Fi networks\u2026</string>
+    <string name="wifi_empty_list_wifi_on">Searching for Wi\u2011Fi networks\u2026</string>
+    <!-- Wifi Settings. text displayed when user has restriction DISALLOW_CONFIG_WIFI [CHAR LIMIT=NONE]-->
+    <string name="wifi_empty_list_user_restricted">You don\'t have permission to change the Wi\u2011Fi network.</string>
     <!-- Wi-Fi settings. title for setup other network button [CHAR LIMIT=35]-->
     <string name="wifi_other_network">Other network\u2026</string>
     <!-- Wi-Fi settings. content description for more button [CHAR LIMIT=50]-->
@@ -1330,23 +1358,23 @@
     <!-- Wi-Fi settings. wps menu title [CHAR LIMIT=25]-->
     <string name="wifi_setup_wps">Automatic setup (WPS)</string>
     <!-- Message informing that wifi is required during setup [CHAR LIMIT=NONE] -->
-    <string name="wifi_required_info_text">To complete setup, your tablet needs access to Wi-Fi. After setup, you can switch between mobile data and Wi-Fi.</string>
+    <string name="wifi_required_info_text">To complete setup, your tablet needs access to Wi\u2011Fi. After setup, you can switch between mobile data and Wi\u2011Fi.</string>
 
     <!-- Dialog for Access Points --> <skip />
     <!-- Label to show/hide advanced options -->
     <string name="wifi_show_advanced">Show advanced options</string>
     <!-- Title for the WPS setup dialog [CHAR LIMIT=50] -->
-    <string name="wifi_wps_setup_title">Wi-Fi Protected Setup</string>
+    <string name="wifi_wps_setup_title">Wi\u2011Fi Protected Setup</string>
     <!-- Message in WPS dialog at start up [CHAR LIMIT=150] -->
     <string name="wifi_wps_setup_msg">Starting WPS\u2026</string>
     <!-- Message in WPS dialog for PBC after start up [CHAR LIMIT=150] -->
-    <string name="wifi_wps_onstart_pbc">Press the Wi-Fi Protected Setup button on your router. It may be called \"WPS\" or contain this symbol:</string>
+    <string name="wifi_wps_onstart_pbc">Press the Wi\u2011Fi Protected Setup button on your router. It may be called \"WPS\" or contain this symbol:</string>
     <!-- Message in WPS dialog for PIN after start up [CHAR LIMIT=150] -->
-    <string name="wifi_wps_onstart_pin">Enter pin <xliff:g id="number">%1$s</xliff:g> on your Wi-Fi router. The setup can take up to two minutes to complete.</string>
+    <string name="wifi_wps_onstart_pin">Enter pin <xliff:g id="number">%1$s</xliff:g> on your Wi\u2011Fi router. The setup can take up to two minutes to complete.</string>
     <!-- Text displayed when WPS succeeds [CHAR LIMIT=150] -->
     <string name="wifi_wps_complete">WPS succeeded. Connecting to the network\u2026</string>
     <!-- Text displayed when Wi-Fi is connected through WPS [CHAR LIMIT=150] -->
-    <string name="wifi_wps_connected">Connected to Wi-Fi network <xliff:g id="network_name">%s</xliff:g></string>
+    <string name="wifi_wps_connected">Connected to Wi\u2011Fi network <xliff:g id="network_name">%s</xliff:g></string>
     <!-- Text displayed when WPS setup is in progress [CHAR LIMIT=150] -->
     <string name="wifi_wps_in_progress">WPS is already in progress and can take up to two minutes to complete</string>
     <!-- Text displayed when WPS fails to start [CHAR LIMIT=150] -->
@@ -1361,6 +1389,8 @@
     <string name="wifi_wps_failed_overlap">Another WPS session was detected. Please try again in a few minutes.</string>
     <!-- Label for the SSID of the network -->
     <string name="wifi_ssid">Network SSID</string>
+    <!-- Hint for a text field to enter the SSID of a hidden wifi network. [CHAR LIMIT=35] -->
+    <string name="wifi_ssid_hint">Enter the SSID</string>
     <!-- Label for the security of the connection -->
     <string name="wifi_security">Security</string>
     <!-- Label for the signal strength of the connection -->
@@ -1448,9 +1478,9 @@
     <!-- Do not translate.  Concise terminology for wifi with 802.1x EAP security -->
     <string name="wifi_security_eap">802.1x EAP</string>
 
-    <string name="wifi_mode">Mode</string>
-    <string name="wifi_mode_ibss">Ad-Hoc (IBSS) Network</string>
-    <string name="wifi_mode_ibss_short">Ad-Hoc</string>
+    <string name="wifi_scan_always_turnon_message">To improve location accuracy and for other purposes, <xliff:g id="app_name">%1$s</xliff:g> wants to turn on network scanning, even when Wi-Fi is off.\n\nAllow this for all apps that want to scan?</string>
+    <string name="wifi_scan_always_confirm_allow">Allow</string>
+    <string name="wifi_scan_always_confirm_deny">Deny</string>
 
     <!-- Button label to connect to a Wi-Fi network -->
     <string name="wifi_connect">Connect</string>
@@ -1467,42 +1497,32 @@
     <!-- Button label to dismiss the dialog -->
     <string name="wifi_cancel">Cancel</string>
     <!-- Button for skipping a step after having been warned of a potential concern [CHAR LIMIT=30] -->
-    <string name="wifi_skip_anyway" msgid="5205612884736051138">Skip anyway</string>
+    <string name="wifi_skip_anyway">Skip anyway</string>
     <!-- Button for going to the previous screen or step [CHAR LIMIT=20] -->
     <string name="wifi_dont_skip">Don\'t skip</string>
 
     <!-- Text warning about skipping Wi-Fi with a mobile connect (tablet) [CHAR LIMIT=NONE]-->
-    <string name="wifi_skipped_message" product="tablet" msgid="6518433975501257341">WARNING: You may incur extra carrier data charges.\n\nTablet setup can require significant network activity.</string>
+    <string name="wifi_skipped_message" product="tablet">WARNING: You may incur extra carrier data charges.\n\nTablet setup can require significant network activity.</string>
     <!-- Text warning about skipping Wi-Fi with a mobile connect (phone) [CHAR LIMIT=NONE]-->
-    <string name="wifi_skipped_message" product="default" msgid="4376150150678208848">WARNING: You may incur extra carrier data charges.\n\nPhone setup can require significant network activity.</string>
+    <string name="wifi_skipped_message" product="default">WARNING: You may incur extra carrier data charges.\n\nPhone setup can require significant network activity.</string>
     <!-- Text warning about skipping Wi-Fi without a mobile connect (tablet) [CHAR LIMIT=NONE] -->
-    <string name="wifi_and_mobile_skipped_message" product="tablet" msgid="5647058314212144925">WARNING: The tablet won\'t be able to verify that your software is up to date.</string>
+    <string name="wifi_and_mobile_skipped_message" product="tablet">WARNING: Until you have an internet connection, the tablet won\'t be able to verify that your software is up to date.</string>
     <!-- Text warning about skipping Wi-Fi without a mobile connect (phone) [CHAR LIMIT=NONE] -->
-    <string name="wifi_and_mobile_skipped_message" product="default" msgid="1288483646141987070">WARNING: The phone won\'t be able to verify that your software is up to date.</string>
+    <string name="wifi_and_mobile_skipped_message" product="default">WARNING: Until you have an internet connection, the phone won\'t be able to verify that your software is up to date.</string>
     <!-- Text alerting that Wi-Fi couldn't connect (tablet) [CHAR LIMIT=NONE] -->
-    <string name="wifi_connect_failed_message" product="tablet" msgid="2006689630582761529">The tablet was unable to connect to this Wi-Fi network.</string>
+    <string name="wifi_connect_failed_message" product="tablet">The tablet was unable to connect to this Wi\u2011Fi network.</string>
     <!-- Text alerting that Wi-Fi couldn't connect (phone) [CHAR LIMIT=NONE] -->
-    <string name="wifi_connect_failed_message" product="default" msgid="8220901976514642385">The phone was unable to connect to this Wi-Fi network.</string>
+    <string name="wifi_connect_failed_message" product="default">The phone was unable to connect to this Wi\u2011Fi network.</string>
 
     <!-- Wi-Fi Advanced Settings --> <skip />
     <!-- Wi-Fi settings screen, advanced, settings section.  This is a header shown above advanced wifi settings. -->
-    <string name="wifi_advanced_titlebar">Advanced Wi-Fi</string>
+    <string name="wifi_advanced_titlebar">Advanced Wi\u2011Fi</string>
     <!-- Wi-Fi settings screen, setting title for setting the band [CHAR LIMIT=50]-->
-    <string name="wifi_setting_frequency_band_title">Wi-Fi frequency band</string>
+    <string name="wifi_setting_frequency_band_title">Wi\u2011Fi frequency band</string>
     <!-- Wi-Fi settings screen, setting summary for setting the wifi frequency band [CHAR LIMIT=50]-->
     <string name="wifi_setting_frequency_band_summary">Specify the frequency range of operation</string>
     <!-- Wi-Fi settings screen, error message when the frequency band could not be set [CHAR LIMIT=50]. -->
     <string name="wifi_setting_frequency_band_error">There was a problem setting the frequency band.</string>
-    <!-- Wi-Fi settings screen, advanced, title of the item to show the Wi-Fi device's MAC address. -->
-    <string name="wifi_setting_countrycode_title">Wi-Fi region code</string>
-    <!-- Wi-Fi settings screen, setting summary for setting the wifi frequency band [CHAR LIMIT=50]-->
-    <string name="wifi_setting_countrycode_summary">Specify the region code for Wi-Fi</string>
-    <!-- Wi-Fi settings screen, error message when the frequency band could not be set [CHAR LIMIT=50]. -->
-    <string name="wifi_setting_countrycode_error">There was a problem setting the region code.</string>
-    <!-- Wi-Fi settings screen, advanced, title of the item to set the Wi-Fi priority. -->
-    <string name="wifi_setting_priority_title">Wi-Fi priority</string>
-    <!-- Wi-Fi settings screen, setting summary for setting the Wi-Fi priority-->
-    <string name="wifi_setting_priority_summary">Specify the priority of the Wi-Fi networks</string>
     <!-- Wi-Fi settings screen, advanced, title of the item to show the Wi-Fi device's MAC address. -->
     <string name="wifi_advanced_mac_address_title">MAC address</string>
     <!-- Title of the screen to adjust IP settings -->
@@ -1542,7 +1562,7 @@
 
     <!-- Wi-Fi p2p / Wi-Fi Direct settings -->
     <!-- Used in the 1st-level settings screen to launch Wi-fi Direct settings [CHAR LIMIT=25] -->
-    <string name="wifi_p2p_settings_title">Wi-Fi Direct</string>
+    <string name="wifi_p2p_settings_title">Wi\u2011Fi Direct</string>
     <string name="wifi_p2p_device_info">Device information</string>
     <string name="wifi_p2p_persist_network">Remember this connection</string>
     <!-- Menu option to discover peers-->
@@ -1574,7 +1594,7 @@
 
     <!-- Wifi AP settings-->
     <!-- Label for wifi tether checkbox. Toggles Access Point on/off -->
-    <string name="wifi_tether_checkbox_text">Portable Wi-Fi hotspot</string>
+    <string name="wifi_tether_checkbox_text">Portable Wi\u2011Fi hotspot</string>
     <!-- Summary text when turning hotspot on -->
     <string name="wifi_tether_starting">Turning hotspot on\u2026</string>
     <!-- Summary text when turning hotspot off -->
@@ -1582,11 +1602,11 @@
     <!-- Subtext for wifi tether checkbox on success -->
     <string name="wifi_tether_enabled_subtext">Portable hotspot <xliff:g id="network_ssid">%1$s</xliff:g> active</string>
     <!-- Subtext for wifi tether checkbox on failure -->
-    <string name="wifi_tether_failed_subtext">Portable Wi-Fi hotspot error</string>
+    <string name="wifi_tether_failed_subtext">Portable Wi\u2011Fi hotspot error</string>
     <!-- Used to open the ssid and security dialog for Wifi Access Point -->
-    <string name="wifi_tether_configure_ap_text">Set up Wi-Fi hotspot</string>
+    <string name="wifi_tether_configure_ap_text">Set up Wi\u2011Fi hotspot</string>
     <!-- Subtext on configuration preference to indicate SSID and security chosen -->
-    <string name="wifi_tether_configure_subtext"><xliff:g id="network_ssid">%1$s</xliff:g> <xliff:g id="network_security">%2$s</xliff:g> portable Wi-Fi hotspot</string>
+    <string name="wifi_tether_configure_subtext"><xliff:g id="network_ssid">%1$s</xliff:g> <xliff:g id="network_security">%2$s</xliff:g> portable Wi\u2011Fi hotspot</string>
     <!-- Default access point SSID used for tethering -->
     <string name="wifi_tether_configure_ssid_default">AndroidHotspot</string>
 
@@ -1718,10 +1738,6 @@
     <string name="lock_sounds_enable_title">Screen lock sound</string>
     <!-- Sound settings screen, setting check box label -->
     <string name="haptic_feedback_enable_title">Vibrate on touch</string>
-    <!-- Sound settings screen, setting check box label -->
-    <string name="volume_adjust_sounds_enable_title">Volume adjustment sound</string>
-    <!-- Sound settings screen, setting check box summary -->
-    <string name="volume_adjust_sounds_enable_summary">Play sound when adjusting volume with volume rocker</string>
     <!-- Sound settings screen, setting option name checkbox to enable/disable audio recording features that improve audio recording in noisy environments -->
     <string name="audio_record_proc_title">Noise cancellation</string>
     <!-- Volume description for media volume -->
@@ -1812,11 +1828,11 @@
     <string name="wallpaper_settings_fragment_title">Choose wallpaper from</string>
     <!-- Display settings screen, trigger for screen saver options -->
     <string name="screensaver_settings_title">Daydream</string>
-    <!-- Display settings screen, summary fragment for screen saver options, activated on sleep or docked -->
+    <!-- Display settings screen, summary fragment for screen saver options, activated when docked or asleep and charging -->
     <string name="screensaver_settings_summary_either_long">When docked or asleep and charging</string>
-    <!-- Dream settings screen, dialog option, activated on sleep or docked -->
+    <!-- Dream settings screen, dialog option, activated when docked or asleep and charging -->
     <string name="screensaver_settings_summary_either_short">Either</string>
-    <!-- Display settings screen, summary fragment for screen saver options, activated on sleep -->
+    <!-- Display settings screen, summary fragment for screen saver options, activated when asleep and charging -->
     <string name="screensaver_settings_summary_sleep">While charging</string>
     <!-- Display settings screen, summary fragment for screen saver options, activated when docked  -->
     <string name="screensaver_settings_summary_dock">While docked</string>
@@ -1961,7 +1977,7 @@
     <!-- About phone, status item title. The cell carrier that the user is connected to.  -->
     <string name="status_operator">Network</string>
     <!-- About phone, status item title.  The MAC address of the Wi-Fi network adapter. -->
-    <string name="status_wifi_mac_address">Wi-Fi MAC address</string>
+    <string name="status_wifi_mac_address">Wi\u2011Fi MAC address</string>
     <!-- About phone, status item title.  The bluetooth adapter's hardware address-->
     <string name="status_bt_address">Bluetooth address</string>
     <!-- About phone, status item title.  The hardware serial number. [CHAR LIMIT=30]-->
@@ -2151,6 +2167,10 @@
     <string name="carrier_enabled_summaryOff">APN disabled</string>
     <!-- Edit Beaerer Info of APN -->
     <string name="bearer">Bearer</string>
+    <!-- Edit Mvno Type Info of APN -->
+    <string name="mvno_type">MVNO type</string>
+    <!-- Edit Mvno Match Data Info of APN -->
+    <string name="mvno_match_data">MVNO value</string>
     <!-- Edit access point screen menu option to delete this APN -->
     <string name="menu_delete">Delete APN</string>
     <!-- APNs screen menu option to create a brand spanking new APN -->
@@ -2313,14 +2333,29 @@
     <!-- Wireless controls, item title to go into the network settings -->
     <string name="network_settings_title">Mobile networks</string>
 
+    <!-- Manage mobile plan [CHAR LIMIT=35]-->
+    <string name="manage_mobile_plan_title" translatable="true">Manage mobile plan</string>
+
+    <!-- The SIM operator is not known [CHAR_ LIMIT=50]-->
+    <string name="mobile_unknown_sim_operator" translatable="true">Uknown SIM operator</string>
+
+    <!-- There is no mobile provisiong website for the operator which is the firat parameter [CHAR_ LIMIT=50]-->
+    <string name="mobile_no_provisioning_url" translatable="true">%1$s has no known provisioning website</string>
+
+    <!-- Ask user to insert a SIM card [CHAR_ LIMIT=50]-->
+    <string name="mobile_insert_sim_card" translatable="true">Please insert SIM card and restart</string>
+
+    <!-- Ask user to connect to the internet [CHAR_ LIMIT=50]-->
+    <string name="mobile_connect_to_internet" translatable="true">Please connect to the internet</string>
+
     <!-- Security & location settings screen, section header for settings relating to location -->
     <string name="location_title">My Location</string>
     <!-- [CHAR LIMIT=30] Security & location settings screen, setting check box label for Google location service (cell ID, wifi, etc.) -->
-    <string name="location_network_based">Wi-Fi &amp; mobile network location</string>
+    <string name="location_network_based">Wi\u2011Fi &amp; mobile network location</string>
     <!-- [CHAR LIMIT=130] Security & location settings screen, setting summary for Google location service check box-->
     <string name="location_neighborhood_level">Let apps use Google\'s location service to estimate your location faster. Anonymous location data will be collected and sent to Google.</string>
     <!-- [CHAR LIMIT=130] Security & location settings screen, setting summary when Use wireless networks check box is selected, for wifi-only devices -->
-    <string name="location_neighborhood_level_wifi">Location determined by Wi-Fi</string>
+    <string name="location_neighborhood_level_wifi">Location determined by Wi\u2011Fi</string>
     <!-- [CHAR LIMIT=30] Security & location settings screen, setting check box label for GPS satellites -->
     <string name="location_gps">GPS satellites</string>
     <!-- [CHAR LIMIT=100] Security & location settings screen, setting check box summary for GPS satellites on a tablet -->
@@ -2454,10 +2489,6 @@
     <string name="lockpattern_settings_enable_summary">Must draw pattern to unlock screen</string>
     <!-- Security & location settings screen, setting check box title. This setting controls whether a visible green line is drawn as the user moves his finger around while drawing the unlock pattern.  If checked, this line is drawn.  If unchecked, there is nothing drawn so the user does not reveal his pattern while he unlocks the phone.-->
     <string name="lockpattern_settings_enable_visible_pattern_title">Make pattern visible</string>
-    <!-- Security & location settings screen, setting check box title. This setting controls whether a visible red line will be drawn after the user has drawn the unlock pattern incorrectly.  If checked, this line is drawn.  If unchecked, there is nothing drawn so the user does not reveal his pattern while he unlocks the phone.-->
-    <string name="lockpattern_settings_enable_error_path_title">Show pattern error</string>
-    <!-- Security & location settings screen, setting check box title. This setting controls whether the dots will be drawn when using the lockscreen pattern.-->
-    <string name="lockpattern_settings_enable_dots_title">Show pattern dots</string>
     <!-- Security & location settings screen, setting check box title. This setting controls whether tactile feedback will be produced when the user draws the pattern.-->
     <string name="lockpattern_settings_enable_tactile_feedback_title">Vibrate on touch</string>
     <!-- Security & location settings screen, setting check box title. This controls whether the device locks immediately when the power button is pressed. [CHAR LIMIT=28]-->
@@ -2604,6 +2635,8 @@
     <!-- Text for filter option in ManageApps screen to display all installed
     applications -->
     <string name="filter_apps_all">All</string>
+    <!-- [CHAR LIMIT=NONE] Text for filter option in ManageApps screen to display disabled apps -->
+    <string name="filter_apps_disabled">Disabled</string>
     <!-- Text for filter option in ManageApps screen to display third party
     applications only -->
     <string name="filter_apps_third_party">Downloaded</string>
@@ -2736,6 +2769,15 @@
     <string name="app_disable_notifications_dlg_text">
         If you turn off notifications for this app, you may miss important alerts and updates.
     </string>
+
+    <!-- App Ops Settings --> <skip />
+    <!-- [CHAR LIMIT=NONE] App ops settings title, on main settings screen. If clicked, the user is taken to a settings screen for app operations -->
+    <string name="app_ops_settings">App ops</string>
+    <!-- [CHAR LIMIT=NONE] Time label for an operation that is currently running. -->
+    <string name="app_ops_running">Running</string>
+    <!-- [CHAR LIMIT=NONE] Time label for an operation that has never executed. -->
+    <string name="app_ops_never_used">(Never used)</string>
+
     <!-- [CHAR LIMIT=25] Services settings screen, setting option name for the user to go to the screen to view app storage use -->
     <string name="storageuse_settings_title">Storage use</string>
     <!-- Services settings screen, setting option summary for the user to go to the screen to app storage use -->
@@ -2927,6 +2969,10 @@
     <string name="user_dict_settings_add_shortcut_option_name">Shortcut:</string>
     <!-- User dictionary settings. Label to put before the language field. [CHAR LIMIT=20] -->
     <string name="user_dict_settings_add_locale_option_name">Language:</string>
+    <!-- User dictionary settings. Hint for the text field to type the word to add to the user dictionary. [CHAR LIMIT=35] -->
+    <string name="user_dict_settings_add_word_hint">Type a word</string>
+    <!-- User dictionary settings. Hint for the text field to type the optional shortcut to add to the user dictionary. [CHAR LIMIT=35] -->
+    <string name="user_dict_settings_add_shortcut_hint">Optional shortcut</string>
     <!-- User dictionary settings. The title of the dialog to edit an existing word in the user dictionary. -->
     <string name="user_dict_settings_edit_dialog_title">Edit word</string>
     <!-- User dictionary settings. The title of the context menu item to edit the current word -->
@@ -3013,10 +3059,14 @@
     <string name="development_settings_title">Developer options</string>
     <!-- Development Settings summary.  The summary of the item to take the user to Development settings.  Development settings are settings meant for application developers. -->
     <string name="development_settings_summary">Set options for app development</string>
-    <!-- Setting checkbox title for Whether to enable Android debugging support on the phone. -->
-    <string name="enable_adb">Android debugging</string>
-    <!-- Setting checkbox summary for Whether to enable Android debugging support on the phone -->
-    <string name="enable_adb_summary">Allow Android debug mode, the adb interface on USB (or on network)</string>
+    <!-- Setting checkbox title for Whether to enable USB debugging support on the phone. -->
+    <!-- Error message for users that aren't allowed to modify developer options [CHAR LIMIT=none] -->
+    <string name="development_settings_not_available">Developer options are not available for this user</string>
+    <string name="enable_adb">USB debugging</string>
+    <!-- Setting checkbox summary for Whether to enable USB debugging support on the phone -->
+    <string name="enable_adb_summary">Debug mode when USB is connected</string>
+    <!-- Setting title to revoke secure USB debugging authorizations -->
+    <string name="clear_adb_keys">Revoke USB debugging authorizations</string>
     <!-- [CHAR LIMIT=NONE] Setting checkbox title for Whether to include bug report item in power menu. -->
     <string name="bugreport_in_power">Power menu bug reports</string>
     <!-- [CHAR LIMIT=NONE] Setting checkbox summary for Whether to include bug report item in power -->
@@ -3033,6 +3083,8 @@
     <string name="adb_warning_title">Allow USB debugging?</string>
     <!-- Warning text to user about the implications of enabling USB debugging -->
     <string name="adb_warning_message">USB debugging is intended for development purposes only. Use it to copy data between your computer and your device, install apps on your device without notification, and read log data.</string>
+    <!-- Message of dialog confirming that user wants to revoke access to adb from all computers they have authorized -->
+    <string name="adb_keys_warning_message">Revoke access to USB debugging from all computers you\'ve previously authorized?</string>
     <!-- Title of warning dialog about the implications of enabling developer settings -->
     <string name="dev_settings_warning_title">Allow development settings?</string>
     <!-- Warning text to user about the implications of enabling USB debugging -->
@@ -3059,15 +3111,6 @@
     <string name="enforce_read_external_confirm_title" product="default">Protect SD card?</string>
     <!-- Message of dialog confirming that user wants to protect external storage. [CHAR LIMIT=NONE] -->
     <string name="enforce_read_external_confirm_message" product="default">When SD card is protected, apps must request permission to read data from external storage.\n\nSome apps may not work until updated by their developers.</string>
-
-    <!-- Setting checkbox title for root access -->
-    <string name="root_access">Root access</string>
-    <string name="root_access_warning_title">Allow root access?</string>
-    <string name="root_access_warning_message">Allowing applications to request root access is very dangerous and could compromise the security of your system!</string>
-    <string name="root_access_none">Disabled</string>
-    <string name="root_access_apps">Apps only</string>
-    <string name="root_access_adb">ADB only</string>
-    <string name="root_access_all">Apps and ADB</string>
 
     <!-- Title for the screen that lets the user choose a gadget to add to the home screen
          (or other screens that can host gadgets).  Note to translators: we're still determining
@@ -3149,14 +3192,10 @@
         screen magnification on app transitions</string>
     <!-- Title for the accessibility preference to power button to end a call. [CHAR LIMIT=35] -->
     <string name="accessibility_power_button_ends_call_prerefence_title">Power button ends call</string>
-    <!-- Title for the accessibility preference to home button to answers a call. [CHAR LIMIT=35] -->
-    <string name="accessibility_home_button_answers_call_prerefence_title">Home button answers call</string>
     <!-- Title for the accessibility preference to speak passwords. [CHAR LIMIT=35] -->
     <string name="accessibility_toggle_speak_password_preference_title">Speak passwords</string>
     <!-- Title for accessibility preference to choose long-press delay i.e. timeout before it is detected. [CHAR LIMIT=35] -->
     <string name="accessibility_long_press_timeout_preference_title">Touch &amp; hold delay</string>
-    <!-- Title for accessibility preference to install accessibility scripts from Google. [CHAR LIMIT=35] -->
-    <string name="accessibility_toggle_script_injection_preference_title">Enhance web accessibility</string>
 
     <!-- Title for accessibility menu item to lauch a settings activity. [CHAR LIMIT=15] -->
     <string name="accessibility_menu_item_settings">Settings</string>
@@ -3166,40 +3205,24 @@
     <!-- Summary for the disabled state of an accessiblity feature. [CHAR LIMIT=10] -->
     <string name="accessibility_feature_state_off">Off</string>
 
-    <!-- Summary for the allowed state of script injection. [CHAR LIMIT=15] -->
-    <string name="accessibility_script_injection_allowed">Allowed</string>
-    <!-- Summary for the disallowed state of script injection. [CHAR LIMIT=15] -->
-    <string name="accessibility_script_injection_disallowed">Not allowed</string>
-
-    <!-- Title for the dialog button to allow script injection. [CHAR LIMIT=15] -->
-    <string name="accessibility_script_injection_button_allow">Allow</string>
-    <!-- Title for the dialog button to disallow script injection. [CHAR LIMIT=15] -->
-    <string name="accessibility_script_injection_button_disallow">Don\'t allow</string>
-
-     <!-- Title for a warning message about security implications of enabling an accessibility service,
-         displayed as a dialog message when the user selects to enable an accessibility service (tablet). [CHAR LIMIT=NONE] -->
-    <string name="accessibility_service_security_warning_title">Use
+    <!-- Title for a warning about security implications of enabling an accessibility
+         service. [CHAR LIMIT=NONE] -->
+    <string name="enable_service_title">Use
          <xliff:g id="service" example="TalkBack">%1$s</xliff:g>?</string>
-    <!-- Summary for a warning message about security implications of enabling an accessibility service,
-         displayed as a dialog message when the user selects to enable an accessibility service (tablet). [CHAR LIMIT=NONE] -->
-    <string name="accessibility_service_security_warning_summary" product="tablet">
-            <xliff:g id="accessibility_service_name">%1$s</xliff:g> can
-            collect all of the text you type, except passwords. This includes personal data such as credit card
-            numbers. It can also collect data about your interactions with the tablet.</string>
-    <!-- Summary for a warning message about security implications of enabling an accessibility service,
-         displayed as a dialog message when the user selects to enable an accessibility service (phone). [CHAR LIMIT=NONE] -->
-    <string name="accessibility_service_security_warning_summary" product="default">
-            <xliff:g id="accessibility_service_name">%1$s</xliff:g> can
-            collect all of the text you type, except passwords. This includes personal data such as credit card
-            numbers. It can also collect data about your interactions with the phone.</string>
+    <!-- Title for the list of capabilities of an accessibility service. -->
+    <string name="capabilities_list_title"><xliff:g id="service" example="TalkBack">%1$s</xliff:g>
+        needs to:</string>
 
-    <!-- Title for a warning about disabling an accessibility service displayed as a dialog message when the user
-         selects to disable that service. This avoids accidental disabling. [CHAR LIMIT=NONE] -->
-    <string name="accessibility_service_disable_warning_title">Stop
-         <xliff:g id="service" example="TalkBack">%1$s</xliff:g>?</string>
-    <!-- Summary for a warning about disabling accessibility service displayed as a dialog message when the user
-         selects to disable that service. This avoids accidental disabling. [CHAR LIMIT=NONE] -->
-    <string name="accessibility_service_disable_warning_summary">Touching OK will
+    <!-- Title for the capability of an accessibility service to receive events and keys. -->
+    <string name="capability_title_receiveAccessibilityEvents">Observe your actions</string>
+    <!-- Description for the capability of an accessibility service to receive events and keys. -->
+    <string name="capability_desc_receiveAccessibilityEvents">Receive notifications when you\'re
+        interacting with an app.</string>
+
+    <!-- Title for a warning about disabling an accessibility service. [CHAR LIMIT=NONE] -->
+    <string name="disable_service_title">Stop <xliff:g id="service" example="TalkBack">%1$s</xliff:g>?</string>
+    <!-- Message for a warning about disabling accessibility service. [CHAR LIMIT=NONE] -->
+    <string name="disable_service_message">Touching OK will
         stop <xliff:g id="service" example="TalkBack">%1$s</xliff:g>.</string>
 
     <!-- Title for the prompt shown as a placeholder if no accessibility serivices are installed. [CHAR LIMIT=50] -->
@@ -3213,11 +3236,6 @@
     <string name="accessibility_service_no_apps_message">TalkBack provides spoken feedback to
          help blind and low-vision users. Do you want to install it for free from Android
          Market?</string>
-
-    <!-- Warning message about security implications of downloading accessibility scripts,
-         displayed as a dialog message when the user selects to enable script downloading. [CHAR LIMIT=NONE] -->
-    <string name="accessibility_script_injection_security_warning_summary">Do you want apps to
-        install scripts from Google that make their web content more accessible?</string>
 
     <!-- Default description for an accessibility serivice if the latter doesn't provide one. [CHAR LIMIT=NONE] -->
     <string name="accessibility_service_default_description">No description provided.</string>
@@ -3251,7 +3269,7 @@
     <!-- [CHAR LIMIT=25] Label for battery stats gps on state graph -->
     <string name="battery_stats_gps_on_label">GPS on</string>
     <!-- [CHAR LIMIT=25] Label for battery stats wifi running state graph -->
-    <string name="battery_stats_wifi_running_label">Wi-Fi</string>
+    <string name="battery_stats_wifi_running_label">Wi\u2011Fi</string>
     <!-- [CHAR LIMIT=25] Label for battery stats wake lock state graph -->
     <string name="battery_stats_wake_lock_label">Awake</string>
     <!-- [CHAR LIMIT=25] Label for battery stats phone signal strength graph -->
@@ -3261,9 +3279,9 @@
     <!-- CPU awake time title -->
     <string name="awake">Device awake time</string>
     <!-- Wifi on time -->
-    <string name="wifi_on_time">Wi-Fi on time</string>
+    <string name="wifi_on_time">Wi\u2011Fi on time</string>
     <!-- Bluetooth on time -->
-    <string name="bluetooth_on_time">Wi-Fi on time</string>
+    <string name="bluetooth_on_time">Wi\u2011Fi on time</string>
     <!-- Application name and battery usage percentage -->
     <string name="usage_name_percent"><xliff:g id="name">%1$s</xliff:g>" - "
             <xliff:g id="number" example="30">%2$s</xliff:g><xliff:g id="percent" example="%">%%</xliff:g></string>
@@ -3283,7 +3301,7 @@
     <!-- Label for power consumed by the screen -->
     <string name="power_screen">Screen</string>
     <!-- Label for power consumed by Wi-Fi -->
-    <string name="power_wifi">Wi-Fi</string>
+    <string name="power_wifi">Wi\u2011Fi</string>
     <!-- Label for power consumed by Bluetooth -->
     <string name="power_bluetooth">Bluetooth</string>
     <!-- Label for power consumed by Cell idle -->
@@ -3304,7 +3322,7 @@
     <!-- Label for GPS usage time -->
     <string name="usage_type_gps">GPS</string>
     <!-- [CHAR LIMIT=25] Label for WIFI usage time -->
-    <string name="usage_type_wifi_running">Wi-Fi running</string>
+    <string name="usage_type_wifi_running">Wi\u2011Fi running</string>
     <!-- Label for Phone usage time -->
     <string name="usage_type_phone" product="tablet">Tablet</string>
     <!-- Label for Phone usage time -->
@@ -3330,7 +3348,7 @@
     <!-- Label for display settings -->
     <string name="battery_action_display">Screen settings</string>
     <!-- Label for wifi settings -->
-    <string name="battery_action_wifi">Wi-Fi settings</string>
+    <string name="battery_action_wifi">Wi\u2011Fi settings</string>
     <!-- Label for bluetooth settings -->
     <string name="battery_action_bluetooth">Bluetooth settings</string>
 
@@ -3353,9 +3371,9 @@
     <string name="battery_sugg_display">Reduce the screen brightness and/or screen timeout</string>
 
     <!-- Description for wifi connectivity -->
-    <string name="battery_desc_wifi">Battery used by Wi-Fi</string>
+    <string name="battery_desc_wifi">Battery used by Wi\u2011Fi</string>
     <!-- Suggestion for wifi connectivity power drain -->
-    <string name="battery_sugg_wifi">Turn off Wi-Fi when not using it or when it isn\'t available</string>
+    <string name="battery_sugg_wifi">Turn off Wi\u2011Fi when not using it or when it isn\'t available</string>
 
     <!-- Description for bluetooth power consumption detail -->
     <string name="battery_desc_bluetooth">Battery used by Bluetooth</string>
@@ -3460,6 +3478,9 @@
     all the text that will be spoken, including personal data like passwords and credit
     card numbers. It comes from the <xliff:g id="tts_plugin_engine_name">%s</xliff:g> engine.
     Enable the use of this speech synthesis engine?</string>
+    <!-- Warning message about required internet conectivity for TTS synthesis, displayed as a dialog
+         message when the user selects to play an example for network only locale and there's no internet connectivity. -->
+    <string name="tts_engine_network_required">This language requires a working network connection for text-to-speech output.</string>
     <!-- On main TTS Settings screen, text for divider under which all TTS engines are listed -->
     <string name="tts_engines_section">Engines</string>
     <!-- On main TTS Settings screen, text preceded by the TTS engine name, clicking this button will launch the engine settings -->
@@ -3504,10 +3525,10 @@
 
     <!-- Power Control Widget -->
     <string name="gadget_title">Power control</string>
-    <string name="gadget_toggle_wifi">Updating Wi-Fi setting</string>
+    <string name="gadget_toggle_wifi">Updating Wi\u2011Fi setting</string>
     <string name="gadget_toggle_bluetooth">Updating Bluetooth setting</string>
     <!-- Template for gadget toggle button description. Populated examples are "Wi-Fi off" or "Wi-Fi turning on". -->
-    <string name="gadget_state_template"><xliff:g name="feature" example="Wi-Fi">%1$s</xliff:g> <xliff:g name="state" example="off">%2$s</xliff:g></string>
+    <string name="gadget_state_template"><xliff:g name="feature" example="Wi\u2011Fi">%1$s</xliff:g> <xliff:g name="state" example="off">%2$s</xliff:g></string>
     <!-- Gadget value used to describe on state. -->
     <string name="gadget_state_on">on</string>
     <!-- Gadget value used to describe off state. -->
@@ -3517,7 +3538,7 @@
     <!-- Gadget value used to describe turning off state. -->
     <string name="gadget_state_turning_off">turning off</string>
     <!-- Spoken description for the Wi-Fi power control gadget. -->
-    <string name="gadget_wifi">Wi-Fi</string>
+    <string name="gadget_wifi">Wi\u2011Fi</string>
     <!-- Spoken description for the Bluetooth power control gadget. -->
     <string name="gadget_bluetooth">Bluetooth</string>
     <!-- Spoken description for the GPS power control gadget. -->
@@ -3556,6 +3577,12 @@
     <string name="trusted_credentials">Trusted credentials</string>
     <!-- Summary of preference to display trusted credentials (aka CA certificates) [CHAR LIMIT=NONE] -->
     <string name="trusted_credentials_summary">Display trusted CA certificates</string>
+    <!-- Title of preference of what type of credential storage this device has: hardware or software [CHAR LIMIT=30] -->
+    <string name="credential_storage_type">Storage type</string>
+    <!-- Summary text for preference showing what type of credential storage this device has when it is stored in a hardware-backed storage (as opposed to "software only") [CHAR LIMIT=NONE] -->
+    <string name="credential_storage_type_hardware">Hardware-backed</string>
+    <!-- Summary text for preference showing what type of credential storage this device has when it is stored in software only (as opposed to "hardware-backed") [CHAR LIMIT=NONE] -->
+    <string name="credential_storage_type_software">Software only</string>
 
     <!-- Message to draw an unlock pattern when installing credentials -->
     <string name="credentials_install_gesture_prompt">Draw your unlock pattern</string>
@@ -3603,7 +3630,7 @@
     <!-- Backup data menu title -->
     <string name="backup_data_title">Back up my data</string>
     <!-- Summary text of the "back up data" setting -->
-    <string name="backup_data_summary">Back up app data, Wi-Fi passwords, and other settings to Google servers</string>
+    <string name="backup_data_summary">Back up app data, Wi\u2011Fi passwords, and other settings to Google servers</string>
     <!-- Configure backup account options menu title [CHAR LIMIT=25]-->
     <string name="backup_configure_account_title">Backup account</string>
     <!-- Default summary text of the "Configure backup account" setting [CHAR LIMIT=80]-->
@@ -3630,7 +3657,7 @@
     <!-- Dialog title for confirmation to erase backup data from server -->
     <string name="backup_erase_dialog_title"></string>
     <!-- Dialog title for confirmation to erase backup data from server -->
-    <string name="backup_erase_dialog_message">Stop backing up your Wi-Fi passwords, bookmarks, other settings, and app data, plus erase all copies on Google servers?</string>
+    <string name="backup_erase_dialog_message">Stop backing up your Wi\u2011Fi passwords, bookmarks, other settings, and app data, plus erase all copies on Google servers?</string>
 
     <!-- Device admin settings screen --><skip />
     <!-- Device admin settings activity title -->
@@ -3673,28 +3700,24 @@
          [CHAR LIMIT=40] -->
     <string name="sound_category_system_title">System</string>
 
-    <!-- Category title for headset specific Settings.
-         [CHAR LIMIT=40] -->
-    <string name="headset_category_title">Headset</string>
-
     <!-- Wifi Setup For Setup Wizard with XL screen -->
     <!-- Title shown in Wifi Setup Wizard with XL screen -->
-    <string name="wifi_setup_title">Wi-Fi setup</string>
+    <string name="wifi_setup_title">Wi\u2011Fi setup</string>
     <!-- Title shown in Wifi Setup Wizard with XL screen when
          a user is configuring password for a network.
          The argument should be the name of the network.
          [CHAR LIMIT=50] -->
-    <string name="wifi_setup_title_editing_network">Connect to Wi-Fi network <xliff:g id="network_name" example="Happy Mobile">%s</xliff:g></string>
+    <string name="wifi_setup_title_editing_network">Connect to Wi\u2011Fi network <xliff:g id="network_name" example="Happy Mobile">%s</xliff:g></string>
     <!-- Title shown in Wifi Setup For Setup Wizard with XL screen when
          the device is connecting a network the user specified.
          The argument should be the name of the network.
          [CHAR LIMIT=50] -->
-    <string name="wifi_setup_title_connecting_network">Connecting to Wi-Fi network <xliff:g id="network_name" example="Happy Mobile">%s</xliff:g>\u2026</string>
+    <string name="wifi_setup_title_connecting_network">Connecting to Wi\u2011Fi network <xliff:g id="network_name" example="Happy Mobile">%s</xliff:g>\u2026</string>
     <!-- Title shown in Wifi Setup For Setup Wizard with XL screen when
          the device successfully connected to a network the user specified.
          The argument should be the name of the network.
          [CHAR LIMIT=50] -->
-    <string name="wifi_setup_title_connected_network">Connected to Wi-Fi network <xliff:g id="network_name" example="Happy Mobile">%s</xliff:g></string>
+    <string name="wifi_setup_title_connected_network">Connected to Wi\u2011Fi network <xliff:g id="network_name" example="Happy Mobile">%s</xliff:g></string>
     <!-- Title shown in Wifi Setup For Setup Wizard with XL screen when
          a user is adding a network.
          [CHAR LIMIT=50] -->
@@ -3770,11 +3793,11 @@
     <!-- Message shown when users select EAP in Wi-Fi settings for SetupWizard,
          saying EAP can't be configured in SetupWizard flow.
          [CHAR LIMIT=NONE] -->
-    <string name="wifi_setup_eap_not_supported">You can\'t configure an EAP Wi-Fi connection during setup. After setup, you can do that in Settings &gt; Wireless &amp; networks.</string>
+    <string name="wifi_setup_eap_not_supported">You can\'t configure an EAP Wi\u2011Fi connection during setup. After setup, you can do that in Settings &gt; Wireless &amp; networks.</string>
     <!-- Message shown when the device is connecting a network [CHAR LIMIT=NONE] -->
     <string name="wifi_setup_description_connecting">Connecting can take a few minutes\u2026</string>
     <!-- Message shown when the device is connected to a network [CHAR LIMIT=NONE] -->
-    <string name="wifi_setup_description_connected">Touch <b>Next</b> to continue with setup.\n\nTouch <b>Back</b> to connect to a different Wi-Fi network.</string>
+    <string name="wifi_setup_description_connected">Touch <b>Next</b> to continue with setup.\n\nTouch <b>Back</b> to connect to a different Wi\u2011Fi network.</string>
 
     <!-- Do not translate. This is a stub which will be removed soon. -->
     <string name="time_zone_auto_stub" translatable="false">Select Time Zone</string>
@@ -3926,6 +3949,9 @@
     <!-- Preference category for drawing debugging development settings. [CHAR LIMIT=25] -->
     <string name="debug_drawing_category">Drawing</string>
 
+    <!-- Preference category for hardware accelerated drawing debugging development settings. [CHAR LIMIT=50] -->
+    <string name="debug_hw_drawing_category">Hardware accelerated rendering</string>
+
     <!-- Preference category for monitoring debugging development settings. [CHAR LIMIT=25] -->
     <string name="debug_monitoring_category">Monitoring</string>
 
@@ -3970,18 +3996,6 @@
     <!-- UI debug setting: disable use of overlays summary [CHAR LIMIT=50] -->
     <string name="disable_overlays_summary">Always use GPU for screen compositing</string>
 
-    <!-- UI debug setting: enable low-level traces? [CHAR LIMIT=25] -->
-    <string name="enable_traces_title">Enable traces</string>
-    <!-- UI debug setting: title for dialog to enable low-level traces [CHAR LIMIT=25] -->
-    <string name="enable_traces_dialog_title">Select enabled traces</string>
-
-    <!-- UI debug setting: enable low-level traces, none enabled summary [CHAR LIMIT=NONE] -->
-    <string name="enable_traces_summary_none">No traces currently enabled</string>
-    <!-- UI debug setting: enable low-level traces, some number enabled summary [CHAR LIMIT=NONE] -->
-    <string name="enable_traces_summary_num"><xliff:g id="num">%1$d</xliff:g> traces currently enabled</string>
-    <!-- UI debug setting: enable low-level traces, all enabled summary [CHAR LIMIT=NONE] -->
-    <string name="enable_traces_summary_all">All traces currently enabled</string>
-
     <!-- UI debug setting: enable various types of OpenGL traces [CHAR LIMIT=25] -->
     <string name="enable_opengl_traces_title">Enable OpenGL traces</string>
 
@@ -4005,10 +4019,11 @@
     <!-- UI debug setting: force anti-aliasing summary [CHAR LIMIT=50] -->
     <string name="force_msaa_summary">Enable 4x MSAA in OpenGL ES 2.0 apps</string>
 
+    <!-- UI debug setting: show when non-rectangular clip operations are used [CHAR LIMIT=50] -->
+    <string name="show_non_rect_clip">Debug non-rectangular clip operations</string>
+
     <!-- UI debug setting: profile time taken by hardware acceleration to render apps [CHAR LIMIT=25] -->
     <string name="track_frame_time">Profile GPU rendering</string>
-    <!-- UI debug setting: profile hardware acceleration summary [CHAR LIMIT=50] -->
-    <string name="track_frame_time_summary">Measure rendering time in adb shell dumpsys gfxinfo</string>
 
     <!-- UI debug setting: scaling factor for window animations [CHAR LIMIT=25] -->
     <string name="window_animation_scale_title">Window animation scale</string>
@@ -4040,6 +4055,11 @@
     <string name="show_all_anrs_summary">Show App Not Responding dialog
         for background apps</string>
 
+    <!-- UI debug setting: use experimental WebView [CHAR LIMIT=25] -->
+    <string name="experimental_webview">Use Experimental WebView</string>
+    <!-- UI debug setting: use experimental WebView summary [CHAR LIMIT=50] -->
+    <string name="experimental_webview_summary">Apps will use the newest (beta) WebView</string>
+
     <!-- Activity title for network data usage summary. [CHAR LIMIT=25] -->
     <string name="data_usage_summary_title">Data usage</string>
     <!-- Title for option to pick visible time range from a list available usage periods. [CHAR LIMIT=25] -->
@@ -4051,7 +4071,7 @@
     <!-- Title for checkbox menu option to show 4G mobile data usage separate from other mobile data usage. [CHAR LIMIT=26] -->
     <string name="data_usage_menu_split_4g">Separate 4G usage</string>
     <!-- Title for checkbox menu option to show Wi-Fi data usage. [CHAR LIMIT=26] -->
-    <string name="data_usage_menu_show_wifi">Show Wi-Fi usage</string>
+    <string name="data_usage_menu_show_wifi">Show Wi\u2011Fi usage</string>
     <!-- Title for checkbox menu option to show Ethernet data usage. [CHAR LIMIT=26] -->
     <string name="data_usage_menu_show_ethernet">Show Ethernet usage</string>
     <!-- Title for menu option to configure metered networks. [CHAR LIMIT=26] -->
@@ -4082,10 +4102,10 @@
     <!-- Checkbox label that will disable 2G-3G network data connection when user-defined limit is reached. [CHAR LIMIT=26] -->
     <string name="data_usage_disable_3g_limit">Set 2G-3G data limit</string>
     <!-- Checkbox label that will disable Wi-Fi network data connection when user-defined limit is reached. [CHAR LIMIT=26] -->
-    <string name="data_usage_disable_wifi_limit">Set Wi-Fi data limit</string>
+    <string name="data_usage_disable_wifi_limit">Set Wi\u2011Fi data limit</string>
 
     <!-- Tab title for showing Wi-Fi data usage. [CHAR LIMIT=10] -->
-    <string name="data_usage_tab_wifi">Wi-Fi</string>
+    <string name="data_usage_tab_wifi">Wi\u2011Fi</string>
     <!-- Tab title for showing Ethernet data usage. [CHAR LIMIT=10] -->
     <string name="data_usage_tab_ethernet">Ethernet</string>
     <!-- Tab title for showing combined mobile data usage. [CHAR LIMIT=10] -->
@@ -4154,11 +4174,11 @@
     <!-- Title of dialog shown before user restricts background data usage. [CHAR LIMIT=48] -->
     <string name="data_usage_restrict_background_title">Restrict background data?</string>
     <!-- Body of dialog shown before user restricts background data usage. [CHAR LIMIT=NONE] -->
-    <string name="data_usage_restrict_background">If you restrict background mobile data, some apps and services won\'t work unless you\'re connected to a Wi-Fi network.</string>
+    <string name="data_usage_restrict_background">If you restrict background mobile data, some apps and services won\'t work unless you\'re connected to a Wi\u2011Fi network.</string>
     <!-- Body of dialog shown before user restricts background data usage. This is for multiuser tablets. [CHAR LIMIT=NONE] -->
-    <string name="data_usage_restrict_background_multiuser" product="tablet">If you restrict background mobile data, some apps and services won\'t work unless you\'re connected to a Wi-Fi network.\n\nThis setting affects all users on this tablet.</string>
+    <string name="data_usage_restrict_background_multiuser" product="tablet">If you restrict background mobile data, some apps and services won\'t work unless you\'re connected to a Wi\u2011Fi network.\n\nThis setting affects all users on this tablet.</string>
     <!-- Body of dialog shown before user restricts background data usage. This is for multiuser phones. [CHAR LIMIT=NONE] -->
-    <string name="data_usage_restrict_background_multiuser" product="default">If you restrict background mobile data, some apps and services won\'t work unless you\'re connected to a Wi-Fi network.\n\nThis setting affects all users on this phone.</string>
+    <string name="data_usage_restrict_background_multiuser" product="default">If you restrict background mobile data, some apps and services won\'t work unless you\'re connected to a Wi\u2011Fi network.\n\nThis setting affects all users on this phone.</string>
 
     <!-- Label displaying current network data usage warning threshold. [CHAR LIMIT=18] -->
     <string name="data_usage_sweep_warning"><font size="21"><xliff:g id="number" example="128">^1</xliff:g></font> <font size="9"><xliff:g id="unit" example="KB">^2</xliff:g></font>\n<font size="12">warning</font></string>
@@ -4182,13 +4202,13 @@
     <!-- Dialog title for selecting metered networks. [CHAR LIMIT=25] -->
     <string name="data_usage_metered_title">Mobile hotspots</string>
     <!-- Dialog body for selecting paid networks. [CHAR LIMIT=NONE] -->
-    <string name="data_usage_metered_body">Select the Wi-Fi networks which are mobile hotspots.  Apps can be restricted from using these networks when in the background.  Apps may also warn before using these networks for large downloads.</string>
+    <string name="data_usage_metered_body">Select the Wi\u2011Fi networks which are mobile hotspots.  Apps can be restricted from using these networks when in the background.  Apps may also warn before using these networks for large downloads.</string>
     <!-- Header for list of mobile networks. [CHAR LIMIT=32] -->
     <string name="data_usage_metered_mobile">Mobile networks</string>
     <!-- Header for list of Wi-Fi networks. [CHAR LIMIT=32] -->
-    <string name="data_usage_metered_wifi">Wi-Fi networks</string>
+    <string name="data_usage_metered_wifi">Wi\u2011Fi networks</string>
     <!-- Body text prompting user to enable Wi-Fi to configure metered networks. [CHAR LIMIT=64] -->
-    <string name="data_usage_metered_wifi_disabled">To select mobile hotspots, turn Wi-Fi on.</string>
+    <string name="data_usage_metered_wifi_disabled">To select mobile hotspots, turn Wi\u2011Fi on.</string>
 
     <!-- Button at the bottom of the CryptKeeper screen to make an emergency call. -->
     <string name="cryptkeeper_emergency_call">Emergency call</string>
@@ -4320,32 +4340,48 @@
 
     <!-- User settings screen title [CHAR LIMIT=25] -->
     <string name="user_settings_title">Users</string>
-    <!-- User settings section title for details about you [CHAR LIMIT=25] -->
-    <string name="user_you_section">You</string>
-    <!-- User settings user list section header [CHAR LIMIT=30] -->
-    <string name="user_list_title">Other users</string>
-    <!-- User settings add user menu [CHAR LIMIT=20] -->
-    <string name="user_add_user_menu">Add user</string>
-    <!-- User summary to indicate that user is currently active in the background [CHAR LIMIT=100] -->
-    <string name="user_summary_active">Active</string>
-    <!-- User summary to indicate that user is currently inactive in the background [CHAR LIMIT=100] -->
-    <string name="user_summary_inactive">Not active</string>
+    <!-- User settings header for list of users and profiles [CHAR LIMIT=40] -->
+    <string name="user_list_title">Users &amp; profiles</string>
+    <!-- User settings add user menu [CHAR LIMIT=35] -->
+    <string name="user_add_user_menu">Add user or profile</string>
+    <!-- User settings summary for a restricted profile [CHAR LIMIT=50] -->
+    <string name="user_summary_restricted_profile">Restricted profile</string>
+    <!-- User settings warning that restricted profile needs a screen lock [CHAR LIMIT=NONE] -->
+    <string name="user_need_lock_message">Before you can create a restricted profile, you\'ll need to set up a screen lock to protect your apps and personal data.</string>
+    <!-- User settings dialog button to set screen lock [CHAR LIMIT=25] -->
+    <string name="user_set_lock_button">Set lock</string>
     <!-- User summary to indicate that user is currently not set up [CHAR LIMIT=100] -->
     <string name="user_summary_not_set_up">Not set up</string>
+    <!-- User summary to indicate that restricted profile is currently not set up [CHAR LIMIT=100] -->
+    <string name="user_summary_restricted_not_set_up">Not set up - Restricted profile</string>
     <!-- User information string to represent the owner of the device [CHAR LIMIT=25] -->
     <string name="user_owner">Owner</string>
+    <!-- User settings title for current user entry "You" user. [CHAR LIMIT=30] -->
+    <string name="user_you">You (<xliff:g id="name" example="Name">%s</xliff:g>)</string>
     <!-- Title for the preference to enter the nickname of the userto display in the user switcher [CHAR LIMIT=25]-->
     <string name="user_nickname">Nickname</string>
+    <!-- Title for add user type dialog [CHAR LIMIT=45] -->
+    <string name="user_add_user_type_title">Add</string>
+    <!-- Summary for add user entry in the choice dialog [CHAR LIMIT=none] -->
+    <string name="user_add_user_item_summary">Users have their own apps and content</string>
+    <!-- Summary for add restricted profile entry in the choice dialog [CHAR LIMIT=none] -->
+    <string name="user_add_profile_item_summary">You can restrict access to apps and content from your account</string>
+    <!-- Button text for adding a regular user [CHAR LIMIT=25] -->
+    <string name="user_add_user_item_title">User</string>
+    <!-- Button text for adding a restricted profile [CHAR LIMIT=25] -->
+    <string name="user_add_profile_item_title">Restricted profile</string>
     <!-- Title for add user confirmation dialog [CHAR LIMIT=30] -->
     <string name="user_add_user_title">Add new user</string>
     <!-- Message for add user confirmation dialog - long version. [CHAR LIMIT=none] -->
-    <string name="user_add_user_message_long">You can share this device with other people by creating additional users. Each user has their own space, which they can customize with their own apps, wallpaper, and so on. Users can also adjust tablet settings like Wi-Fi that affect everyone.\n\nAfter you create a new user, that person needs to go through a setup process.\n\nAny user can accept updated app permissions on behalf of all other users.</string>
+    <string name="user_add_user_message_long">You can share this device with other people by creating additional users. Each user has their own space, which they can customize with their own apps, wallpaper, and so on. Users can also adjust tablet settings like Wi\u2011Fi that affect everyone.\n\nAfter you create a new user, that person needs to go through a setup process.\n\nAny user can accept updated app permissions on behalf of all other users.</string>
     <!-- Message for add user confirmation dialog - short version. [CHAR LIMIT=none] -->
     <string name="user_add_user_message_short">After you create a new user, that person needs to go through a setup process.\n\nAny user can accept updated app permissions on behalf of all other users.</string>
     <!-- Title of dialog to setup a new user [CHAR LIMIT=30] -->
     <string name="user_setup_dialog_title">Set up user now?</string>
     <!-- Message in dialog to setup a new user after creation [CHAR LIMIT=none] -->
     <string name="user_setup_dialog_message">Make sure the person is available to take the tablet and set up their space</string>
+    <!-- Message in dialog to setup a new restricted profile after creation [CHAR LIMIT=none] -->
+    <string name="user_setup_profile_dialog_message">Set up profile now?</string>
     <!-- Button text to setup the new user now [CHAR LIMIT=25] -->
     <string name="user_setup_button_setup_now">Set up now</string>
     <!-- Button text to setup the new user later [CHAR LIMIT=25] -->
@@ -4354,15 +4390,21 @@
     <string name="user_cannot_manage_message" product="tablet">Only the tablet\'s owner can manage users.</string>
     <!-- Message to secondary users that only owner can manage users [CHAR LIMIT=none] -->
     <string name="user_cannot_manage_message" product="default">Only the phone\'s owner can manage users.</string>
+    <!-- Message to limited users that they cannot add accounts [CHAR LIMIT=100] -->
+    <string name="user_cannot_add_accounts_message">Restricted profiles cannot add accounts</string>
 
     <!-- User details remove user menu [CHAR LIMIT=20] -->
     <string name="user_remove_user_menu">Delete <xliff:g id="user_name">%1$s</xliff:g> from this device</string>
     <!-- User details new user name [CHAR LIMIT=30] -->
     <string name="user_new_user_name">New user</string>
+    <!-- User details new restricted profile name [CHAR LIMIT=30] -->
+    <string name="user_new_profile_name">New profile</string>
     <!-- User (self) removal confirmation title [CHAR LIMIT=30] -->
     <string name="user_confirm_remove_self_title">Delete yourself?</string>
     <!-- User removal confirmation title [CHAR LIMIT=25] -->
     <string name="user_confirm_remove_title">Remove user?</string>
+    <!-- Profile removal confirmation title [CHAR LIMIT=25] -->
+    <string name="user_profile_confirm_remove_title">Remove profile?</string>
     <!-- User (self) removal confirmation message [CHAR LIMIT=none] -->
     <string name="user_confirm_remove_self_message" product="tablet">You will lose your space and data on this tablet. You can\'t undo this action.</string>
     <!-- User (self) removal confirmation message [CHAR LIMIT=none] -->
@@ -4371,12 +4413,23 @@
     <string name="user_confirm_remove_message" product="tablet">This user\'s space and data will disappear from this tablet. You can\'t undo this action.</string>
     <!-- User removal confirmation message [CHAR LIMIT=none] -->
     <string name="user_confirm_remove_message" product="default">This user\'s space and data will disappear from this phone. You can\'t undo this action.</string>
+    <!-- User profile removal confirmation message [CHAR LIMIT=none] -->
+    <string name="user_profile_confirm_remove_message" product="tablet">This profile\'s space and data will disappear from this tablet. You can\'t undo this action.</string>
+    <!-- User profile removal confirmation message [CHAR LIMIT=none] -->
+    <string name="user_profile_confirm_remove_message" product="default">This profile\'s space and data will disappear from this phone. You can\'t undo this action.</string>
     <!-- Setting label to show that a new user is being added [CHAR LIMIT=30] -->
     <string name="user_adding_new_user">Adding new user\u2026</string>
     <!-- Spoken content description for delete icon beside a user [CHAR LIMIT=none] -->
     <string name="user_delete_user_description">Delete user</string>
     <!-- Delete button text [CHAR LIMIT=25] -->
     <string name="user_delete_button">Delete</string>
+
+    <!-- Application Restrictions screen title [CHAR LIMIT=45] -->
+    <string name="application_restrictions">Allow apps and content</string>
+    <!-- Applications with restrictions header [CHAR LIMIT=45] -->
+    <string name="apps_with_restrictions_header">Applications with restrictions</string>
+    <!-- Applicaitons with restrictions - settings button [CHAR LIMIT=30] -->
+    <string name="apps_with_restrictions_settings_button">Expand settings for application</string>
 
     <!-- Warning message when changing a global setting for a tablet.[CHAR LIMIT=none] -->
     <string name="global_change_warning" product="tablet">This setting affects all users on this tablet.</string>
@@ -4394,35 +4447,35 @@
     <!-- Help menu label [CHAR LIMIT=20] -->
     <string name="help_label">Help</string>
     <!-- Help URL, WiFi [DO NOT TRANSLATE] -->
-    <string name="help_url_wifi" translatable="false">http://support.google.com/mobile/?p=settings_wifi</string>
+    <string name="help_url_wifi" translatable="false"></string>
     <!-- Help URL, Bluetooth [DO NOT TRANSLATE] -->
-    <string name="help_url_bluetooth" translatable="false">http://support.google.com/mobile/?p=settings_bluetooth</string>
+    <string name="help_url_bluetooth" translatable="false"></string>
     <!-- Help URL, Data usage [DO NOT TRANSLATE] -->
-    <string name="help_url_data_usage" translatable="false">http://support.google.com/mobile/?p=settings_data</string>
+    <string name="help_url_data_usage" translatable="false"></string>
     <!-- Help URL, More [DO NOT TRANSLATE] -->
-    <string name="help_url_more_networks" translatable="false">http://support.google.com/mobile/?p=settings_wireless</string>
+    <string name="help_url_more_networks" translatable="false"></string>
     <!-- Help URL, Vpn [DO NOT TRANSLATE] -->
-    <string name="help_url_vpn" translatable="false">http://support.google.com/mobile/?p=settings_vpn</string>
+    <string name="help_url_vpn" translatable="false"></string>
     <!-- Help URL, Sound [DO NOT TRANSLATE] -->
-    <string name="help_url_sound" translatable="false">http://support.google.com/mobile/?p=settings_sound</string>
+    <string name="help_url_sound" translatable="false"></string>
     <!-- Help URL, Battery [DO NOT TRANSLATE] -->
-    <string name="help_url_battery" translatable="false">http://support.google.com/mobile/?p=settings_battery</string>
+    <string name="help_url_battery" translatable="false"></string>
     <!-- Help URL, Accounts [DO NOT TRANSLATE] -->
-    <string name="help_url_accounts" translatable="false">http://support.google.com/mobile/?p=settings_accounts</string>
+    <string name="help_url_accounts" translatable="false"></string>
     <!-- Help URL, Choose lockscreen [DO NOT TRANSLATE] -->
-    <string name="help_url_choose_lockscreen" translatable="false">http://support.google.com/mobile/?p=settings_screenlock</string>
+    <string name="help_url_choose_lockscreen" translatable="false"></string>
     <!-- Help URL, Backup & reset [DO NOT TRANSLATE] -->
-    <string name="help_url_backup_reset" translatable="false">http://support.google.com/mobile/?p=settings_backup</string>
+    <string name="help_url_backup_reset" translatable="false"></string>
     <!-- Help URL, Tethering [DO NOT TRANSLATE] -->
-    <string name="help_url_tether" translatable="false">http://support.google.com/mobile/?p=settings_tether</string>
+    <string name="help_url_tether" translatable="false"></string>
     <!-- Help URL, Dreams [DO NOT TRANSLATE] -->
-    <string name="help_url_dreams" translatable="false">http://support.google.com/mobile/?p=settings_dreams</string>
+    <string name="help_url_dreams" translatable="false"></string>
     <!-- Help URL, User settings [DO NOT TRANSLATE] -->
-    <string name="help_url_users" translatable="false">http://support.google.com/mobile/?p=settings_users</string>
+    <string name="help_url_users" translatable="false"></string>
     <!-- Help URL, Location access [DO NOT TRANSLATE] -->
-    <string name="help_url_location_access" translatable="false">http://support.google.com/mobile/?p=settings_location</string>
+    <string name="help_url_location_access" translatable="false"></string>
     <!-- Help URL, Security settings [DO NOT TRANSLATE] -->
-    <string name="help_url_security" translatable="false">http://support.google.com/mobile/?p=settings_security</string>
+    <string name="help_url_security" translatable="false"></string>
 
     <!-- User account title [CHAR LIMIT=30] -->
     <string name="user_account_title">Account for content</string>
@@ -4434,1248 +4487,50 @@
     <!-- Cell Broadcast settings description [CHAR LIMIT=100] -->
     <string name="cell_broadcast_settings_summary">Select the types of emergency alerts to display.</string>
 
-    <!-- **** CYANOGENMOD ADDITIONS START **** -->
-
-    <string name="ok">OK</string>
-
-    <!-- Quiet hours -->
-    <string name="quiet_hours_title">Quiet hours</string>
-    <string name="quiet_hours_summary">Configure the hours the device should be quiet</string>
-    <string name="quiet_hours_note_title">Note</string>
-    <string name="quiet_hours_note_summary">Incoming calls will behave like usual during quiet hours</string>
-    <string name="quiet_hours_enabled">Enable quiet hours</string>
-    <string name="quiet_hours_enabled_on">Quiet hours will be enforced</string>
-    <string name="quiet_hours_enabled_off">Notifications will function as normal</string>
-    <string name="quiet_hours_start">Start of quiet hours</string>
-    <string name="quiet_hours_start_summary">When to start enforcing quiet hours</string>
-    <string name="quiet_hours_end">End of quiet hours</string>
-    <string name="quiet_hours_end_summary">When to stop enforcing quiet hours</string>
-    <string name="quiet_hours_mute">Mute notifications</string>
-    <string name="quiet_hours_mute_on">No sounds will be played</string>
-    <string name="quiet_hours_mute_off">Sounds will play like normal</string>
-    <string name="quiet_hours_still">Disable vibrations</string>
-    <string name="quiet_hours_still_on">Device will not vibrate</string>
-    <string name="quiet_hours_still_off">Device will vibrate normally</string>
-    <string name="quiet_hours_dim">Disable notification light</string>
-    <string name="quiet_hours_dim_on">Notification light will be disabled</string>
-    <string name="quiet_hours_dim_off">Notification light will function as normal</string>
-    <string name="quiet_hours_haptic">Disable haptic feedback</string>
-    <string name="quiet_hours_haptic_on">Haptic feedback will be disabled</string>
-    <string name="quiet_hours_haptic_off">Haptic feedback will function as normal</string>
-    <string name="quiet_hours_active_from">Active from</string>
-    <string name="quiet_hours_active_to">to</string>
-
-    <!-- time range preference -->
-    <string name="start_time_title">Start</string>
-    <string name="end_time_title">End</string>
-
-    <!-- convert sound to vibration toggle -->
-    <string name="notification_convert_sound_to_vibration_title">Vibrate on notification</string>
-    <string name="notification_convert_sound_to_vibration_summary">In vibrate mode, all notifications will vibrate regardless of individual app settings</string>
-
-    <!-- Hostname setting -->
-    <string name="device_hostname">Device hostname</string>
-
-    <!-- About phone screen,  setting option name-->
-    <string name="mod_version">AoCP version</string>
-    <string name="mod_version_default">Unknown</string>
-    <!-- About phone screen, build date of ROM -->
-    <string name="build_date">Build date</string>
-    <string name="build_date_default">2012-01-01-0000</string>
-    <!-- About device screen, Cpu info. -->
-    <string name="cpu_info">CPU</string>
-    <!-- About phone screen, Free memory info -->
-    <string name="mem_info">Memory</string>
-    <!-- About phone screen, status item label -->
-
-    <!-- Anonymous Statistics #CM -->
-    <!-- About device screen, list item title. Takes the user to the screen about opting in or out of anonymous statistics. -->
-    <string name="anonymous_statistics_title">CyanogenMod statistics</string>
-    <string name="anonymous_statistics_summary">Help make CyanogenMod better by opting into anonymous statistics reporting</string>
-    <string name="anonymous_statistics_warning_title">About</string>
-    <string name="anonymous_statistics_warning">Opting into CyanogenMod Statistics will allow non-personal data to be submitted to the
-        developers of CyanogenMod to track unique installations across devices. The information submitted includes an unique identifier,
-        which does not compromise your privacy or personal data. The data is submitted during each boot.\n\nFor an example of the data that is submitted, tap on Preview Data.</string>
-    <string name="enable_reporting_title">Enable reporting</string>
-    <string name="preview_data_title">Preview data</string>
-    <string name="preview_data_summary">%s</string>
-    <string name="view_stats_title">View stats</string>
-    <string name="anonymous_learn_more">Learn more</string>
-
-    <!-- Anonymous Statistics - Notification -->
-    <string name="anonymous_notification_desc">Enable or Disable CyanogenMod Statistics</string>
-
-    <!-- Anonymous Statistics - Preview -->
-    <string name="preview_id_title">Unique ID</string>
-    <string name="preview_device_title">Device</string>
-    <string name="preview_version_title">Version</string>
-    <string name="preview_country_title">Country</string>
-    <string name="preview_carrier_title">Carrier</string>
-    <!-- INTERFACE Settings  -->
-    <!-- Settings main menu category heading. Interface (Launcher, Themes, System). [CHAR LIMIT=40] -->
-    <string name="header_category_interface">INTERFACE</string>
-
-    <!-- Launcher settings  -->
-    <string name="launcher_settings_title">Launcher</string>
-
-    <!-- Themes settings  -->
-    <string name="themes_settings_title">Themes</string>
-
-    <!-- System Interface settings  -->
-    <string name="system_settings_title">Personalize</string>
-    <string name="system_interface_title">System interface</string>
-
-    <!-- Notification Drawer  -->
-    <string name="notification_drawer_title">Notification drawer</string>
-
-    <string name="lock_screen_title">Lock screen</string>
-
-    <!-- Lock Screen Shortcuts -->
-    <string name="lockscreen_target_info">Drag the slider to targets to assign shortcuts</string>
-    <string name="lockscreen_target_title">Slider shortcuts</string>
-    <string name="lockscreen_target_summary">View or change custom lock screen shortcuts</string>
-    <string name="lockscreen_target_reset">Lock screen shortcuts reset to default</string>
-    <string name="lockscreen_target_save">Lock screen shortcuts saved</string>
-    <string name="lockscreen_target_reset_title">Reset</string>
-    <string name="lockscreen_target_reset_message">Delete all user created lock screen shortcuts and restore to default?</string>
-    <string name="lockscreen_target_empty">Empty</string>
-    <string name="lockscreen_target_edit_title">Edit shortcut and icon</string>
-    <string name="lockscreen_target_edit_msg">Select or change the desired application or activity and the associated icon</string>
-
-    <!-- Lock screen vibrate settings -->
-    <string name="lockscreen_vibrate_enabled_title">Vibrate</string>
-    <string name="lockscreen_vibrate_enabled_head">Vibrate when unlocking</string>
-
-    <!-- Lock screen misc. settings -->
-    <string name="lockscreen_battery_status_title">Battery status</string>
-    <string name="lockscreen_battery_status_charging">Only when charging</string>
-    <string name="lockscreen_battery_status_alwayson">Always on</string>
-
-    <!-- Profiles settings  -->
-    <string name="profiles_settings_title">Profiles</string>
-    <string name="profiles_general_title">General</string>
-    <string name="profiles_add">Add</string>
-    <string name="profile_menu_delete">Delete</string>
-    <string name="profile_settings_title">Profile</string>
-    <string name="profile_empty_list_profiles_off">To configure and use System profiles, turn Profiles on.</string>
-
-    <!-- Add Profile -->
-    <string name="add_profile_dialog_title">Create new profile</string>
-    <string name="profile_name_title">Name</string>
-    <string name="profile_profile_name_prompt">Enter a name for the new profile</string>
-    <string name="menu_new_profile">New profile</string>
-    <string name="menu_new_profile_summary">Add and configure a new profile</string>
-    <string name="new_profile_name">&lt;new profile&gt;</string>
-
-    <!-- Rename Dialog  -->
-    <string name="rename_dialog_title">Rename</string>
-    <string name="rename_dialog_message">Enter a new name</string>
-    <string name="duplicate_profile_name">Duplicate profile name!</string>
-    <string name="duplicate_appgroup_name">Duplicate application group name!</string>
-
-    <!-- Reset Profiles -->
-    <string name="profile_reset_title">Reset</string>
-    <string name="profile_reset_message">Delete all user created profiles and application groups and restore them to default?</string>
-
-    <!-- Delete confimation messages -->
-    <string name="profile_delete_confirm">Delete this profile?</string>
-    <string name="profile_app_delete_confirm">Remove this application?</string>
-    <string name="profile_cannot_delete">An active profile cannot be deleted</string>
-
-    <!-- Profile Config screen PreferenceGroup titles -->
-    <string name="profile_connectionoverrides_title">Connection overrides</string>
-    <string name="profile_volumeoverrides_title">Volume overrides</string>
-    <string name="profile_vibratoroverrides_title">Vibrator overrides</string>
-    <string name="connection_state_disabled">Disable</string>
-    <string name="connection_state_enabled">Enable</string>
-    <string name="volume_override_summary">Set to</string>
-    <string name="vibrator_state_disabled">Disable</string>
-    <string name="vibrator_state_enabled">Enable</string>
-    <string name="vibrator_state_silent">Only when silent</string>
-
-    <!-- Menu item for managing profiles -->
-    <string name="profile_profiles_manage">Profiles</string>
-    <string name="profile_profile_manage">Manage profile</string>
-    <string name="profile_applist_manage">Application list</string>
-    <string name="profile_appgroups_manage">Application groups</string>
-    <string name="profile_appgroup_manage">Manage application group</string>
-
-    <!-- Profile settings screen, section header for settings related to notification profiles -->
-    <string name="profile_settings">Profile settings</string>
-    <string name="profile_name">Name</string>
-
-    <!-- Profile Settings sound modes labels -->
-    <string name="sound_mode">Notification mode</string>
-    <string name="ringer_mode">Ring mode</string>
-    <string name="lights_mode">Lights mode</string>
-    <string name="vibrate_mode">Vibrate mode</string>
-    <string name="choose_soundtone">Choose notification tone</string>
-    <string name="choose_ringtone">Choose ringtone</string>
-    <!-- Pie controls -->
-    <string name="pie_controls_title">Pie Controls</string>
-    <string name="pie_controls_summary">Allows navigation and status report</string>
-    <string name="pie_targets_title">Targets</string>
-    <string name="pie_gravity_title">Pie gravity</string>
-    <string name="pie_gravity_summary">Select the location where Pie will be placed at</string>
-    <string name="pie_gravity_top">Top</string>
-    <string name="pie_gravity_bottom">Bottom</string>
-    <string name="pie_gravity_right">Right</string>
-    <string name="pie_gravity_left">Left</string>
-    <string name="pie_mode_title">Pie style</string>
-    <string name="pie_mode_summary">Manage how animations and status additions will be handled</string>
-    <string name="pie_mode_bare">Bare</string>
-    <string name="pie_mode_quick">Quick</string>
-    <string name="pie_mode_default">Default</string>
-    <string name="pie_mode_slow">Slow</string>
-    <string name="pie_size_title">Pie size</string>
-    <string name="pie_size_summary">Define Pie controls size</string>
-    <string name="pie_size_small">Small</string>
-    <string name="pie_size_default">@string/pie_mode_default</string>
-    <string name="pie_size_large">Large</string>
-    <string name="pie_size_gigantic">Gigantic</string>
-    <string name="pie_color_title">Pie color settings</string>
-    <string name="pie_color_style_title">Pie color style</string>
-    <string name="pie_background_title">Background color</string>
-    <string name="pie_select_title">Selection color</string>
-    <string name="pie_outlines_title">Outlines color</string>
-    <string name="pie_status_clock_title">Clock color</string>
-    <string name="pie_status_title">Status color</string>
-    <string name="pie_chevron_left_title">Left chevron color</string>
-    <string name="pie_chevron_right_title">Right chevron color</string>
-    <string name="pie_juice_title">Battery juice color</string>
-    <string name="pie_button_color_title">Buttons color</string>
-    <string name="pie_gap_title">Pie gap</string>
-    <string name="pie_gap_summary">Adjust the gap that separates Pie elements</string>
-    <string name="pie_gap_none">None</string>
-    <string name="pie_gap_small">Small (default)</string>
-    <string name="pie_gap_big">Big</string>
-    <string name="pie_gap_huge">Huge</string>
-    <string name="pie_center_title">Center pie</string>
-    <string name="pie_center_summary">If un-checked, pie will appear where your fingers trigger it</string>
-    <string name="pie_trigger_title">Trigger size</string>
-    <string name="pie_trigger_summary">Determine the size of the triggering area that will start pie controls</string>
-    <string name="pie_trigger_small">Small</string>
-    <string name="pie_trigger_normal">Normal</string>
-    <string name="pie_trigger_big">Big</string>
-    <string name="pie_trigger_huge">Huge (Default)</string>
-    <string name="pie_notifications_title">Enable Chevron Targets</string>
-    <string name="pie_notifications_summary">Enabling, will let the Notification panels and QuickSettings active when swipe.</string>
-    <string name="pie_menu_title">Show menu button always</string>
-    <string name="pie_menu_summary">Whether or not the menu button will appear when unneeded</string>
-    <string name="pie_search_title">Show search button</string>
-    <string name="pie_search_summary">Access to GoogleNow via Pie</string>
-    <string name="pie_lastapp_title">Last App button</string>
-    <string name="pie_lastapp_summary">Enable last app button on Pie</string>
-    <string name="pie_stick_title">Prevent rotation</string>
-    <string name="pie_stick_summary">If checked Pie will stay in place no matter which orientation</string>
-    <string name="pie_restart_launcher_title">Restart Launcher</string>
-    <string name="pie_restart_launcher_summary">Changing screensize can have adverse effects. This option allows your launcher to regain sanity, the cost is a slight blackout (recommended)</string>
-    <string name="all_color">Custom Colors</string>
-    <string name="stock_color">Default Colors</string>
-
-
-    <!-- Sound settings screen, setting option name to pick ringtone (a list dialog comes up)-->
-    <string name="soundtone_title">Notification tone</string>
-    <string name="soundtone_summary">""</string>
-
-    <!-- Title for application group setting screen -->
-    <string name="profile_appgroups_title">Application groups</string>
-    <string name="profile_applist_title">Applications</string>
-    <string name="profile_new_appgroup">New application group</string>
-    <string name="profile_delete_appgroup">Delete this application group?</string>
-    <string name="profile_appgroup_name_prompt">Enter a name for the new application group</string>
-    <string name="profile_appgroup_name_title">Name</string>
-    <string name="profile_add_app">Add application</string>
-    <string name="profile_delete_app">Remove application</string>
-
-    <!-- Add application dialog box title -->
-    <string name="profile_choose_app">Choose application</string>
-    <string name="profile_settings_header">Profile settings</string>
-
-    <!-- Profiles - system settings -->
-    <string name="profile_system_settings_title">System settings</string>
-    <string name="profile_lockmode_title">Lock screen mode</string>
-    <string name="profile_lockmode_default">Default</string>
-    <string name="profile_lockmode_insecure">Insecure</string>
-    <string name="profile_lockmode_disabled">Disabled</string>
-    <string name="profile_lockmode_default_summary">Use system default</string>
-    <string name="profile_lockmode_insecure_summary">Use insecure lock screen</string>
-    <string name="profile_lockmode_disabled_summary">Lock screen is disabled</string>
-    <string name="profile_airplanemode_title">Airplane mode</string>
-    <string name="profile_disable_screen_lock_summary">Disable lock screen security while this profile is active</string>
-
-    <string name="vibrator_type_ringer">Calls</string>
-    <string name="vibrator_type_notification">Notifications</string>
-
-    <!-- Connection override toggles (not all are used at this time ) -->
-    <string name="possibleButtons">Possible Buttons</string>
-    <string name="toggleWifi">Wi-Fi</string>
-    <string name="toggleWifiAp">Portable Wi-Fi hotspot</string>
-    <string name="toggleBluetooth">Bluetooth</string>
-    <string name="toggleGPS">GPS</string>
-    <string name="toggleData">Mobile Data</string>
-    <string name="toggleSync">Data Sync</string>
-    <string name="toggle2g3g">2G/3G</string>
-    <string name="toggleSound">Ring Mode</string>
-    <string name="toggleBrightness">Brightness</string>
-    <string name="toggleAutoRotate">Orientation</string>
-    <string name="toggleScreenTimeout">Screen Timeout</string>
-    <string name="toggleAirplane">Airplane</string>
-    <string name="toggleFlashlight">Flashlight</string>
-    <string name="toggleLockScreen">Lock Screen</string>
-    <string name="toggleWimax">WiMAX</string>
-
-    <!-- Screen security - Screen security   -->
-    <string name="screen_security_category">Screen security</string>
-    <string name="screen_security_title">Lock screen</string>
-    <string name="screen_security_summary">View or change lock screen security, delay and timeout settings</string>
-    <string name="additional_options_title">Additional options</string>
-    <string name="unlock_menu_unlock_title">Menu unlock</string>
-    <string name="unlock_menu_unlock_summary">Pressing the menu button unlocks the device</string>
-    <string name="unlock_home_unlock_title">Home unlock</string>
-    <string name="unlock_home_unlock_summary">Pressing the home button unlocks the device</string>
-    <string name="unlock_quick_unlock_control_title">Quick unlock</string>
-    <string name="unlock_quick_unlock_control_summary">Unlock automatically when the correct PIN/password is entered</string>
-
-    <!-- Slide lock delay -->
-    <string name="delay_and_timeout_title">Lock delay</string>
-    <string name="slide_lock_delay_title">Delay screen lock</string>
-    <string name="slide_lock_timeout_delay_title">Delay after timeout</string>
-    <string name="slide_lock_screenoff_delay_title">Delay after turned off</string>
-    <string name="slide_lock_delay_none">None</string>
-    <string name="slide_lock_delay_1s">1 second</string>
-    <string name="slide_lock_delay_5s">5 seconds</string>
-    <string name="slide_lock_delay_10s">10 seconds</string>
-    <string name="slide_lock_delay_15s">15 seconds</string>
-    <string name="slide_lock_delay_30s">30 seconds</string>
-    <string name="slide_lock_delay_1m">1 minute</string>
-    <string name="slide_lock_delay_5m">5 minutes</string>
-    <string name="slide_lock_delay_10m">10 minutes</string>
-    <string name="slide_lock_delay_30m">30 minutes</string>
-
-    <!-- Performance settings  -->
-    <string name="performance_settings_title">Performance</string>
-
-    <!-- Performance Settings : Warning dialog  -->
-    <string name="performance_settings_warning_title">Proceed with Caution</string>
-    <string name="performance_settings_warning">These settings are included for experimentation and any changes made to them have the potential to cause instability, crashes, data loss or hardware failures.\n\nWe request you do not file bug reports if any of these settings have been changed from the defaults.</string>
-
-    <!-- Performance Settings : Processor Settings -->
-    <!-- Performance Settings : Processor settings title -->
-    <string name="processor_title">Processor</string>
-    <!-- Performance Settings : Processor settings summary. -->
-    <string name="processor_summary">Change CPU governor and clock speed</string>
-
-    <!-- Performance Settings : Processor settings sub items -->
-    <string name="cpu_cur_freq_title">Current CPU frequency</string>
-    <string name="cpu_governors_title">CPU governor</string>
-    <string name="cpu_governors_summary">%S</string>
-    <string name="cpu_min_freq_title">Minimum CPU frequency</string>
-    <string name="cpu_min_freq_summary">%s</string>
-    <string name="cpu_max_freq_title">Maximum CPU frequency</string>
-    <string name="cpu_max_freq_summary">%s</string>
-    <string name="cpu_set_on_boot">Set on boot</string>
-    <string name="cpu_set_on_boot_summary">Restore the processor settings on boot</string>
-
-    <!-- Performance Settings : I/O scheduler settings title -->
-    <string name="io_scheds_title">I/O scheduler</string>
-    <!-- Performance Settings : I/O scheduler settings summary. -->
-    <string name="io_scheds_summary">Change I/O scheduler</string>
-
-    <!-- Performance Settings : I/O scheduler settings sub items -->
-    <string name="io_sched_title">I/O scheduler</string>
-    <string name="io_sched_summary">%S</string>
-    <string name="io_sched_set_on_boot">Set on boot</string>
-    <string name="io_sched_set_on_boot_summary">Restore the I/O scheduler settings on boot</string>
-
-    <!-- Memory Management -->
-    <string name="memory_management_title">Memory management</string>
-    <string name="memory_management_summary">Customize the usage of memory to alter system performance</string>
-    <!-- zRam -->
-    <string name="pref_zram_title">zRam</string>
-    <string name="pref_zram_summary">Compress memory for increased virtual capacity (requires reboot)</string>
-    <!-- KSM -->
-    <string name="pref_ksm_title">Kernel samepage merging</string>
-    <string name="pref_ksm_summary">KSM reduces physical memory requirements and improves performance</string>
-    <!-- Purgeable Assets -->
-    <string name="pref_purgeable_assets_title">Allow purging of assets</string>
-    <string name="pref_purgeable_assets_summary">Purging of bitmap memory assets allows the freeing of more RAM when needed (requires reboot)</string>
-
-    <!-- Performance Settings : Dithering -->
-    <string name="pref_use_dithering_title">Surface improvement</string>
-    <string name="dithering_no_dither">Disable dithering</string>
-    <string name="dithering_color_banding">Fix color banding (default)</string>
-    <string name="dithering_blur_effect">Fix color banding and blur effect</string>
-
-    <!-- Performance Settings : 16bpp Alpha -->
-    <string name="pref_use_16bpp_alpha_title">16bit transparency</string>
-    <string name="pref_use_16bpp_alpha_summary">Better graphics performance, but lower quality and may cause visual artifacts (requires reboot)</string>
-
-    <!-- Display : Rotation  -->
-    <string name="display_rotation_title">Rotation</string>
-    <string name="display_rotation_disabled">Disabled</string>
-    <string name="display_rotation_unit">degrees</string>
-    <string name="display_rotation_category_title">Rotation modes</string>
-    <string name="display_rotation_0_title">0 degrees</string>
-    <string name="display_rotation_90_title">90 degrees</string>
-    <string name="display_rotation_180_title">180 degrees</string>
-    <string name="display_rotation_270_title">270 degrees</string>
-
-    <!-- Lock screen shortcuts -->
-    <string name="picker_activities">Activities</string>
-    <string name="select_custom_app_title">Select custom application</string>
-    <string name="select_custom_activity_title">Select custom activity</string>
-    <string name="icon_picker_choose_icon_title">Choose icon</string>
-    <string name="icon_picker_alarm">Alarm</string>
-    <string name="icon_picker_browser">Browser</string>
-    <string name="icon_picker_calendar">Calendar</string>
-    <string name="icon_picker_camera">Camera</string>
-    <string name="icon_picker_chrome">Chrome</string>
-    <string name="icon_picker_email">Email</string>
-    <string name="icon_picker_email2">Email Holo</string>
-    <string name="icon_picker_facebook">Facebook</string>
-    <string name="icon_picker_gallery">Gallery</string>
-    <string name="icon_picker_google_small">Google (small)</string>
-    <string name="icon_picker_googleplus">Google Plus</string>
-    <string name="icon_picker_googletalk">Google Talk</string>
-    <string name="icon_picker_maps">Maps</string>
-    <string name="icon_picker_movie">Movie</string>
-    <string name="icon_picker_music">Music</string>
-    <string name="icon_picker_nav_normal">Navigation</string>
-    <string name="icon_picker_phone">Phone</string>
-    <string name="icon_picker_podcast">Podcast</string>
-    <string name="icon_picker_rss">Rss</string>
-    <string name="icon_picker_search">Search</string>
-    <string name="icon_picker_sms">Messaging</string>
-    <string name="icon_picker_twitter">Twitter</string>
-
-    <!-- String for IconPicker -->
-    <string name="icon_picker_title">Choose icon source</string>
-    <string name="icon_picker_system_icons_title">System icons</string>
-    <string name="icon_picker_gallery_title">Gallery</string>
-    <string name="icon_picker_pack_title">Icon pack</string>
-
-    <string name="increasing_ring_title">Ascending ringtone</string>
-    <!-- Sound settings screen, the caption of the checkbox for making incoming calls increase in volume -->
-    <string name="checkbox_increasing_ring">Enable</string>
-    <!-- Sound settings screen, the title of the volume bar to adjust the minimum increasing ring volume -->
-    <string name="increasing_ring_min_volume_title">Ringing start volume</string>
-    <string name="increasing_ring_volume_notice">Notice:\nAs the start volume is set higher than the ringer volume, the ring tone will be played using the ringer volume.</string>
-    <string name="increasing_ring_interval_title">Increase interval</string>
-    <string name="increasing_ring_interval_eachring">On each ring</string>
-    <string name="increasing_ring_interval_half_second">0.5 seconds</string>
-    <string name="increasing_ring_interval_1second">1 second</string>
-    <string name="increasing_ring_interval_2seconds">2 seconds</string>
-    <string name="increasing_ring_interval_3seconds">3 seconds</string>
-    <string name="increasing_ring_interval_5seconds">5 seconds</string>
-    <string name="increasing_ring_interval_10seconds">10 seconds</string>
-
-    <string name="profile_write_nfc_tag">Write to NFC tag</string>
-    <string name="profile_write_touch_tag">Touch tag to write</string>
-    <string name="profile_write_success">Tag successfully written</string>
-    <string name="profile_write_failed">Tag writing failed!</string>
-    <string name="profile_selected">Profile selected: %1$s</string>
-    <string name="profile_nfc_text">Writing a profile to a NFC tag allows for tapping the tag to select the profile. Tapping a second time will select the previously selected profile.</string>
-    <string name="profile_unknown_nfc_tag">Unknown profile</string>
-    <string name="profile_add_nfc_text">This NFC tag refers to an unknown profile. Attaching this NFC tag to an existing profile will allow for selecting the profile in the future.</string>
-    <string name="profile_select">Select profile</string>
-
-    <string name="link_volume_ringtones">Link ringtone &amp; notifications volumes</string>
-    <string name="link_volume_mutes">Silent mode affects notifications</string>
-
-    <!-- Display settings screen, notification light settings -->
-    <string name="notification_pulse_title">Notification light</string>
-    <string name="notification_light_general_title">General</string>
-    <string name="notification_light_applist_title">Applications</string>
-    <string name="notification_light_phonelist_title">Phone</string>
-    <string name="notification_light_use_custom">Use custom values</string>
-    <string name="notification_light_enabled">Enabled</string>
-    <string name="notification_light_disabled">Disabled</string>
-    <string name="notification_light_default_value">Default</string>
-    <string name="notification_light_missed_call_title">Missed call</string>
-    <string name="notification_light_voicemail_title">Voicemail</string>
-
-    <!-- Notification light dialogs -->
-    <string name="edit_light_settings">Edit light settings</string>
-    <string name="pulse_speed_title">Pulse length and speed</string>
-    <string name="picker_arrow">→</string>
-    <string name="default_time">Normal</string>
-    <string name="custom_time">Custom</string>
-    <string name="dialog_test">Test</string>
-    <string name="dialog_delete_title">Delete</string>
-    <string name="dialog_delete_message">Remove selected item?</string>
-    <string name="dialog_test_message">Turn the screen off to see the selected notification in action or dismiss this dialog to stop the test</string>
-    <string name="dialog_test_button">Dismiss</string>
-
-    <!-- Values for the notification light pulse spinners -->
-    <string name="pulse_length_always_on">Always on</string>
-    <string name="pulse_length_very_short">Very short</string>
-    <string name="pulse_length_short">Short</string>
-    <string name="pulse_length_normal">Normal</string>
-    <string name="pulse_length_long">Long</string>
-    <string name="pulse_length_very_long">Very long</string>
-    <string name="pulse_speed_very_fast">Very fast</string>
-    <string name="pulse_speed_fast">Fast</string>
-    <string name="pulse_speed_normal">Normal</string>
-    <string name="pulse_speed_slow">Slow</string>
-    <string name="pulse_speed_very_slow">Very slow</string>
-
-    <!-- Battery light settings  -->
-    <string name="battery_light_title">Battery light</string>
-    <string name="battery_low_pulse_title">Pulse if battery low</string>
-    <string name="battery_light_list_title">Colors</string>
-    <string name="battery_light_low_color_title">Battery low</string>
-    <string name="battery_light_medium_color_title">Charging</string>
-    <string name="battery_light_full_color_title">Fully charged</string>
-
-    <!-- Sound settings screen -->
-    <!-- Notification drawer background -->
-    <string name="notification_wallpaper_title">Notification drawer style</string>
-    <string name="notification_wallpaper_background">Notification background</string>
-    <string name="notification_wallpaper_landscape_title">Different landscape background</string>
-    <string name="notification_background_color_fill">Color fill</string>
-    <string name="notification_background_custom_image">Custom image</string>
-    <string name="notification_background_default_wallpaper">Default background</string>
-    <string name="notification_drawer_custom_background_dialog_title">Choose color</string>
-    <string name="notif_wallpaper_alpha_title">Notification background transparency</string>
-    <string name="notif_alpha_title">Notification Rows transparency</string>
-    <string name="volume_overlay_title">Volume panel style</string>
-    <string name="volbtn_music_controls_title">Volume rocker music controls</string>
-    <string name="volbtn_music_controls_summary">When screen off, long-pressing the volume rockers will seek music tracks</string>
-    <string name="volume_ring_only_description">Ringtone</string>
-    <string name="ring_mode_title">Ring mode</string>
-    <string name="ring_mode_normal">Normal</string>
-    <string name="ring_mode_vibrate">Vibrate</string>
-    <string name="ring_mode_mute">Mute</string>
-
-     <!-- Hardware keys -->
-    <string name="hardware_keys_title">Hardware keys</string>
-    <string name="hardware_keys_bindings_title">Key actions</string>
-    <string name="hardware_keys_enable_custom_title">Enable custom actions</string>
-    <string name="hardware_keys_home_press_title">Home key</string>
-    <string name="hardware_keys_home_long_press_title">Home key (long press)</string>
-    <string name="hardware_keys_back_press_title">Back key</string>
-    <string name="hardware_keys_back_long_press_title">Back key (long press)</string>
-    <string name="hardware_keys_menu_press_title">Menu key</string>
-    <string name="hardware_keys_menu_long_press_title">Menu key (long press)</string>
-    <string name="hardware_keys_assist_press_title">Search key</string>
-    <string name="hardware_keys_assist_long_press_title">Search key (long press)</string>
-    <string name="hardware_keys_app_switch_press_title">App switch key</string>
-    <string name="hardware_keys_app_switch_long_press_title">App switch key (long press)</string>
-    <string name="hardware_keys_show_overflow_title">Show action overflow</string>
-    <string name="hardware_keys_show_overflow_summary">Display the 3-dot overflow menu button within apps</string>
-    <string name="hardware_keys_show_overflow_toast_enable">The action overflow button may not be visible until apps are restarted</string>
-    <string name="hardware_keys_show_overflow_toast_disable">The action overflow button may not be hidden until apps are restarted</string>
-    <string name="hardware_keys_action_nothing">None</string>
-    <string name="hardware_keys_action_home">Home</string>
-    <string name="hardware_keys_action_back">Back</string>
-    <string name="hardware_keys_action_menu">Menu</string>
-    <string name="hardware_keys_action_app_switch">Recents</string>
-    <string name="hardware_keys_action_search">Search</string>
-    <string name="hardware_keys_action_voice_search">Voice search</string>
-    <string name="hardware_keys_action_in_app_search">In-app search</string>
-    <string name="hardware_keys_action_power">Screen off</string>
-    <string name="hardware_keys_action_notifications">Notifications</string>
-    <string name="hardware_keys_action_expanded">Expanded desktop toggle</string>
-    <string name="hardware_keys_action_kill_app">Kill app</string>
-    <string name="hardware_keys_action_last_app">Last app</string>
-    <string name="hardware_keys_action_custom_app">Custom app</string>
-    <string name="hardware_keys_action_widgets">Widgets viewpager</string>
-    <string name="hardware_keys_action_quicksettings">Quicksettings panel</string>
-
-    <!-- Swap volume buttons when the screen is rotated -->
-    <string name="swap_volume_buttons_title">Swap volume buttons</string>
-    <string name="swap_volume_buttons_summary">Swap volume buttons when the screen is rotated</string>
-
-    <!-- Navigation Bar -->
-    <string name="navigation_bar_title">Buttons and layout</string>
-    <string name="navigation_bar_help_text">1 - To begin editing, tap the lock icon\n\n2 - Tap any button to assign or change functionality\n\n3 - Long press any button to rearrange the order\n\n4 - To save, tap the lock icon again\n\n5 - To restore system default, tap the reset button\n\n</string>
-    <string name="navigation_bar_tips">&#8226; Actions can only be assigned to one button at a time\n\n&#8226; The home button cannot be re-assigned\n\n&#8226; Side buttons cannot be rearranged</string>
-    <string name="navigation_bar_tips_title">Quick tips</string>
-    <string name="navigation_bar_reset_message">Delete current settings and restore to default?</string>
-    <string name="navigation_bar_save_message">Navigation bar settings saved</string>
-    <string name="navigation_bar_reset_toast">Navigation bar reset to default</string>
-    <string name="navigation_bar_menu_editable">Editable</string>
-    <string name="navigation_bar_menu_locked">Locked</string>
-
-    <!-- Power Widget  -->
-    <string name="power_widget_title">Power widget</string>
-    <string name="title_expanded_widget">Power widget</string>
-    <string name="power_widget_behavior">Widget behavior</string>
-    <string name="title_expanded_hide_onchange">Close drawer on change</string>
-    <string name="title_expanded_hide_indicator">Hide indicators</string>
-    <string name="title_expanded_hide_scrollbar">Hide scrollbar</string>
-    <string name="title_widget_picker">Widget buttons</string>
-    <string name="summary_widget_picker">View or change the displayed buttons</string>
-    <string name="title_widget_order">Widget button order</string>
-    <string name="summary_widget_order">View or change the order of the buttons</string>
-    <string name="title_buttons">Buttons</string>
-    <string name="title_toggle_wifi">Toggle Wi-Fi</string>
-    <string name="title_toggle_bluetooth">Toggle Bluetooth</string>
-    <string name="title_toggle_gps">Toggle GPS</string>
-    <string name="title_toggle_sound">Toggle Sound</string>
-    <string name="title_toggle_brightness">Toggle Brightness</string>
-    <string name="title_toggle_sync">Toggle Sync</string>
-    <string name="title_toggle_wifiap">Toggle Wi-Fi AP</string>
-    <string name="title_toggle_screentimeout">Toggle Screen timeout</string>
-    <string name="title_toggle_mobiledata">Toggle Mobile data</string>
-    <string name="title_toggle_lockscreen">Toggle Lock screen</string>
-    <string name="title_toggle_networkmode">Toggle network mode</string>
-    <string name="title_toggle_autorotate">Toggle Orientation</string>
-    <string name="title_toggle_airplane">Toggle Airplane mode</string>
-    <string name="title_toggle_flashlight">Toggle Flashlight</string>
-    <string name="title_toggle_sleep">Go to sleep</string>
-    <string name="title_toggle_media_play_pause">Media: Toggle Play/Pause</string>
-    <string name="title_toggle_media_previous">Media: Skip to Previous</string>
-    <string name="title_toggle_media_next">Media: Skip to Next</string>
-    <string name="title_toggle_lte">Toggle LTE</string>
-    <string name="title_toggle_wimax">Toggle WiMAX</string>
-    <string name="title_button_modes">Button modes</string>
-    <string name="pref_brightness_mode_title">Brightness modes</string>
-    <string name="pref_brightness_mode_summary">View or change the Brightness button modes</string>
-    <string name="cm_brightness_mode_auto">Auto</string>
-    <string name="cm_brightness_mode_dim">Dim</string>
-    <string name="pref_network_mode_title">Network modes</string>
-    <string name="pref_screentimeout_mode_title">Screen timeout modes</string>
-    <string name="pref_ring_mode_title">Sound modes</string>
-    <string name="pref_ring_mode_summary">View or change the Sound button modes</string>
-    <string name="cm_sound_mode_silent">Silent</string>
-    <string name="cm_sound_mode_vibrate">Vibrate</string>
-    <string name="cm_sound_mode_sound">Sound</string>
-    <string name="cm_sound_mode_soundVibrate">Sound &amp; Vibrate</string>
-    <string name="pref_flash_mode_title">Flash mode</string>
-    <string name="expanded_haptic_feedback_title">Haptic feedback</string>
-
-    <!-- Kill app long-press back -->
-    <string name="kill_app_longpress_back">Kill app back button</string>
-    <string name="kill_app_longpress_back_summary">Kill the foreground app by long-pressing the back key</string>
-
-    <!-- Change Log strings -->
-    <string name="changelog_title">View changelog</string>
-    <string name="changelog_loading">Loading changelog\u2026</string>
-    <string name="changelog_error">Unable to load changelog</string>
-    <string name="changelog_unknown">Unknown</string>
-    <string name="changelog_version">Version</string>
-
-    <!-- Power menu enable disable -->
-    <string name="power_menu_title">Power menu</string>
-    <string name="power_menu_reboot_title">Reboot menu</string>
-    <string name="power_menu_screenshot_title">Screenshot</string>
-    <string name="power_menu_expanded_desktop">Expanded desktop</string>
-    <string name="expanded_desktop_disabled">Disabled</string>
-    <string name="expanded_desktop_status_bar">Status bar visible</string>
-    <string name="expanded_desktop_no_status_bar">Status bar hidden</string>
-    <string name="power_menu_profiles_title">Profile switcher</string>
-    <string name="power_menu_airplane_title">Airplane mode</string>
-    <string name="power_menu_user_title">User switcher</string>
-    <string name="power_menu_sound_title">Sound panel</string>
-
-    <!-- CM Updater -->
-    <string name="cmupdate_settings_title">CyanogenMod updates</string>
-    <string name="cmupdate_settings_summary">Check for, view or install available updates</string>
-
-    <!-- Advanced, Device specific (DeviceParts) settings  -->
-    <string name="advanced_settings_title">Advanced</string>
-
-    <!-- Whether to display IME switcher notifcation -->
-    <string name="ime_switcher_notify">Selector notification</string>
-    <string name="ime_switcher_notify_summary">Display input method selector notification</string>
-
-    <!-- Status bar  -->
-    <string name="status_bar_title">Status bar</string>
-    <string name="status_bar_clock_settings_title">Status bar clock settings</string>
- 
-    <string name="status_bar_general_title">General</string>
- 
-    <string name="battery_color_title">Circle battery color</string>
-    
-    <string name="battery_font_color_title">Circle battery text color</string>
-
-    <string name="status_bar_battery_title">Battery status style</string>
-    <string name="status_bar_toggle_brightness">Brightness control</string>
-    <string name="status_bar_toggle_brightness_summary">Adjust brightness by sliding across status bar</string>
-    <string name="status_bar_toggle_info">Automatic brightness is enabled</string>
-    <string name="status_bar_signal_text_title">Signal status style</string>
-    <string name="status_bar_style_icon">Icon</string>
-    <string name="status_bar_style_hidden">Hidden</string>
-    <string name="status_bar_signal_text_show_text">Text</string>
-    <string name="status_bar_battery_status_percentage">Percentage</string>
-    <string name="status_bar_battery_status_circle">Circle</string>
-    <string name="status_bar_battery_status_circle_percentage">Circle with percentage</string>
-        <!-- Status bar | Clock -->
-    <string name="status_bar_clock">Clock and date</string>
-    <string name="status_bar_clock_title">Clock and date style</string>
-
-    <string name="clock_enabled">Enabled</string>
-    <string name="clock_disabled">Disabled</string>
-   
-    <string name="status_bar_show_clock_title">Show clock</string>
-    <string name="status_bar_am_pm_title">AM/PM style</string>
-    <string name="status_bar_am_pm_info">24-hour clock is enabled</string>
-   
-    <string name="clock_date_display">Date</string>
-    <string name="clock_date_display_summary">Display custom date before the clock</string>
-    <string name="clock_date_style">Date style</string>
-    <string name="clock_date_format">Date format</string>
-    <string name="clock_date_string_edittext_title">Must be in DateFormat eg. MM/dd/yy</string>
-    <string name="clock_date_string_edittext_summary">Enter string</string>
-    <string name="clock_title_enable">Clock style</string>
-    <string name="title_clock_ampm_entries">AM/PM style</string>
-    <string name="enable_clock_weekday">Day of the week</string>
-    <string name="enable_clock_weekday_summary">Abbreviated day of the week before the time</string>
-    <string name="colors">Colors</string>
-    <string name="clock_color_title">Clock color</string>
-    <string name="alarm">Alarms</string>
-    <string name="clock_options">Clock Options</string>
-    <string name="nothing">Nothing</string>
-    <string name="today">Calendar for today</string>
-    <string name="event">Calendar new event</string>
-    <string name="voiceassist">Voice commands</string>
-    <string name="title_clock_doubleclick">Clock double click actions</string>
-    <string name="title_clock_longclick">Clock long click actions</string>
-    <string name="title_clock_shortclick">Clock short click actions</string>
-
-    <!-- clock stuff -->
-    <string name="right_clock">Right clock</string>
-    <string name="center_clock">Center clock</string>
-    <string name="no_clock">No clock</string>
-    <string name="dont_show">Don\'t show</string>
-    <string name="small_am_pm">Small AM/PM</string>
-    <string name="regular_am_pm">Regular AM/PM</string>
-    <string name="protekk_oclock">ProTekk O\'Clock</string>
-    <string name="small_weekday">Small weekday</string>
-    <string name="regular_weekday">Regular weekday</string>
-    <!-- Status bar notification count -->
-    <string name="status_bar_notif_count_title">Show notification count</string>
-    <string name="status_bar_notif_count_summary">Display number of pending notifications</string>
-
-    <!-- Wakeup options -->
-    <string name="display_category_wakeup_options_title">Wakeup options</string>
-    <string name="pref_volume_wake_title">Volume rocker wake</string>
-    <string name="pref_volume_wake_summary">Pressing the volume rocker up/down will wake the device</string>
-    <string name="pref_home_wake_title">Home button</string>
-    <string name="pref_home_wake_summary">Pressing the home button will wake your device</string>
-    <!-- Setting checkbox summary for displaying USB debugging notification -->
-    <string name="adb_notify">USB debugging notify</string>
-    <string name="adb_notify_summary">Display a notification when USB debugging is connected</string>
-
-    <!-- Launches Dev Tools -->
-    <string name="development_tools_title">Launch Tools</string>
-
-    <!-- USB Mass Storage -->
-    <string name="usb_mass_storage_title">Mass storage</string>
-    <string name="usb_mass_storage_summary">Enable USB mass storage</string>
-    
-    <!-- Digital clock widget  -->
-    <string name="digital_clock_color_title">DigitalClock widget time color</string>
-    <string name="digital_date_color_title">DigitalClock widget date color</string>
-
-    <!-- Android debugging over WiFi -->
-    <string name="adb_over_network">ADB over network</string>
-    <string name="adb_over_network_summary">Enable TCP/IP debugging over network interfaces (Wi-Fi, USB networks). This setting is reset on reboot</string>
-    <!-- Warning for Adb over Network -->
-    <string name="adb_over_network_warning">WARNING: When ADB over network is enabled, your phone is open for intrusions on all connected networks, including GSM data network!\n\nOnly use this feature when you are connected on trusted networks.\n\nDo you really want to enable this function?</string>
-
-    <string name="lockscreen_buttons_title">Button actions</string>
-    <string name="lockscreen_buttons_summary">View or change lock screen button actions</string>
-    <string name="lockscreen_long_press_back_title">Long press Back button</string>
-    <string name="lockscreen_long_press_home_title">Long press Home button</string>
-    <string name="lockscreen_long_press_menu_title">Long press Menu button</string>
-    <string name="lockscreen_buttons_no_action">No action</string>
-    <string name="lockscreen_buttons_flashlight">Flashlight</string>
-    <string name="lockscreen_buttons_next">Next song</string>
-    <string name="lockscreen_buttons_previous">Previous song</string>
-    <string name="lockscreen_buttons_playpause">Play/Pause music</string>
-    <string name="lockscreen_buttons_toggle_sound">Toggle sound</string>
-
-    <!-- Quick settings panel  -->
-    <string name="quick_settings_panel_title">Quick Settings panel</string>
-    <string name="quick_settings_title">Quick Settings</string>
-    <string name="title_static_tiles">Static tiles</string>
-    <string name="tile_picker_title">Tiles and layout</string>
-    <string name="tile_picker_summary">View, select or change the layout of the displayed tiles</string>
-    <string name="tile_choose_title">Choose a tile</string>
-
-    <string name="title_tile_airplane">Airplane mode</string>
-    <string name="title_tile_battery">Battery stats</string>
-    <string name="title_tile_bluetooth">Bluetooth</string>
-    <string name="title_tile_brightness">Brightness</string>
-    <string name="title_tile_sleep">Go to sleep</string>
-    <string name="title_tile_gps">GPS</string>
-    <string name="title_tile_torch">Torch</string>
-    <string name="title_tile_lockscreen">Lock screen</string>
-    <string name="title_tile_lte">LTE</string>
-    <string name="title_tile_mobiledata">Mobile data</string>
-    <string name="title_tile_profile">Profile</string>
-    <string name="title_tile_autorotate">Orientation</string>
-    <string name="title_tile_settings">Settings</string>
-    <string name="title_tile_sound">Sound</string>
-    <string name="title_tile_sync">Sync</string>
-    <string name="title_tile_wifiap">Wi-Fi AP</string>
-    <string name="title_tile_wifi">Wi-Fi</string>
-    <string name="title_tile_wimax">WiMAX</string>
-    <string name="title_tile_user">User switcher</string>
-    <string name="title_tile_networkmode">Network mode</string>
-    <string name="title_tile_nfc">NFC</string>
-    <string name="title_tile_screen_timeout">Screen timeout</string>
-    <string name="title_tile_usb_tether">USB Tether</string>
-    <string name="title_tile_quiet_hours">Quiet hours</string>
-    <string name="title_tile_volume">Volume</string>
-    <string name="title_tile_expanded_desktop">Expanded desktop</string>
-    <string name="title_dynamic_tiles">Dynamic tiles</string>
-    <string name="dynamic_tiles_note_title">Note</string>
-    <string name="dynamic_tiles_note_summary">Dynamic tiles are not always visible and will only show up if triggered by a system event</string>
-    <string name="title_dynamic_alarm">Alarm clock</string>
-    <string name="title_dynamic_bugreport">Bug report</string>
-    <string name="title_dynamic_dock_battery">Dock battery</string>
-    <string name="title_dynamic_ime">IME changer</string>
-    <string name="title_dynamic_usbtether">USB Tether</string>
-    <string name="title_dynamic_wifi">Wi-Fi display</string>
-    <string name="custom_app">Custom app</string>
-    <string name="title_general">General</string>
-    <string name="title_quick_pulldown">Quick pulldown</string>
-    <string name="summary_quick_pulldown">%1$s edge of the status bar pulls down Quick Settings</string>
-    <string name="quick_pulldown_summary_left">Left</string>
-    <string name="quick_pulldown_summary_right">Right</string>
-    <string name="quick_pulldown_off">Off</string>
-    <string name="quick_pulldown_left">Left</string>
-    <string name="quick_pulldown_right">Right</string>
-    <string name="title_collapse_panel">Auto close panel</string>
-    <string name="summary_collapse_panel">Close the Quick Settings panel upon toggle</string>
-
-    <!-- Shortcut picker -->
-    <string name="use_custom_app_title">Use custom application</string>
-    <string name="use_custom_app_summary">Use custom application instead of the recent applications dialog</string>
-    <string name="group_applications">Applications</string>
-
-    <!-- QuickSettings style options -->
-    <string name="quicksettings_tiles_style">Quick Settings style</string>
-    <string name="summary_quicksettings_tiles_style">Show or change Quick Settings style options</string>
-    <string name="quicksettings_tiles_style_additional_options">Additional options</string>
-    <string name="tiles_per_row_title">Tiles per row</string>
-    <string name="tiles_per_row_duplicate_landscape_title">Scale landscape quantity</string>
-    <string name="tiles_per_row_duplicate_landscape_summary">Landscape view doubles tiles per row quantity</string>
-    <string name="quick_tiles_text_color_title">Tiles text color</string>
-    <string name="quick_settings_style_reset">Reset colors</string>
-    <string name="none">None</string> 
-    
-    <!-- Reset tiles -->
-    <string name="tiles_reset_title">Reset</string>
-    <string name="tiles_reset_message">Restore the default displayed tiles and layout?</string>
-
-    <!--- Volume key cursor control -->
-    <string name="volume_key_cursor_control_title">Volume key cursor control</string>
-    <string name="volume_key_cursor_control_off">Disabled</string>
-    <string name="volume_key_cursor_control_on">Volume up/down moves cursor left/right</string>
-    <string name="volume_key_cursor_control_on_reverse">Volume up/down moves cursor right/left</string>
-
-    <!-- Wireless display -->
-    <string name="pref_wifi_disable_hdcp_title">Skip HDCP negotiation</string>
-    <string name="pref_wifi_disable_hdcp_summary">Try this option if you can connect but don\'t get any output</string>
-
-    <!--- Sms security limit -->
-    <string name="app_security_title">App security</string>
-    <string name="sms_security_check_limit_title">SMS message limit</string>
-    <string name="sms_security_check_limit_summary">Apps can send %d messages in 30 minutes before requiring confirmation</string>
-    <string name="sms_security_check_limit_default">30 (Default)</string>
-
-    <!--- Lock clock -->
-    <string name="lock_clock_title">Clock widget</string>
-    <string name="lock_clock_summary">View or change how the \'cLock\' Home and Lock screen widgets will display</string>
-
-    <!-- Stylus Icon -->
-    <string name="stylus_icon_enabled_title">Show icon when using stylus</string>
-    <string name="stylus_icon_enabled_summary">Show the pointer icon when hovering or drawing with the stylus</string>
-
-    <string name="lockscreen_maximize_widgets_title">Maximize widgets</string>
-    <string name="lockscreen_maximize_widgets_summary">Show widgets maximized and the unlock minimized when the screen is turned on</string>
-
-    <!-- Custom lock screen background -->
-    <string name="lockscreen_custom_background_title">Background</string>
-    <string name="lockscreen_custom_background_dialog_title">Choose color</string>
-    <string name="lockscreen_background_result_successful">Background changed successfully</string>
-    <string name="lockscreen_background_result_not_successful">Background could not be changed</string>
-    <string name="lockscreen_background_color_fill">Color fill</string>
-    <string name="lockscreen_background_custom_image">Custom image</string>
-    <string name="lockscreen_background_default_wallpaper">Default wallpaper</string>
-
-    <!-- Launch music player when headset is connected -->
-    <string name="headset_connect_player_title">Launch music app</string>
-    <string name="headset_connect_player_summary">Launch the default music app when headset is connected</string>
-
-    <!-- Safe headset volume restore checkbox -->
-    <string name="safe_headset_volume_title">Safe headset volume</string>
-    <string name="safe_headset_volume_summary">Prevent loud volume levels when headset is first plugged in</string>
-
-   <!-- Color Picker -->
-    <string name="dialog_color_picker">Color Picker</string>
-    <string name="press_color_to_apply">Press on Color to apply</string>
-    <string name="arrow_right">→</string>
-    <string name="arrow_down">↓</string>
-    <string name="hex">Hex:</string>
-    <string name="hex_hint">#FF000000</string>
-    <string name="set">Set</string>
-    <string name="ics_color">Holo</string>
-
-    <!-- Weather -->
-    <string name="title_weather">Weather Settings</string>
-    <string name="weather">Weather</string>
-    <string name="header_summary_weather">@null</string>
-    <string name="weather_enable">Enable weather</string>
-    <string name="weather_enable_summary">Whether to pull weather information and display it throughout the ROM.</string>
-    <string name="weather_use_custom_location">Use custom location</string>
-    <string name="weather_use_custom_location_summary">Setting a custom location can save some battery. Otherwise network-location is used to determine your location.</string>
-    <string name="weather_custom_location_dialog_title">Set your location</string>
-    <string name="weather_custom_location_dialog_message">Be sure to follow the examples! Setting an invalid location will stop you from getting weather updates and may cause unexpected behavior.\n\nExamples: New York,NY // New York, NY // 10033 // London, England</string>
-    <string name="weather_custom_location_title">Custom location</string>
-    <string name="weather_show_location_title">Show location</string>
-    <string name="weather_show_location_summary">Show your location.</string>
-    <string name="weather_refresh_interval">Refresh interval</string>
-    <string name="weather_refresh_interval_minutes">" minutes"</string>
-    <string name="weather_use_celcius">Metric units</string>
-    <string name="weather_use_celcius_summary">Enabling this will display weather temperature in Celsius rather than Fahrenheit and windspeed in km/h rather than mph.</string>
-    <string name="weather_statusbar_style">Statusbar weather style</string>
-    <string name="title_weather_longclick">Weather panel long click actions</string>
-    <string name="title_weather_shortclick">Weather panel short click actions</string>
-    <string name="update">Update weather panel</string>
-    <string name="weather_refreshing">Requesting weather update!</string>
-    <string name="weather_loc_warning_title">Cannot retrieve location!</string>
-    <string name="weather_loc_warning_msg">"Obtaining location from network is currently disabled. This breaks the ability to get the current weather in your current location. Please set a custom location or enable obtaining your location from your network."</string>
-    <string name="weather_loc_warning_positive">"Enable network location"</string>
-    <string name="weather_loc_warning_negative">"Don't enable."</string>
-    <string name="menu_weather_get_weather">Get weather</string>
-    <string name="weather_statusbar_hide">Weather panel hide options</string>
-    <string name="always_on">Visible</string>
-    <string name="always_hide">Hide</string>
-   
-
-    <!-- Weather Codes -->
-    <string name="weather_0">Tornado</string>
-    <string name="weather_1">Tropical Storm</string>
-    <string name="weather_2">Hurricane</string>
-    <string name="weather_3">Severe Thunderstorms</string>
-    <string name="weather_4">Thunderstorms</string>
-    <string name="weather_5">Mixed Rain and Snow</string>
-    <string name="weather_6">Mixed Rain and Sleet</string>
-    <string name="weather_7">Mixed Snow and Sleet</string>
-    <string name="weather_8">Freezing Drizzle</string>
-    <string name="weather_9">Drizzle</string>
-    <string name="weather_10">Freezing Rain</string>
-    <string name="weather_11">Showers</string>
-    <string name="weather_12">Showers</string>
-    <string name="weather_13">Snow Flurries</string>
-    <string name="weather_14">Light Snow Showers</string>
-    <string name="weather_15">Blowing Snow</string>
-    <string name="weather_16">Snow</string>
-    <string name="weather_17">Hail</string>
-    <string name="weather_18">Sleet</string>
-    <string name="weather_19">Dust</string>
-    <string name="weather_20">Foggy</string>
-    <string name="weather_21">Haze</string>
-    <string name="weather_22">Smoky</string>
-    <string name="weather_23">Blustery</string>
-    <string name="weather_24">Windy</string>
-    <string name="weather_25">Cold</string>
-    <string name="weather_26">Cloudy</string>
-    <!-- mostly cloudy (night) -->
-    <string name="weather_27">Mostly Cloudy</string>
-    <!-- mostly cloudy (day) -->
-    <string name="weather_28">Mostly Cloudy</string>
-    <!-- partly cloudy (night) -->
-    <string name="weather_29">Partly Cloudy</string>
-    <!-- partly cloudy (day) -->
-    <string name="weather_30">Partly Cloudy</string>
-    <!-- clear (night) -->
-    <string name="weather_31">Clear</string>
-    <string name="weather_32">Sunny</string>
-    <!-- fair (night) -->
-    <string name="weather_33">Fair</string>
-    <!-- fair (day) -->
-    <string name="weather_34">Fair</string>
-    <string name="weather_35">Mixed Rain and Hail</string>
-    <string name="weather_36">Hot</string>
-    <string name="weather_37">Isolated Thunderstorms</string>
-    <string name="weather_38">Scattered Thunderstorms</string>
-    <string name="weather_39">Scattered Thunderstorms</string>
-    <string name="weather_40">Scattered Showers</string>
-    <string name="weather_41">Heavy Snow</string>
-    <string name="weather_42">Scattered Snow Showers</string>
-    <string name="weather_43">Scattered Snow Showers</string>
-    <string name="weather_44">Partly Cloudy</string>
-    <string name="weather_45">Thundershowers</string>
-    <string name="weather_46">Snow Showers</string>
-    <string name="weather_47">Isolated Thundershowers</string>
-    <!-- Forecase unavailable -->
-    <string name="weather_3200"></string>
-
-    <!-- Miscellaneous -->
-    <string name="location_unavailable">Unable to retrieve location information for weather update</string>
-
-    <!-- cardinal directions -->
-    <string name="direction_north">N</string>
-    <string name="direction_north_east">NE</string>
-    <string name="direction_east">E</string>
-    <string name="direction_south_east">SE</string>
-    <string name="direction_south">S</string>
-    <string name="direction_south_west">SW</string>
-    <string name="direction_west">W</string>
-    <string name="direction_north_west">NW</string>
-    
-    <string name="off">Off</string>
-    <string name="time_1_minute">1 minute</string>
-    <string name="time_5_minutes">5 minutes</string>
-    <string name="time_10_minutes">10 minutes</string>
-    <string name="time_30_minutes">30 minutes</string>
-    <string name="time_45_minutes">45 minutes</string>
-    <string name="time_60_minutes">60 minutes</string>
-    <string name="time_2_hours">2 hours</string>
-    <string name="time_3_hours">3 hours</string>
-    <string name="time_4_hours">4 hours</string>
-    <string name="time_6_hours">6 hours</string>
-    <string name="time_8_hours">8 hours</string>
-    <string name="above_carrier_text">Above carrier text</string>
-    <string name="weather_panel">Weather panel</string>
-    <string name="text">Text</string>
-    <!-- Waiver -->
-    <string name="cyanogenmod_waiver_title">Waiver</string>
-    <string name="cyanogenmod_waiver_body">Changing this setting may be against your state or government laws.\n\nIn selecting \'OK\' below, you acknowledge this warning and waive, indemnify and hold harmless CyanogenMod and its contributors from all legal liabilities.</string>
-
-      <!-- Automatic brightness customization -->
-    <string name="light_sensor_current_value">Current light sensor value: <xliff:g id="light_level">%d</xliff:g> lux</string>
-    <string name="auto_brightness_dialog_title">Automatic brightness levels</string>
-    <string name="auto_brightness_level_format"><xliff:g id="level">%1$d</xliff:g> lux</string>
-    <string name="auto_brightness_last_level_format"><xliff:g id="level">%1$d</xliff:g> -\n\u221e lux</string>
-    <string name="auto_brightness_brightness_format" translatable="false"><xliff:g id="percent">%s</xliff:g>%%</string>
-    <string name="auto_brightness_adjust_button">Adjust</string>
-    <string name="auto_brightness_close_button">Close</string>
-    <string name="auto_brightness_reset_button">Reset</string>
-    <string name="auto_brightness_split_dialog_title">Split brightness level</string>
-    <string name="auto_brightness_start_lux">Range start (lux)</string>
-    <string name="auto_brightness_end_lux">Range end (lux)</string>
-    <string name="auto_brightness_level_dialog_title">Light level setup</string>
-    <string name="auto_brightness_lux">Ambient brightness (lux)</string>
-    <string name="auto_brightness_backlight">Screen brightness (%)</string>
-    <string name="auto_brightness_reset_dialog_title">Reset levels?</string>
-    <string name="auto_brightness_reset_confirmation">All brightness levels will be reset to their default settings.</string>
-    <string name="auto_brightness_split_lux_format">Split position (between <xliff:g id="min">%1$d</xliff:g> and <xliff:g id="max">%2$d</xliff:g> lux)</string>
-    <string name="auto_brightness_level_options">Light level options</string>
-    <string name="auto_brightness_menu_edit">Edit</string>
-    <string name="auto_brightness_menu_split">Split</string>
-    <string name="auto_brightness_menu_remove">Remove</string>
-    <string name="auto_brightness_preview">Preview</string>
-    <string name="auto_brightness_preview_dialog_title">Brightness curve preview</string>
-    <string name="auto_brightness_help_dialog_title">Help</string>
-    <string name="auto_brightness_help_text"><b>How is brightness calculated?</b>
-\n\n
-The brightness curve is calculated by performing a <i>cubic spline interpolation</i>
-on a given number of <i>control points</i>. It\'s not a \'bucket-type\' calculation where
-screen brightness will stay constant for a specific range of ambient brightness. That way,
-small changes in ambient brightness do not cause a large jump in screen brightness; however,
-it can be a little hard to predict the exact consequences of changing control points.\n
-To help with that, a preview of the calculated curve can be examined. Please note that the
-preview shows the curve in <i>logarithmic</i> scale, so that all control points can be shown
-distinctively. When using a linear scale, it wouldn\'t be possible to distinguish the tendentially
-more important control points in the lower range of ambient brightness.
-\n\n
-<b>How to edit the brightness curve?</b>
-\n\n
-Each line in the brightness list corresponds to one <i>control point</i> of the
-brightness curve. To edit the brightness level of the point, you can use the slider
-present in each line. The screen brightness will be changed accordingly while touching
-the slider to give a preview of the light level.\n
-Additional options are available by long-pressing a line. By selecting \'Edit\', you can
-both edit the ambient brightness level of the control point as well as manually input the
-desired screen brightness. Selecting \'Split\' allows you to to duplicate one line into
-two in order to insert additional control points. \'Remove\' deletes the selected line.
-    </string>
-
-    <string name="auto_brightness_sensitivity_title">Adjustment sensitivity</string>
-    <string name="auto_brightness_sensitivity_verylow">Very low</string>
-    <string name="auto_brightness_sensitivity_low">Low</string>
-    <string name="auto_brightness_sensitivity_medium">Medium</string>
-    <string name="auto_brightness_sensitivity_high">High</string>
-    <string name="auto_brightness_sensitivity_veryhigh">Very high</string>
-
-    <!-- Advanced reboot options -->
-    <string name="advanced_reboot_title">Advanced reboot</string>
-    <string name="advanced_reboot_summary">When unlocked, include options in the power menu for rebooting into recovery or bootloader</string>
-    <!-- Propmodder -->
-    <string name="propmodder_title">Propmodder</string>
-    <string name="buildprop_title">/system/build.prop mods</string>
-    <string name="nonprop_cat_title">Mods involving init.d script</string>
-    <string name="main_warning_title">YOU HAVE BEEN WARNED</string>
-    <string name="main_warning_summary">This app was conceived while watching monkeys juggling knives.  It hacks your \'/system/build.prop\' WE ARE NOT RESPONSIBLE FOR ACCIDENTAL KNIFE CUTS! Your device your responsibility</string>
-    <string name="pref_wifi_scan_interval_title">Wifi scan interval</string>
-    <string name="pref_wifi_scan_interval_summary">The time between wifi scans when no stored access points are available (requires reboot)</string>
-    <string name="pref_wifi_scan_alt_summary">Time between wifi scans: %s</string>
-    <string name="pref_lcd_density_title">LCD density</string>
-    <string name="pref_lcd_density_summary">This is the screen density allowing more high definition look (requires reboot)</string>
-    <string name="pref_lcd_density_alt_summary">Screen density: %s</string>
-    <string name="pref_max_events_title">Windows Manager\'s max events per second</string>
-    <string name="pref_max_events_summary">This is a runtime value that controls the number of events the system will allow in a second (requires reboot)</string>
-    <string name="pref_max_events_alt_summary">Max number of system events: %s</string>
-    <string name="pref_usb_mode_title">Default USB mode</string>
-    <string name="pref_usb_mode_summary">This decides what the default setting is when you plug in to a computer via USB (requires reboot)</string>
-    <string name="pref_ring_delay_title">Telephone ringer delay</string>
-    <string name="pref_ring_delay_summary">The amount of time from when the system registers an incoming phone call until the ringer starts (requires reboot)</string>
-    <string name="pref_ring_delay_alt_summary">Incoming call Delay: %s</string>
-    <string name="pref_vm_heapsize_title">Dalvik cache heapsize</string>
-    <string name="pref_vm_heapsize_summary">This controls the size of the cache the Dalvik VM has access to (requires reboot)</string>
-    <string name="pref_vm_heapsize_alt_summary">Dalvik VM cache size: %s</string>
-    <string name="propmodder_warning_title">ROOT IS REQUIRED</string>
-    <string name="propmodder_warning">This program changes system properties in /system/build.prop DO NOT USE if you don\'t know what you are doing. We (n00bware, makers of PropModder) are not responsible for your device PERIOD. You have been warned</string>
-    <string name="showbuild_title">Do you know what is in your build.prop</string>
-    <string name="showbuild_dialog">This is your /system/build.prop</string>
-    <string name="showbuild_loading">Loading build.prop\u2026</string>
-    <string name="showbuild_error">Error loading build.prop\u2026</string>
-    <string name="showbuild_unknown">Unknown</string>
-    <string name="showbuild_version">Version</string>
-    <string name="showbuild_label">We should look because knowing is half the battle</string>
-    <string name="pref_fast_up_title">HSUPA upload speed hack</string>
-    <string name="pref_fast_up_summary">*WARNING* if you change this value it will add the needed values to your build.prop if they are not already present (requires reboot)</string>
-    <string name="pref_fast_up_alt_summary">Fast up found active: %s</string>
-    <string name="pref_prox_delay_title">Proximity sensor delay</string>
-    <string name="pref_prox_delay_summary">When you are in-call screen is off when the device moves away from your face this delay value controls how long before screen turns on (requires reboot)</string>
-    <string name="pref_prox_delay_alt_summary">Proximity sensor set to: %s</string>
-    <string name="pref_logcat_title">Disable logcat</string>
-    <string name="pref_logcat_summary">Disabling logcat can improve system speed, but makes debugging very difficult</string>
-    <string name="pref_mod_version_title">Change your Build Number</string>
-    <string name="pref_mod_version_summary">This is astetic and doesn\'t improve the system</string>
-    <string name="pref_mod_version_alt_summary">Build Number: %s</string>
-    <string name="pref_mod_version_default">PropModder!!!</string>
-    <string name="pref_sleep_title">PM Sleep mode</string>
-    <string name="pref_sleep_summary">Modify Nighttime sleep policy</string>
-    <string name="pref_sleep_alt_summary">Current Sleep Mode: %s</string>
-    <string name="pref_navbar_title">Navigation Bar</string>
-    <string name="pref_navbar_summary">Show/Hide Navigation Bar</string>
-    <string name="pref_navbar_alt_summary">Navigation Bar: %s</string>
-    <string name="pref_tcp_stack_title">Optimize TCP Stack</string>
-    <string name="pref_tcp_stack_summary">Modify the buffer-size for better performance</string>
-    <string name="pref_check_in_title">Check in service</string>
-    <string name="pref_check_in_summary">Stop sending system usage data to Google and HTC</string>
-    <string name="pref_sdcard_buffer_title">Sdcard speed hack</string>
-    <string name="pref_sdcard_buffer_summary">Modify the sdcard buffer-size for better performance</string>
-    <string name="pref_g_speed_title">3G Speed Hack</string>
-    <string name="pref_g_speed_summary">Uncap 3g speed</string>
-    <string name="pref_gpu_title">GPU Acceleration</string>
-    <string name="pref_gpu_summary">To enable hardware acceleration where the GPU controls the UI instead of the CPU</string>
-
-
-    <!-- Battery Bar -->
-    <string name="battery_bar">Battery bar location</string>
-    <string name="battery_bar_color">Battery bar color</string>
-    <string name="battery_bar_cat">Battery bar options</string>
-    <string name="battery_bar_style_title">Battery bar style</string>
-    <string name="battery_bar_thickness_title">Battery bar thickness</string>
-    <string name="battery_bar_animate_title">Charging animation</string>
-    <string name="battery_bar_animate_summary">The charging animation may result in a poor user experience. Enable at your own discretion.</string>
-    <string name="navigation_bar_category">Navigation bar</string>
-   <!-- Navigation ring shortcuts -->
-    <string name="navigation_ring_title">Quick launch shortcuts</string>
-    <string name="navring_target_reset_message">Delete all user created navigation bar shortcuts and restore to default?</string>
-    <string name="navring_target_reset">Navigation bar shortcuts reset to default</string>
-    <string name="navring_target_save">Navigation bar shortcuts saved</string>
-    <string name="navring_action_open_ime_switcher">Open IME Switcher</string>
-    <string name="navring_action_kill_app">Kill app</string>
-    <string name="navring_action_none">None</string>
-    <string name="navring_action_take_screenshot">Take screenshot</string>
-    <string name="navring_action_ring_vibrate">Ring/Vibration</string>
-    <string name="navring_action_ring_silent">Ring/Silent</string>
-    <string name="navring_action_ring_vibrate_silent">Ring/Vibration/Silent</string>
-    <string name="navring_action_screen_off">Screen off</string>
-    <string name="navring_action_torch">Toggle torch</string>
-    <string name="navring_action_google_now">Google Now</string>
-    <string name="navring_choose_action_title">Choose action</string>
-        <!-- Stylus Gestures -->
-    <string name="gestures_settings_title">Stylus gestures</string>
-    <string name="category_spen_title">Stylus gestures</string>
-    <string name="enable_subcat_title">Stylus</string>
-    <string name="enable_spen_title_head">Enable stylus gestures</string>
-    <string name="enable_spen_summary_head">Launch custom actions with stylus button swipe gestures. Warning: apps will not be able to receive input fired by holding the stylus button</string>
-    <string name="gestures_subcat_title">Gestures</string>
-    <string name="gestures_left_spen_title_head">Left swipe</string>
-    <string name="gestures_left_spen_summary_head">Launch custom action on left swipe</string>
-    <string name="gestures_right_spen_title_head">Right swipe</string>
-    <string name="gestures_right_spen_summary_head">Launch custom action on right swipe</string>
-    <string name="gestures_up_spen_title_head">Up swipe</string>
-    <string name="gestures_up_spen_summary_head">Launch custom action on up swipe</string>
-    <string name="gestures_down_spen_title_head">Down swipe</string>
-    <string name="gestures_down_spen_summary_head">Launch custom action on down swipe</string>
-    <string name="gestures_long_spen_title_head">Long press</string>
-    <string name="gestures_long_spen_summary_head">Launch custom action on long press</string>
-    <string name="gestures_double_spen_title_head">Double tap</string>
-    <string name="gestures_double_spen_summary_head">Launch custom action on double tap</string>
-
-    <!-- Gestures Options -->
-    <string name="gestures_action_empty">No action</string>
-    <string name="gestures_action_home">Emulate home key</string>
-    <string name="gestures_action_back">Emulate back key</string>
-    <string name="gestures_action_menu">Emulate menu key</string>
-    <string name="gestures_action_search">Invoke search</string>
-    <string name="gestures_action_recent">Recent apps</string>
-
-    <!-- Stylus gestures -->
-    <string name="stylus_app_not_installed">%s is not installed</string>
-
-    <!-- Wi-Fi frequency selection for new IBSS -->
-    <string name="wifi_ibss_freq_title">Channel / Frequency</string>
-    <string name="wifi_channel">Channel</string>
-    <string name="wifi_mhz">MHz</string>
-
-    <!-- Category title for power sound notification specific Settings.
-         [CHAR LIMIT=40] -->
-    <string name="power_notifications_category_title">Power sounds</string>
-
-    <!-- Sound settings, power notifications enable/disable, setting check box label -->
-    <string name="power_notifications_enable_title">Enable</string>
-    <!-- Sound settings, power notifications vibrate enable/disable, setting check box label -->
-    <string name="power_notifications_vibrate_title">Vibrate</string>
-    <!-- Sound settings, power notifications ringtone selection, preference label -->
-    <string name="power_notifications_ringtone_title">Notification sound</string>
-    <!-- Sound settings, power notifications label for ringtone == none -->
-    <string name="power_notifications_ringtone_silent">Silent</string>
-    <!--CRT Stuff-->
-    <string name="display_category_animation_options_title">Animation options</string>
-    <string name="system_power_crt_screen_off_title">CRT Screen Off</string>
-    <string name="system_power_crt_screen_off_summary">Screen will animate an Electron Beam when turned off</string>
-    <string name="system_power_crt_mode_title">CRT animation mode</string>
-    <string name="system_power_crt_mode_dialog_title">Show CRT animation</string>
-    <string name="system_power_crt_mode_horizontal">Portrait horizontal</string>
-    <string name="system_power_crt_mode_vertical">Portrait vertical</string>
-    <string name="system_power_crt_mode_both">Orientation dependent</string>
-
-    <!-- Label for are-notifications-enabled checkbox in app details [CHAR LIMIT=20] -->
-    <string name="app_halo_label_black">Blacklist from HALO</string>
-    <string name="app_halo_label_white">Whitelist from HALO</string>
- 
-    <!-- HALO -->
-    <string name="halo_options_title">Halo</string>
-    <string name="halo_hide_title">Hide HALO after activity</string>
-    <string name="halo_enabled_title">Enable HALO</string>
-    <string name="halo_enabled_summary">If checked enable HALO feature (floating window on recent apps would not be affected)</string>
-    <string name="halo_hide_summary">HALO will appear for incoming tasks and scroll out of sight after a while</string>
-    <string name="halo_reversed_title">Reverse HALO</string>
-    <string name="halo_reversed_summary">Applies for task switching and moving gestures</string>
-    <string name="halo_state_title">HALO policy</string>
-    <string name="halo_state_summary">Enables black/white listing notifications</string>
-    <string name="halo_state_black">Black list</string>
-    <string name="halo_state_white">White list</string>
-    <string name="halo_pause_title">Pause active app</string>
-    <string name="halo_pause_summary">When opening an app with HALO the underlying app will get paused</string>
-
-    <!-- Privacy Guard -->
-    <string name="privacy_guard_switch_label">Enable Privacy Guard</string>
-    <string name="privacy_guard_dlg_title">Enable Privacy Guard?</string>
-    <string name="privacy_guard_dlg_text">When Privacy Guard is enabled, the app will not be able to access personal data such as contacts, messages or call logs.</string>
-    <string name="privacy_guard_default_title">Enabled by default</string>
-    <string name="privacy_guard_default_summary">Enable by default for newly-installed apps</string>
-    <string name="privacy_guard_manager_title">Privacy Guard</string>
-    <string name="privacy_guard_manager_summary">Manage which apps have access to your personal data</string>
-    <string name="privacy_guard_no_user_apps">No apps are installed</string>
-    <string name="privacy_guard_filter_does_not_match">No apps with relevant permissions are installed</string>
-    <string name="privacy_guard_help_title">Help</string>
-    <string name="privacy_guard_reset_title">Reset</string>
-    <string name="privacy_guard_help_text">In this screen you can choose for which apps Privacy Guard should be active by simply tapping on them. Selected apps will not be able to access your personal data, such as contacts, messages or call logs. Long pressing on an entry opens the app details screen for that app.\n\nBy default system apps are not shown. If you want to show them or filter apps to show only the ones requesting access to personal data by their permissions, select the respective options in the menu.</string>
-    <string name="privacy_guard_manager_show_system_apps">Show system apps</string>
-    <string name="privacy_guard_manager_filter_permissions">Permission filter</string> 
+    <!-- User app limits screen title [CHAR LIMIT=35] -->
+    <string name="user_restrictions_title">Application and content restrictions</string>
+    <!-- User limits screen, user name rename text [CHAR LIMIT=15] -->
+    <string name="user_rename">RENAME</string>
+    <!-- Preference label for custom restrictions [CHAR LIMIT=35] -->
+    <string name="app_restrictions_custom_label">Set app restrictions</string>
+    <!-- Summary for app entries that are controlled by another entry [CHAR LIMIT=none] -->
+    <string name="user_restrictions_controlled_by">Controlled by <xliff:g id="app">%1$s</xliff:g></string>
+    <!-- Summary for apps that aren't supported in limited users [CHAR LIMIT=none] -->
+    <string name="app_not_supported_in_limited">This app is not supported in restricted profiles</string>
+    <!-- Summary text for apps that are allowed to access accounts from the primary user [CHAR LIMIT=none] -->
+    <string name="app_sees_restricted_accounts">This app can access your accounts</string>
+
+    <!-- Restrictions title for configuring wifi and mobile [CHAR LIMIT=35] -->
+    <string name="restriction_wifi_config_title">Wi\u2011Fi and Mobile</string>
+    <!-- Restrictions summary for configuring wifi and mobile [CHAR LIMIT=100] -->
+    <string name="restriction_wifi_config_summary">Allow modification of Wi\u2011Fi and Mobile settings</string>
+    <!-- Restrictions title for changing bluetooth configuration [CHAR LIMIT=35] -->
+    <string name="restriction_bluetooth_config_title">Bluetooth</string>
+    <!-- Restrictions summary for changing bluetooth configuration [CHAR LIMIT=100] -->
+    <string name="restriction_bluetooth_config_summary">Allow modification of Bluetooth pairings and settings</string>
+    <!-- Restrictions title for allowing NFC transfers [CHAR LIMIT=35] -->
+    <string name="restriction_nfc_enable_title">NFC</string>
+    <!-- Restrictions summary for allowing NFC transfers (tablet) [CHAR LIMIT=100] -->
+    <string name="restriction_nfc_enable_summary" product="tablet">Allow data exchange when the tablet touches another device</string>
+    <!-- Restrictions summary for allowing NFC transfers (phone) [CHAR LIMIT=100] -->
+    <string name="restriction_nfc_enable_summary" product="default">Allow data exchange when the phone touches another device</string>
+    <!-- Restrictions title for allowing location sharing [CHAR LIMIT=35] -->
+    <string name="restriction_location_enable_title">Location access</string>
+    <!-- Restrictions summary for allowing location sharing [CHAR LIMIT=100] -->
+    <string name="restriction_location_enable_summary" >Let apps use your location information</string>
+
+    <!-- Wizard back button label [CHAR LIMIT=25] -->
+    <string name="wizard_back">Back</string>
+    <!-- Wizard next button label [CHAR LIMIT=25] -->
+    <string name="wizard_next">Next</string>
+    <!-- Wizard next button label [CHAR LIMIT=25] -->
+    <string name="wizard_finish">Finish</string>
+
+    <!-- An option in a photo selection dialog, if there is no photo yet [CHAR LIMIT=50] -->
+    <string name="user_image_take_photo" msgid="7496128293167402354">Take photo</string>
+    <!-- An option in a photo selection dialog, if there is no photo yet [CHAR LIMIT=50] -->
+    <string name="user_image_choose_photo" msgid="3746334626214970837">Choose photo from Gallery</string>
+
+    <!-- Text to display in regulatory info screen (from device overlay). -->
+    <string name="regulatory_info_text"></string>
 </resources>
