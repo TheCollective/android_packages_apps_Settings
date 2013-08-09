@@ -58,10 +58,14 @@ public class SettingsPreferenceFragment extends PreferenceFragment implements Di
 
     // Cache the content resolver for async callbacks
     private ContentResolver mContentResolver;
+	
+	protected Context mContext;
 
     @Override
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
+
+        mContext = getActivity().getApplicationContext();
 
         // Prepare help url and enable menu if necessary
         int helpResource = getHelpResource();
