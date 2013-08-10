@@ -105,8 +105,6 @@ public class DevelopmentSettings extends PreferenceFragment
     private static final String LOCAL_BACKUP_PASSWORD = "local_backup_password";
     private static final String HARDWARE_UI_PROPERTY = "persist.sys.ui.hw";
     private static final String MSAA_PROPERTY = "debug.egl.force_msaa";
-    private static final String BUGREPORT = "bugreport";
-    private static final String BUGREPORT_IN_POWER_KEY = "bugreport_in_power";
     private static final String OPENGL_TRACES_PROPERTY = "debug.egl.trace";
 
     private static final String DEBUG_APP_KEY = "debug_app";
@@ -154,8 +152,6 @@ public class DevelopmentSettings extends PreferenceFragment
 
     private static final String DEVELOPMENT_TOOLS = "development_tools";
 
-    private static final String ADVANCED_REBOOT_KEY = "advanced_reboot";
-
     private static final int RESULT_DEBUG_APP = 1000;
 
     private IWindowManager mWindowManager;
@@ -170,8 +166,6 @@ public class DevelopmentSettings extends PreferenceFragment
     private CheckBoxPreference mEnableAdb;
     private CheckBoxPreference mAdbNotify;
     private Preference mClearAdbKeys;
-    private Preference mBugreport;
-    private CheckBoxPreference mBugreportInPower;
     private CheckBoxPreference mAdbOverNetwork;
     private CheckBoxPreference mKeepScreenOn;
     private CheckBoxPreference mEnforceReadExternal;
@@ -213,7 +207,6 @@ public class DevelopmentSettings extends PreferenceFragment
     private Object mSelectedRootValue;
     private PreferenceScreen mDevelopmentTools;
 
-    private CheckBoxPreference mAdvancedReboot;
     private CheckBoxPreference mExperimentalWebView;
 
     private final ArrayList<Preference> mAllPrefs = new ArrayList<Preference>();
@@ -262,21 +255,17 @@ public class DevelopmentSettings extends PreferenceFragment
             }
         }
 
-        mBugreport = findPreference(BUGREPORT);
-        mBugreportInPower = findAndInitCheckboxPref(BUGREPORT_IN_POWER_KEY);
         mAdbOverNetwork = findAndInitCheckboxPref(ADB_TCPIP);
         mKeepScreenOn = findAndInitCheckboxPref(KEEP_SCREEN_ON);
         mEnforceReadExternal = findAndInitCheckboxPref(ENFORCE_READ_EXTERNAL);
         mAllowMockLocation = findAndInitCheckboxPref(ALLOW_MOCK_LOCATION);
         mPassword = (PreferenceScreen) findPreference(LOCAL_BACKUP_PASSWORD);
         mAllPrefs.add(mPassword);
-        mAdvancedReboot = findAndInitCheckboxPref(ADVANCED_REBOOT_KEY);
 
         if (!android.os.Process.myUserHandle().equals(UserHandle.OWNER)) {
             disableForUser(mEnableAdb);
             disableForUser(mClearAdbKeys);
             disableForUser(mPassword);
-            disableForUser(mAdvancedReboot);
         }
 
         mDebugAppPref = findPreference(DEBUG_APP_KEY);
@@ -503,8 +492,6 @@ public class DevelopmentSettings extends PreferenceFragment
                 Settings.Global.ADB_ENABLED, 0) != 0);
         mAdbNotify.setChecked(Settings.Secure.getInt(cr,
                 Settings.Secure.ADB_NOTIFY, 1) != 0);
-        updateCheckBox(mBugreportInPower, Settings.Secure.getInt(cr,
-                Settings.Secure.BUGREPORT_IN_POWER_MENU, 0) != 0);
         updateCheckBox(mKeepScreenOn, Settings.Global.getInt(cr,
                 Settings.Global.STAY_ON_WHILE_PLUGGED_IN, 0) != 0);
         updateCheckBox(mEnforceReadExternal, isPermissionEnforced(READ_EXTERNAL_STORAGE));
@@ -535,20 +522,7 @@ public class DevelopmentSettings extends PreferenceFragment
         updateShowAllANRsOptions();
         updateExperimentalWebViewOptions();
         updateVerifyAppsOverUsbOptions();
-        updateBugreportOptions();
         updateRootAccessOptions();
-        updateAdvancedRebootOptions();
-    }
-
-    private void writeAdvancedRebootOptions() {
-        Settings.Secure.putInt(getActivity().getContentResolver(),
-                Settings.Secure.ADVANCED_REBOOT,
-                mAdvancedReboot.isChecked() ? 1 : 0);
-    }
-
-    private void updateAdvancedRebootOptions() {
-        mAdvancedReboot.setChecked(Settings.Secure.getInt(getActivity().getContentResolver(),
-                Settings.Secure.ADVANCED_REBOOT, 0) != 0);
     }
 
     private void updateAdbOverNetwork() {
@@ -768,25 +742,6 @@ public class DevelopmentSettings extends PreferenceFragment
     private boolean showVerifierSetting() {
         return Settings.Global.getInt(getActivity().getContentResolver(),
                 Settings.Global.PACKAGE_VERIFIER_SETTING_VISIBLE, 1) > 0;
-    }
-
-    private void updateBugreportOptions() {
-        if ("user".equals(Build.TYPE)) {
-            final ContentResolver resolver = getActivity().getContentResolver();
-            final boolean adbEnabled = Settings.Global.getInt(
-                    resolver, Settings.Global.ADB_ENABLED, 0) != 0;
-            if (adbEnabled) {
-                mBugreport.setEnabled(true);
-                mBugreportInPower.setEnabled(true);
-            } else {
-                mBugreport.setEnabled(false);
-                mBugreportInPower.setEnabled(false);
-                mBugreportInPower.setChecked(false);
-                Settings.Secure.putInt(resolver, Settings.Secure.BUGREPORT_IN_POWER_MENU, 0);
-            }
-        } else {
-            mBugreportInPower.setEnabled(true);
-        }
     }
 
     // Returns the current state of the system property that controls
@@ -1252,7 +1207,6 @@ public class DevelopmentSettings extends PreferenceFragment
                         Settings.Global.ADB_ENABLED, 0);
                 mVerifyAppsOverUsb.setEnabled(false);
                 mVerifyAppsOverUsb.setChecked(false);
-                updateBugreportOptions();
             }
         } else if (preference == mClearAdbKeys) {
             if (mAdbKeysDialog != null) dismissDialogs();
@@ -1261,10 +1215,6 @@ public class DevelopmentSettings extends PreferenceFragment
                         .setPositiveButton(android.R.string.ok, this)
                         .setNegativeButton(android.R.string.cancel, null)
                         .show();
-        } else if (preference == mBugreportInPower) {
-            Settings.Secure.putInt(getActivity().getContentResolver(),
-                    Settings.Secure.BUGREPORT_IN_POWER_MENU, 
-                    mBugreportInPower.isChecked() ? 1 : 0);
         } else if (preference == mAdbNotify) {
             Settings.Secure.putInt(getActivity().getContentResolver(),
                     Settings.Secure.ADB_NOTIFY,
@@ -1340,8 +1290,6 @@ public class DevelopmentSettings extends PreferenceFragment
             writeDebugLayoutOptions();
         } else if (preference == mKillAppLongpressBack) {
             writeKillAppLongpressBackOptions();
-        } else if (preference == mAdvancedReboot) {
-            writeAdvancedRebootOptions();
         }
 
         return false;
@@ -1432,7 +1380,6 @@ public class DevelopmentSettings extends PreferenceFragment
                         Settings.Global.ADB_ENABLED, 1);
                 mVerifyAppsOverUsb.setEnabled(true);
                 updateVerifyAppsOverUsbOptions();
-                updateBugreportOptions();
             }
         } else if (dialog == mAdbTcpDialog) {
             if (which == DialogInterface.BUTTON_POSITIVE) {

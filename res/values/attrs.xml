@@ -92,4 +92,9 @@
         <attr name="markerSize" format="dimension" />
         <attr name="margin" format="dimension" />
     </declare-styleable>
+
+    <declare-styleable name="ImageListPreference">
+        <attr name="summaryImage" format="reference" />
+        <attr name="entryImages" format="reference" />
+    </declare-styleable>
 </resources>

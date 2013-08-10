@@ -27,16 +27,6 @@
                 android:targetClass="com.android.development.Development" />
     </PreferenceScreen>
 
-    <com.android.settings.BugreportPreference
-            android:key="bugreport"
-            android:title="@*android:string/bugreport_title"
-            android:dialogTitle="@*android:string/bugreport_title" />
-
-    <CheckBoxPreference
-        android:key="advanced_reboot"
-        android:title="@string/advanced_reboot_title"
-        android:summary="@string/advanced_reboot_summary" />
-
     <PreferenceScreen
             android:key="local_backup_password"
             android:title="@string/local_backup_password_title"
@@ -105,11 +95,6 @@
             android:imeOptions="actionDone"
             android:inputType="textNoSuggestions"
             android:persistent="false" />
-
-        <CheckBoxPreference
-            android:key="bugreport_in_power"
-            android:title="@string/bugreport_in_power"
-            android:summary="@string/bugreport_in_power_summary"/>
 
         <CheckBoxPreference
             android:key="allow_mock_location"
