@@ -4658,29 +4658,7 @@
     <string name="system_power_crt_mode_vertical">Portrait vertical</string>
     <string name="system_power_crt_mode_both">Orientation dependent</string>
 
-    <!-- Anonymous Statistics #CM -->
-    <!-- About device screen, list item title. Takes the user to the screen about opting in or out of anonymous statistics. -->
-    <string name="anonymous_statistics_title">CyanogenMod statistics</string>
-    <string name="anonymous_statistics_summary">Help make CyanogenMod better by opting into anonymous statistics reporting</string>
-    <string name="anonymous_statistics_warning_title">About</string>
-    <string name="anonymous_statistics_warning">Opting into CyanogenMod Statistics will allow non-personal data to be submitted to the
-        developers of CyanogenMod to track unique installations across devices. The information submitted includes an unique identifier,
-        which does not compromise your privacy or personal data. The data is submitted during each boot.\n\nFor an example of the data that is submitted, tap on Preview Data.</string>
-    <string name="enable_reporting_title">Enable reporting</string>
-    <string name="preview_data_title">Preview data</string>
-    <string name="preview_data_summary">%s</string>
-    <string name="view_stats_title">View stats</string>
-    <string name="anonymous_learn_more">Learn more</string>
 
-    <!-- Anonymous Statistics - Notification -->
-    <string name="anonymous_notification_desc">Enable or Disable CyanogenMod Statistics</string>
-
-    <!-- Anonymous Statistics - Preview -->
-    <string name="preview_id_title">Unique ID</string>
-    <string name="preview_device_title">Device</string>
-    <string name="preview_version_title">Version</string>
-    <string name="preview_country_title">Country</string>
-    <string name="preview_carrier_title">Carrier</string>
    <!-- Activity label of BluetoothMasPermissionActivity, also used as Strings in the permission dialog [CHAR LIMIT=none] -->
     <string name="bluetooth_mas_request">"Message Access request"</string>
     <!-- Bluetooth MAS permission Alert Activity text [CHAR LIMIT=none] -->
@@ -4791,14 +4769,7 @@
     <string name="mem_info">Memory</string>
     <!-- About phone screen, status item label -->
 
-    <!-- Anonymous Statistics #CM -->
-    <!-- About device screen, list item title. Takes the user to the screen about opting in or out of anonymous statistics. -->
-    <string name="anonymous_statistics_title">CyanogenMod statistics</string>
-    <string name="anonymous_statistics_summary">Help make CyanogenMod better by opting into anonymous statistics reporting</string>
-    <string name="anonymous_statistics_warning_title">About</string>
-    <string name="anonymous_statistics_warning">Opting into CyanogenMod Statistics will allow non-personal data to be submitted to the
-        developers of CyanogenMod to track unique installations across devices. The information submitted includes an unique identifier,
-        which does not compromise your privacy or personal data. The data is submitted during each boot.\n\nFor an example of the data that is submitted, tap on Preview Data.</string>
+
     <string name="enable_reporting_title">Enable reporting</string>
     <string name="preview_data_title">Preview data</string>
     <string name="preview_data_summary" translatable="false">%s</string>
@@ -5203,28 +5174,6 @@
     <string name="ring_mode_normal">Normal</string>
     <string name="ring_mode_vibrate">Vibrate</string>
     <string name="ring_mode_mute">Mute</string>
-
-    <!-- Hardware keys -->
-    <string name="hardware_keys_title">Hardware keys</string>
-    <string name="hardware_keys_bindings_title">Key actions</string>
-    <string name="hardware_keys_enable_custom_title">Enable custom actions</string>
-    <string name="hardware_keys_home_long_press_title">Home key (long press)</string>
-    <string name="hardware_keys_menu_press_title">Menu key</string>
-    <string name="hardware_keys_menu_long_press_title">Menu key (long press)</string>
-    <string name="hardware_keys_assist_press_title">Search key</string>
-    <string name="hardware_keys_assist_long_press_title">Search key (long press)</string>
-    <string name="hardware_keys_app_switch_press_title">App switch key</string>
-    <string name="hardware_keys_app_switch_long_press_title">App switch key (long press)</string>
-    <string name="hardware_keys_show_overflow_title">Show action overflow</string>
-    <string name="hardware_keys_show_overflow_summary">Display the 3-dot overflow menu button within apps</string>
-    <string name="hardware_keys_show_overflow_toast_enable">The action overflow button may not be visible until apps are restarted</string>
-    <string name="hardware_keys_show_overflow_toast_disable">The action overflow button may not be hidden until apps are restarted</string>
-    <string name="hardware_keys_action_nothing">No action</string>
-    <string name="hardware_keys_action_menu">Open/close menu</string>
-    <string name="hardware_keys_action_app_switch">Recent apps switcher</string>
-    <string name="hardware_keys_action_search">Search assistant</string>
-    <string name="hardware_keys_action_voice_search">Voice search</string>
-    <string name="hardware_keys_action_in_app_search">In-app search</string>
 
     <!-- Swap volume buttons when the screen is rotated -->
     <string name="swap_volume_buttons_title">Swap volume buttons</string>
