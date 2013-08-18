@@ -16,7 +16,9 @@
 
 package com.android.settings.cyanogenmod;
 
-import android.content.ContentResolver;
+import android.app.Activity;
+import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.preference.CheckBoxPreference;
 import android.preference.ListPreference;
@@ -26,30 +28,60 @@ import android.preference.PreferenceCategory;
 import android.preference.PreferenceScreen;
 import android.provider.Settings;
 import android.provider.Settings.SettingNotFoundException;
-import android.text.format.DateFormat;
 import android.util.Log;
 
 import com.android.settings.R;
+import com.android.settings.util.Helpers;
+import com.android.settings.util.ShortcutPickerHelper;
 import com.android.settings.SettingsPreferenceFragment;
 import com.android.settings.Utils;
+import net.margaritov.preference.colorpicker.ColorPickerPreference;
 
-public class StatusBar extends SettingsPreferenceFragment implements OnPreferenceChangeListener {
+public class StatusBar extends SettingsPreferenceFragment implements 
+                ShortcutPickerHelper.OnPickListener, OnPreferenceChangeListener {
 
-    private static final String STATUS_BAR_CLOCK_CATEGORY = "status_bar_clock";
-    private static final String STATUS_BAR_AM_PM = "status_bar_am_pm";
     private static final String STATUS_BAR_BATTERY = "status_bar_battery";
-    private static final String STATUS_BAR_CLOCK = "status_bar_show_clock";
     private static final String STATUS_BAR_BRIGHTNESS_CONTROL = "status_bar_brightness_control";
     private static final String STATUS_BAR_SIGNAL = "status_bar_signal";
     private static final String STATUS_BAR_NOTIF_COUNT = "status_bar_notif_count";
     private static final String STATUS_BAR_CATEGORY_GENERAL = "status_bar_general";
-
-    private ListPreference mStatusBarAmPm;
+    private static final String PREF_ENABLE = "clock_style";
+    private static final String PREF_AM_PM_STYLE = "clock_am_pm_style";
+    private static final String PREF_COLOR_PICKER = "clock_color";
+	private static final String PREF_BATTERY_PICKER = "battery_color";
+	private static final String PREF_BATTERY_FPICKER = "battery_font_color";
+    private static final String PREF_CLOCK_WEEKDAY = "clock_weekday";
+    private static final String PREF_CLOCK_SHORTCLICK = "clock_shortclick";
+    private static final String PREF_CLOCK_LONGCLICK = "clock_longclick";
+    private static final String PREF_BATT_BAR = "battery_bar_list";
+	private static final String PREF_BATT_BAR_STYLE = "battery_bar_style";
+    private static final String PREF_BATT_BAR_COLOR = "battery_bar_color";
+    private static final String PREF_BATT_BAR_WIDTH = "battery_bar_thickness";
+    private static final String PREF_BATT_ANIMATE = "battery_bar_animate";
+	
     private ListPreference mStatusBarBattery;
+	private ListPreference mBatteryBar;
+    private ListPreference mBatteryBarStyle;
+    private ListPreference mBatteryBarThickness;
     private ListPreference mStatusBarCmSignal;
-    private CheckBoxPreference mStatusBarClock;
+//    private CheckBoxPreference mStatusBarClock;
     private CheckBoxPreference mStatusBarBrightnessControl;
-    private CheckBoxPreference mStatusBarNotifCount;
+	private CheckBoxPreference mStatusBarNotifCount;
+	private CheckBoxPreference mBatteryBarChargingAnimation;
+    private PreferenceCategory mPrefCategoryGeneral;
+	private ColorPickerPreference mBatteryBarColor;
+
+    private ShortcutPickerHelper mPicker;
+    private Preference mPreference;
+    private String mString;
+	ListPreference mClockStyle;
+    ListPreference mClockAmPmstyle;
+    ColorPickerPreference mColorPicker;
+	ColorPickerPreference mBatteryPicker;
+	ColorPickerPreference mBatteryFPicker;
+    ListPreference mClockWeekday;
+    ListPreference mClockShortClick;
+    ListPreference mClockLongClick;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -58,106 +90,298 @@ public class StatusBar extends SettingsPreferenceFragment implements OnPreferenc
         addPreferencesFromResource(R.xml.status_bar);
 
         PreferenceScreen prefSet = getPreferenceScreen();
-        ContentResolver resolver = getActivity().getContentResolver();
 
-        mStatusBarClock = (CheckBoxPreference) prefSet.findPreference(STATUS_BAR_CLOCK);
+        mPicker = new ShortcutPickerHelper(this, this);
+		
+		mClockStyle = (ListPreference) findPreference(PREF_ENABLE);
+        mClockStyle.setOnPreferenceChangeListener(this);
+        mClockStyle.setValue(Integer.toString(Settings.System.getInt(getActivity()
+                .getContentResolver(), Settings.System.STATUSBAR_CLOCK_STYLE,
+                1)));
+
+        mClockAmPmstyle = (ListPreference) findPreference(PREF_AM_PM_STYLE);
+        mClockAmPmstyle.setOnPreferenceChangeListener(this);
+        mClockAmPmstyle.setValue(Integer.toString(Settings.System.getInt(getActivity()
+                .getContentResolver(), Settings.System.STATUSBAR_CLOCK_AM_PM_STYLE,
+                2)));
+
+        mColorPicker = (ColorPickerPreference) findPreference(PREF_COLOR_PICKER);
+        mColorPicker.setOnPreferenceChangeListener(this);
+		
+		mBatteryPicker = (ColorPickerPreference) findPreference(PREF_BATTERY_PICKER);
+        mBatteryPicker.setOnPreferenceChangeListener(this);
+		
+		mBatteryFPicker = (ColorPickerPreference) findPreference(PREF_BATTERY_FPICKER);
+        mBatteryFPicker.setOnPreferenceChangeListener(this);
+
+        mClockWeekday = (ListPreference) findPreference(PREF_CLOCK_WEEKDAY);
+        mClockWeekday.setOnPreferenceChangeListener(this);
+        mClockWeekday.setValue(Integer.toString(Settings.System.getInt(getActivity()
+                .getContentResolver(), Settings.System.STATUSBAR_CLOCK_WEEKDAY,
+                0)));
+
+        mClockShortClick = (ListPreference) findPreference(PREF_CLOCK_SHORTCLICK);
+        mClockShortClick.setOnPreferenceChangeListener(this);
+        mClockShortClick.setSummary(getProperSummary(mClockShortClick));
+        mClockLongClick = (ListPreference) findPreference(PREF_CLOCK_LONGCLICK);
+        mClockLongClick.setOnPreferenceChangeListener(this);
+        mClockLongClick.setSummary(getProperSummary(mClockLongClick));
         mStatusBarBrightnessControl = (CheckBoxPreference) prefSet.findPreference(STATUS_BAR_BRIGHTNESS_CONTROL);
-        mStatusBarAmPm = (ListPreference) prefSet.findPreference(STATUS_BAR_AM_PM);
         mStatusBarBattery = (ListPreference) prefSet.findPreference(STATUS_BAR_BATTERY);
         mStatusBarCmSignal = (ListPreference) prefSet.findPreference(STATUS_BAR_SIGNAL);
 
-        mStatusBarClock.setChecked(Settings.System.getInt(resolver, Settings.System.STATUS_BAR_CLOCK, 1) == 1);
-        mStatusBarClock.setOnPreferenceChangeListener(this);
-
-        if (DateFormat.is24HourFormat(getActivity())) {
-            ((PreferenceCategory) prefSet.findPreference(STATUS_BAR_CLOCK_CATEGORY))
-                    .removePreference(prefSet.findPreference(STATUS_BAR_AM_PM));
-        } else {
-            mStatusBarAmPm = (ListPreference) prefSet.findPreference(STATUS_BAR_AM_PM);
-            int statusBarAmPm = Settings.System.getInt(resolver,
-                    Settings.System.STATUS_BAR_AM_PM, 2);
-
-            mStatusBarAmPm.setValue(String.valueOf(statusBarAmPm));
-            mStatusBarAmPm.setSummary(mStatusBarAmPm.getEntry());
-            mStatusBarAmPm.setOnPreferenceChangeListener(this);
-        }
-
-        mStatusBarBrightnessControl.setChecked(Settings.System.getInt(resolver,
-                Settings.System.STATUS_BAR_BRIGHTNESS_CONTROL, 0) == 1);
-        mStatusBarBrightnessControl.setOnPreferenceChangeListener(this);
+        mStatusBarBrightnessControl.setChecked((Settings.System.getInt(getActivity().getApplicationContext().getContentResolver(),
+                Settings.System.STATUS_BAR_BRIGHTNESS_CONTROL, 0) == 1));
 
         try {
-            if (Settings.System.getInt(resolver, Settings.System.SCREEN_BRIGHTNESS_MODE)
-                    == Settings.System.SCREEN_BRIGHTNESS_MODE_AUTOMATIC) {
+            if (Settings.System.getInt(getActivity().getApplicationContext().getContentResolver(),
+                    Settings.System.SCREEN_BRIGHTNESS_MODE) == Settings.System.SCREEN_BRIGHTNESS_MODE_AUTOMATIC) {
                 mStatusBarBrightnessControl.setEnabled(false);
                 mStatusBarBrightnessControl.setSummary(R.string.status_bar_toggle_info);
             }
         } catch (SettingNotFoundException e) {
         }
 
-        int statusBarBattery = Settings.System.getInt(resolver, Settings.System.STATUS_BAR_BATTERY, 0);
+        try {
+            if (Settings.System.getInt(getActivity().getApplicationContext().getContentResolver(),
+                    Settings.System.TIME_12_24) == 24) {
+                mClockAmPmstyle.setEnabled(false);
+                mClockAmPmstyle.setSummary(R.string.status_bar_am_pm_info);
+            }
+        } catch (SettingNotFoundException e ) {
+        }
+
+
+        int statusBarBattery = Settings.System.getInt(getActivity().getApplicationContext().getContentResolver(),
+                Settings.System.STATUS_BAR_BATTERY, 0);
         mStatusBarBattery.setValue(String.valueOf(statusBarBattery));
         mStatusBarBattery.setSummary(mStatusBarBattery.getEntry());
         mStatusBarBattery.setOnPreferenceChangeListener(this);
 
-        int signalStyle = Settings.System.getInt(resolver, Settings.System.STATUS_BAR_SIGNAL_TEXT, 0);
+        int signalStyle = Settings.System.getInt(getActivity().getApplicationContext().getContentResolver(),
+                Settings.System.STATUS_BAR_SIGNAL_TEXT, 0);
         mStatusBarCmSignal.setValue(String.valueOf(signalStyle));
         mStatusBarCmSignal.setSummary(mStatusBarCmSignal.getEntry());
         mStatusBarCmSignal.setOnPreferenceChangeListener(this);
 
         mStatusBarNotifCount = (CheckBoxPreference) prefSet.findPreference(STATUS_BAR_NOTIF_COUNT);
-        mStatusBarNotifCount.setChecked(Settings.System.getInt(resolver,
-                Settings.System.STATUS_BAR_NOTIF_COUNT, 0) == 1);
-        mStatusBarNotifCount.setOnPreferenceChangeListener(this);
+        mStatusBarNotifCount.setChecked((Settings.System.getInt(getActivity().getApplicationContext().getContentResolver(),
+                Settings.System.STATUS_BAR_NOTIF_COUNT, 0) == 1));
 
-        PreferenceCategory generalCategory =
-                (PreferenceCategory) findPreference(STATUS_BAR_CATEGORY_GENERAL);
+        mBatteryBar = (ListPreference) findPreference(PREF_BATT_BAR);
+        mBatteryBar.setOnPreferenceChangeListener(this);
+        mBatteryBar.setValue((Settings.System
+                .getInt(getActivity().getContentResolver(),
+                        Settings.System.STATUSBAR_BATTERY_BAR, 0))
+                + "");
+
+        mBatteryBarStyle = (ListPreference) findPreference(PREF_BATT_BAR_STYLE);
+        mBatteryBarStyle.setOnPreferenceChangeListener(this);
+        mBatteryBarStyle.setValue((Settings.System.getInt(getActivity()
+                .getContentResolver(),
+                Settings.System.STATUSBAR_BATTERY_BAR_STYLE, 0))
+                + "");
+
+        mBatteryBarColor = (ColorPickerPreference) findPreference(PREF_BATT_BAR_COLOR);
+        mBatteryBarColor.setOnPreferenceChangeListener(this);
+
+        mBatteryBarChargingAnimation = (CheckBoxPreference) findPreference(PREF_BATT_ANIMATE);
+        mBatteryBarChargingAnimation.setChecked(Settings.System.getInt(
+                getActivity().getContentResolver(),
+                Settings.System.STATUSBAR_BATTERY_BAR_ANIMATE, 0) == 1);
+
+        mBatteryBarThickness = (ListPreference) findPreference(PREF_BATT_BAR_WIDTH);
+        mBatteryBarThickness.setOnPreferenceChangeListener(this);
+        mBatteryBarThickness.setValue((Settings.System.getInt(getActivity()
+                .getContentResolver(),
+                Settings.System.STATUSBAR_BATTERY_BAR_THICKNESS, 1))
+                + "");
+
+        mPrefCategoryGeneral = (PreferenceCategory) findPreference(STATUS_BAR_CATEGORY_GENERAL);
 
         if (Utils.isWifiOnly(getActivity())) {
-            generalCategory.removePreference(mStatusBarCmSignal);
+            mPrefCategoryGeneral.removePreference(mStatusBarCmSignal);
         }
 
         if (Utils.isTablet(getActivity())) {
-            generalCategory.removePreference(mStatusBarBrightnessControl);
+            mPrefCategoryGeneral.removePreference(mStatusBarBrightnessControl);
         }
+
     }
 
-    @Override
     public boolean onPreferenceChange(Preference preference, Object newValue) {
-        ContentResolver resolver = getActivity().getContentResolver();
-        if (mStatusBarAmPm != null && preference == mStatusBarAmPm) {
-            int statusBarAmPm = Integer.valueOf((String) newValue);
-            int index = mStatusBarAmPm.findIndexOfValue((String) newValue);
-            Settings.System.putInt(resolver, Settings.System.STATUS_BAR_AM_PM, statusBarAmPm);
-            mStatusBarAmPm.setSummary(mStatusBarAmPm.getEntries()[index]);
-            return true;
-        } else if (preference == mStatusBarBattery) {
+	    boolean result = false;
+
+        if (preference == mStatusBarBattery) {
             int statusBarBattery = Integer.valueOf((String) newValue);
             int index = mStatusBarBattery.findIndexOfValue((String) newValue);
-            Settings.System.putInt(resolver, Settings.System.STATUS_BAR_BATTERY, statusBarBattery);
+            Settings.System.putInt(getActivity().getApplicationContext().getContentResolver(),
+                    Settings.System.STATUS_BAR_BATTERY, statusBarBattery);
             mStatusBarBattery.setSummary(mStatusBarBattery.getEntries()[index]);
             return true;
         } else if (preference == mStatusBarCmSignal) {
             int signalStyle = Integer.valueOf((String) newValue);
             int index = mStatusBarCmSignal.findIndexOfValue((String) newValue);
-            Settings.System.putInt(resolver, Settings.System.STATUS_BAR_SIGNAL_TEXT, signalStyle);
+            Settings.System.putInt(getActivity().getApplicationContext().getContentResolver(),
+                    Settings.System.STATUS_BAR_SIGNAL_TEXT, signalStyle);
             mStatusBarCmSignal.setSummary(mStatusBarCmSignal.getEntries()[index]);
             return true;
-        } else if (preference == mStatusBarClock) {
-            boolean value = (Boolean) newValue;
-            Settings.System.putInt(resolver, Settings.System.STATUS_BAR_CLOCK, value ? 1 : 0);
+		} else if (preference == mBatteryBarColor) {
+            String hex = ColorPickerPreference.convertToARGB(Integer
+                    .valueOf(String.valueOf(newValue)));
+            preference.setSummary(hex);
+
+            int intHex = ColorPickerPreference.convertToColorInt(hex);
+            Settings.System.putInt(getActivity().getContentResolver(),
+                    Settings.System.STATUSBAR_BATTERY_BAR_COLOR, intHex);
             return true;
-        } else if (preference == mStatusBarBrightnessControl) {
-            boolean value = (Boolean) newValue;
-            Settings.System.putInt(resolver,
+        } else if (preference == mBatteryBar) {
+            int val = Integer.parseInt((String) newValue);
+            return Settings.System.putInt(getActivity().getContentResolver(),
+                    Settings.System.STATUSBAR_BATTERY_BAR, val);
+        } else if (preference == mBatteryBarStyle) {
+            int val = Integer.parseInt((String) newValue);
+            return Settings.System.putInt(getActivity().getContentResolver(),
+                    Settings.System.STATUSBAR_BATTERY_BAR_STYLE, val);
+        } else if (preference == mBatteryBarThickness) {
+            int val = Integer.parseInt((String) newValue);
+            return Settings.System.putInt(getActivity().getContentResolver(),
+                    Settings.System.STATUSBAR_BATTERY_BAR_THICKNESS, val);
+
+        } else if (preference == mClockAmPmstyle) {
+
+            int val = Integer.parseInt((String) newValue);
+            result = Settings.System.putInt(getActivity().getContentResolver(),
+                    Settings.System.STATUSBAR_CLOCK_AM_PM_STYLE, val);
+
+        } else if (preference == mClockStyle) {
+
+            int val = Integer.parseInt((String) newValue);
+            result = Settings.System.putInt(getActivity().getContentResolver(),
+                    Settings.System.STATUSBAR_CLOCK_STYLE, val);
+
+        } else if (preference == mColorPicker) {
+            String hex = ColorPickerPreference.convertToARGB(Integer.valueOf(String
+                    .valueOf(newValue)));
+            preference.setSummary(hex);
+
+            int intHex = ColorPickerPreference.convertToColorInt(hex);
+            Settings.System.putInt(getActivity().getContentResolver(),
+                    Settings.System.STATUSBAR_CLOCK_COLOR, intHex);
+            Log.e("ROMAN", intHex + "");
+        } else if (preference == mClockWeekday) {
+            int val = Integer.parseInt((String) newValue);
+            result = Settings.System.putInt(getActivity().getContentResolver(),
+                    Settings.System.STATUSBAR_CLOCK_WEEKDAY, val);
+        } else if (preference == mBatteryPicker) {
+            String hex = ColorPickerPreference.convertToARGB(Integer.valueOf(String
+                    .valueOf(newValue)));
+            preference.setSummary(hex);
+            int intHex = ColorPickerPreference.convertToColorInt(hex);
+            Settings.System.putInt(getActivity().getContentResolver(),
+                    Settings.System.STATUSBAR_BATTERY_COLOR, intHex);
+            Log.e("ROMAN", intHex + "");
+			Helpers.restartSystemUI();
+		} else if (preference == mBatteryFPicker) {
+            String hex = ColorPickerPreference.convertToARGB(Integer.valueOf(String
+                    .valueOf(newValue)));
+            preference.setSummary(hex);
+            int intHex = ColorPickerPreference.convertToColorInt(hex);
+            Settings.System.putInt(getActivity().getContentResolver(),
+                    Settings.System.STATUSBAR_BATTERY_FCOLOR, intHex);
+            Log.e("ROMAN", intHex + "");
+			
+			
+        } else if (preference == mClockShortClick) {
+            mPreference = preference;
+            mString = Settings.System.NOTIFICATION_CLOCK_SHORTCLICK;
+            if (newValue.equals("**app**")) {
+                mPicker.pickShortcut();
+            } else {
+                result = Settings.System.putString(getContentResolver(), Settings.System.NOTIFICATION_CLOCK_SHORTCLICK, (String) newValue);
+                mClockShortClick.setSummary(getProperSummary(mClockShortClick));
+            }
+        } else if (preference == mClockLongClick) {
+            mPreference = preference;
+            mString = Settings.System.NOTIFICATION_CLOCK_LONGCLICK;
+            if (newValue.equals("**app**")) {
+             mPicker.pickShortcut();
+            } else {
+            result = Settings.System.putString(getContentResolver(), Settings.System.NOTIFICATION_CLOCK_LONGCLICK, (String) newValue);
+            mClockLongClick.setSummary(getProperSummary(mClockLongClick));
+            }
+	   }
+        return result;
+    }
+
+    public boolean onPreferenceTreeClick(PreferenceScreen preferenceScreen, Preference preference) {
+        boolean value;
+
+        if (preference == mStatusBarBrightnessControl) {
+            value = mStatusBarBrightnessControl.isChecked();
+            Settings.System.putInt(getActivity().getApplicationContext().getContentResolver(),
                     Settings.System.STATUS_BAR_BRIGHTNESS_CONTROL, value ? 1 : 0);
             return true;
         } else if (preference == mStatusBarNotifCount) {
-            boolean value = (Boolean) newValue;
-            Settings.System.putInt(resolver, Settings.System.STATUS_BAR_NOTIF_COUNT, value ? 1 : 0);
+            value = mStatusBarNotifCount.isChecked();
+            Settings.System.putInt(getActivity().getApplicationContext().getContentResolver(),
+                    Settings.System.STATUS_BAR_NOTIF_COUNT, value ? 1 : 0);
+            return true;
+		} else if (preference == mBatteryBarChargingAnimation) {
+            Settings.System.putInt(getActivity().getContentResolver(),
+                    Settings.System.STATUSBAR_BATTERY_BAR_ANIMATE,
+                    ((CheckBoxPreference) preference).isChecked() ? 1 : 0);
             return true;
         }
-
         return false;
+    }
+
+
+    public void shortcutPicked(String uri, String friendlyName, Bitmap bmp, boolean isApplication) {
+          mPreference.setSummary(friendlyName);
+          Settings.System.putString(getContentResolver(), mString, (String) uri);
+    }
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode == Activity.RESULT_OK) {
+            if (requestCode == ShortcutPickerHelper.REQUEST_PICK_SHORTCUT
+                    || requestCode == ShortcutPickerHelper.REQUEST_PICK_APPLICATION
+                    || requestCode == ShortcutPickerHelper.REQUEST_CREATE_SHORTCUT) {
+                mPicker.onActivityResult(requestCode, resultCode, data);
+            }
+        }
+        super.onActivityResult(requestCode, resultCode, data);
+    }
+
+
+	   private String getProperSummary(Preference preference) {
+        if (preference == mClockShortClick) {
+            mString = Settings.System.NOTIFICATION_CLOCK_SHORTCLICK;
+        } else if (preference == mClockLongClick) {
+            mString = Settings.System.NOTIFICATION_CLOCK_LONGCLICK;
+        }
+
+        String uri = Settings.System.getString(getActivity().getContentResolver(),mString);
+        String empty = "";
+
+        if (uri == null)
+            return empty;
+
+        if (uri.startsWith("**")) {
+            if (uri.equals("**alarm**"))
+                return getResources().getString(R.string.alarm);
+            else if (uri.equals("**event**"))
+                return getResources().getString(R.string.event);
+            else if (uri.equals("**voiceassist**"))
+                return getResources().getString(R.string.voiceassist);
+            else if (uri.equals("**clockoptions**"))
+                return getResources().getString(R.string.clock_options);
+            else if (uri.equals("**today**"))
+                return getResources().getString(R.string.today);
+            else if (uri.equals("**null**"))
+                return getResources().getString(R.string.nothing);
+        } else {
+            return mPicker.getFriendlyNameForUri(uri);
+        }
+        return null;
     }
 }
