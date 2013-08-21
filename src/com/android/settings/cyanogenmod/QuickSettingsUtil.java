@@ -198,11 +198,6 @@ public class QuickSettingsUtil {
             removeTile(TILE_LTE);
         }
 
-        // Don't show the Torch tile if not supported
-        if (!context.getResources().getBoolean(R.bool.has_led_flash)) {
-            removeTile(TILE_TORCH);
-        }
-
         sUnsupportedRemoved = true;
     }
 
