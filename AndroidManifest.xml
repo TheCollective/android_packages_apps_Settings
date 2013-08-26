@@ -1677,8 +1677,6 @@
 
         <activity android:name=".cyanogenmod.QuickSettings" />
 
-        <activity android:name=".chameleonos.ExcludedAppsActivity" />
-
         <!-- "Blacklist settings" UI, used only on voice-capable phone devices. -->
         <activity android:name="Settings$BlacklistSettingsActivity"
                 android:theme="@android:style/Theme.Holo.DialogWhenLarge"
