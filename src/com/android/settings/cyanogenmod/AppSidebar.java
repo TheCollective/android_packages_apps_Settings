@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.android.settings.chameleonos;
+package com.android.settings.cyanogenmod;
 
 import android.content.ComponentName;
 import android.content.Intent;
