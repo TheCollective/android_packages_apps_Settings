@@ -52,6 +52,11 @@
         android:persistent="false" />
 
     <PreferenceScreen
+        android:key="halo"
+        android:fragment="com.android.settings.cyanogenmod.MiscSettings"
+        android:title="@string/halo_options_title" />
+
+    <PreferenceScreen
             android:key="app_sidebar"
             android:fragment="com.android.settings.cyanogenmod.AppSidebar"
             android:title="@string/app_sidebar_title" />
