@@ -5328,9 +5328,9 @@
  
     <string name="status_bar_general_title">General</string>
  
-    <string name="battery_color_title">Circle battery color</string>
+    <string name="battery_color_title">Battery color</string>
     
-    <string name="battery_font_color_title">Circle battery text color</string>
+    <string name="battery_font_color_title">Battery text color</string>
 
     <string name="status_bar_battery_title">Battery status style</string>
     <string name="status_bar_toggle_brightness">Brightness control</string>
@@ -5343,6 +5343,8 @@
     <string name="status_bar_battery_status_percentage">Percentage</string>
     <string name="status_bar_battery_status_circle">Circle</string>
     <string name="status_bar_battery_status_circle_percentage">Circle with percentage</string>
+    <string name="status_bar_battery_status_square">Square</string>
+    <string name="status_bar_battery_status_square_percentage">Square with percentage</string>
         <!-- Status bar | Clock -->
     <string name="status_bar_clock">Clock and date</string>
     <string name="status_bar_clock_title">Clock and date style</string>
