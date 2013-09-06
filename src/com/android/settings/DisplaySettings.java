@@ -475,10 +475,7 @@ public class DisplaySettings extends SettingsPreferenceFragment implements
                     Settings.System.SYSTEM_POWER_ENABLE_CRT_OFF,
                     mCrtOff.isChecked() ? 1 : 0);
             return true;
-        } else if (preference == mScreenOffAnimation) {
-            Settings.System.putInt(getContentResolver(), Settings.System.SCREEN_OFF_ANIMATION,
-                    mScreenOffAnimation.isChecked() ? 1 : 0);
-            return true;
+        
         }
 
         return super.onPreferenceTreeClick(preferenceScreen, preference);
