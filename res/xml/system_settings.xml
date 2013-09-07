@@ -52,9 +52,9 @@
         android:persistent="false" />
 
     <PreferenceScreen
-        android:key="halo"
+        android:id="@+id/halo"
         android:fragment="com.android.settings.cyanogenmod.MiscSettings"
-        android:title="@string/halo_options_title" />
+        android:title="@string/halo_title" />
 
     <PreferenceScreen
             android:key="app_sidebar"

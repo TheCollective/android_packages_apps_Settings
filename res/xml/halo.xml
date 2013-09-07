@@ -1,5 +1,5 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!-- Copyright (C) 2012 The CyanogenMod Project
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright (C) 2012 ParanoidAndroid Project
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -14,50 +14,63 @@ See the License for the specific language governing permissions and
 limitations under the License.
 -->
 
-<PreferenceScreen
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:settings="http://schemas.android.com/apk/res/com.android.settings"
-    android:title="@string/halo_options_title">
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
-       <PreferenceCategory
-        android:title="@string/halo_options_title">
-
-        <CheckBoxPreference
+        <SwitchPreference
             android:key="halo_enabled"
             android:title="@string/halo_enabled_title"
-            android:summary="@string/halo_enabled_summary" />
+            android:summary="@string/halo_enabled_summary"
+            android:defaultValue="false" /> 
+
+        <PreferenceCategory
+        android:key="halo_status"
+        android:title="@string/halo_status_category">
 
         <ListPreference
             android:key="halo_state"
             android:dialogTitle="@string/halo_state_title"
             android:title="@string/halo_state_title"
             android:summary="@string/halo_state_summary"
-            android:dependency="halo_enabled" 
             android:entries="@array/entries_halo_state"
+	    android:dependency="halo_enabled" 
             android:entryValues="@array/values_halo_state" />
 
         <CheckBoxPreference
             android:key="halo_hide"
             android:title="@string/halo_hide_title"
             android:summary="@string/halo_hide_summary"
-            android:dependency="halo_enabled" 
+	    android:dependency="halo_enabled" 
             android:defaultValue="false" />
 
         <CheckBoxPreference
             android:key="halo_reversed"
             android:title="@string/halo_reversed_title"
             android:summary="@string/halo_reversed_summary"
-            android:dependency="halo_enabled" 
+	    android:dependency="halo_enabled" 
             android:defaultValue="true" />
 
-       <!--
-	<CheckBoxPreference
+	<ListPreference
+            android:key="halo_size"
+            android:dialogTitle="@string/halo_size_title"
+            android:title="@string/halo_size_title"
+            android:summary="@string/halo_size_summary"
+            android:entries="@array/entries_halo_size"
+	    android:dependency="halo_enabled" 
+            android:entryValues="@array/values_halo_size" />
+
+    	<CheckBoxPreference
             android:key="halo_pause"
             android:title="@string/halo_pause_title"
-            android:summary="@string/halo_pause_summary"
-            android:dependency="halo_enabled" /> -->
-
+	    android:dependency="halo_enabled" 
+            android:summary="@string/halo_pause_summary" />
+        
     </PreferenceCategory>
+    <!--
+    <PreferenceCategory
+        android:key="halo_colors"
+        android:title="@string/halo_colors_category">
 
-</PreferenceScreen>
+    </PreferenceCategory> -->
+
+</PreferenceScreen> 
 

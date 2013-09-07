@@ -1701,7 +1701,16 @@
                 <data android:mimeType="cm/profile" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".cyanogenmod.MiscSettings"
+            android:label="@string/halo_title">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
 
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.SHORTCUT" />
+            </intent-filter>
+        </activity>
         <activity android:name=".notificationlight.NotificationLightSettings" />
 
         <activity android:name=".notificationlight.BatteryLightSettings" />
