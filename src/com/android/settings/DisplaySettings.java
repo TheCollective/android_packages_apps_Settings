@@ -97,7 +97,7 @@ public class DisplaySettings extends SettingsPreferenceFragment implements
     private WifiDisplayStatus mWifiDisplayStatus;
     private Preference mWifiDisplayPreference;
 
-    private CheckBoxPreference mScreenOffAnimation;
+
 
     private CheckBoxPreference mCrtOff;
 
@@ -203,13 +203,7 @@ public class DisplaySettings extends SettingsPreferenceFragment implements
             getPreferenceScreen().removePreference(wakeupCategory);
         }
 
-        mScreenOffAnimation = (CheckBoxPreference) findPreference(KEY_SCREEN_OFF_ANIMATION);
-        if (res.getBoolean(com.android.internal.R.bool.config_screenOffAnimation)) {
-            mScreenOffAnimation.setChecked(Settings.System.getInt(resolver,
-                    Settings.System.SCREEN_OFF_ANIMATION, 1) == 1);
-        } else {
-            getPreferenceScreen().removePreference(mScreenOffAnimation);
-        }
+        
 
         // respect device default configuration
         // true fades while false animates
