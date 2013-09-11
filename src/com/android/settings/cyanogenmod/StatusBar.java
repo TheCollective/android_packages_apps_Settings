@@ -33,6 +33,7 @@ import android.util.Log;
 import com.android.settings.R;
 import com.android.settings.util.Helpers;
 import com.android.settings.util.ShortcutPickerHelper;
+import com.android.settings.widget.SeekBarPreference;
 import com.android.settings.SettingsPreferenceFragment;
 import com.android.settings.Utils;
 import net.margaritov.preference.colorpicker.ColorPickerPreference;
@@ -41,10 +42,13 @@ public class StatusBar extends SettingsPreferenceFragment implements
                 ShortcutPickerHelper.OnPickListener, OnPreferenceChangeListener {
 
     private static final String STATUS_BAR_BATTERY = "status_bar_battery";
+	private static final String STATUS_BAR_CUSTOM_COLOR = "status_bar_custom_color";
     private static final String STATUS_BAR_BRIGHTNESS_CONTROL = "status_bar_brightness_control";
     private static final String STATUS_BAR_SIGNAL = "status_bar_signal";
     private static final String STATUS_BAR_NOTIF_COUNT = "status_bar_notif_count";
     private static final String STATUS_BAR_CATEGORY_GENERAL = "status_bar_general";
+	private static final String STATUS_BAR_COLOR = "status_bar_color";
+	private static final String STATUS_BAR_ALPHA = "status_bar_alpha";
     private static final String PREF_ENABLE = "clock_style";
     private static final String PREF_AM_PM_STYLE = "clock_am_pm_style";
     private static final String PREF_COLOR_PICKER = "clock_color";
@@ -64,13 +68,13 @@ public class StatusBar extends SettingsPreferenceFragment implements
     private ListPreference mBatteryBarStyle;
     private ListPreference mBatteryBarThickness;
     private ListPreference mStatusBarCmSignal;
-//    private CheckBoxPreference mStatusBarClock;
+    private CheckBoxPreference mStatusBarCustomColor;
     private CheckBoxPreference mStatusBarBrightnessControl;
 	private CheckBoxPreference mStatusBarNotifCount;
 	private CheckBoxPreference mBatteryBarChargingAnimation;
     private PreferenceCategory mPrefCategoryGeneral;
 	private ColorPickerPreference mBatteryBarColor;
-
+    private ColorPickerPreference mStatusBarColor;
     private ShortcutPickerHelper mPicker;
     private Preference mPreference;
     private String mString;
@@ -82,6 +86,7 @@ public class StatusBar extends SettingsPreferenceFragment implements
     ListPreference mClockWeekday;
     ListPreference mClockShortClick;
     ListPreference mClockLongClick;
+	SeekBarPreference mStatusBarAlpha;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -128,6 +133,21 @@ public class StatusBar extends SettingsPreferenceFragment implements
         mClockLongClick.setSummary(getProperSummary(mClockLongClick));
         mStatusBarBrightnessControl = (CheckBoxPreference) prefSet.findPreference(STATUS_BAR_BRIGHTNESS_CONTROL);
         mStatusBarBattery = (ListPreference) prefSet.findPreference(STATUS_BAR_BATTERY);
+		mStatusBarCustomColor = (CheckBoxPreference) findPreference(STATUS_BAR_CUSTOM_COLOR);
+		mStatusBarCustomColor.setChecked(Settings.System.getInt(
+                getActivity().getContentResolver(),
+                Settings.System.STATUSBAR_BACKGROUND, 0) == 1);
+		
+        mStatusBarColor = (ColorPickerPreference) findPreference(STATUS_BAR_COLOR);
+        mStatusBarColor.setOnPreferenceChangeListener(this);
+
+       
+        float statusBarBackground = Settings.System.getFloat(getActivity().getContentResolver(), Settings.System.STATUSBAR_BACKGROUND_ALPHA, 0.0f);
+        
+        mStatusBarAlpha = (SeekBarPreference) findPreference(STATUS_BAR_ALPHA);
+        mStatusBarAlpha.setInitValue((int) (statusBarBackground * 100));
+        mStatusBarAlpha.setProperty(Settings.System.STATUSBAR_BACKGROUND_ALPHA);
+        mStatusBarAlpha.setOnPreferenceChangeListener(this);
         mStatusBarCmSignal = (ListPreference) prefSet.findPreference(STATUS_BAR_SIGNAL);
 
         mStatusBarBrightnessControl.setChecked((Settings.System.getInt(getActivity().getApplicationContext().getContentResolver(),
@@ -269,6 +289,20 @@ public class StatusBar extends SettingsPreferenceFragment implements
             Settings.System.putInt(getActivity().getContentResolver(),
                     Settings.System.STATUSBAR_CLOCK_COLOR, intHex);
             Log.e("ROMAN", intHex + "");
+		} else if (preference == mStatusBarColor) {
+            String hex = ColorPickerPreference.convertToARGB(Integer.valueOf(String
+                    .valueOf(newValue)));
+            preference.setSummary(hex);
+            int intHex = ColorPickerPreference.convertToColorInt(hex);
+            Settings.System.putInt(getActivity().getContentResolver(),
+                    Settings.System.STATUSBAR_CUSTOM_COLOR, intHex);
+            Log.e("ROMAN", intHex + "");
+			Helpers.restartSystemUI();	
+		} else if (preference == mStatusBarAlpha) {
+            float valAlpha = Float.parseFloat((String) newValue);
+            Settings.System.putFloat(getActivity().getContentResolver(),
+                    Settings.System.STATUSBAR_BACKGROUND_ALPHA, valAlpha / 100);
+			return true;
         } else if (preference == mClockWeekday) {
             int val = Integer.parseInt((String) newValue);
             result = Settings.System.putInt(getActivity().getContentResolver(),
@@ -332,6 +366,12 @@ public class StatusBar extends SettingsPreferenceFragment implements
                     Settings.System.STATUSBAR_BATTERY_BAR_ANIMATE,
                     ((CheckBoxPreference) preference).isChecked() ? 1 : 0);
             return true;
+		} else if (preference == mStatusBarCustomColor) {
+            Settings.System.putInt(getActivity().getContentResolver(),
+                    Settings.System.STATUSBAR_BACKGROUND,
+                    ((CheckBoxPreference) preference).isChecked() ? 1 : 0);
+			Helpers.restartSystemUI();		
+            return true;	
         }
         return false;
     }
