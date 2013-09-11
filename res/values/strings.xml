@@ -5401,6 +5401,10 @@
     <string name="status_bar_battery_status_circle_percentage">Circle with percentage</string>
     <string name="status_bar_notif_count_title">Show notification count</string>
     <string name="status_bar_notif_count_summary">Display number of pending notifications</string>
+    <string name="status_bar_custom_background">Enable custom color</string>
+    <string name="status_bar_style">Status bar style</string>
+    <string name="status_bar_custom_color_title">Set status bar color</string>
+    <string name="status_bar_alpha_title">Status bar transparency</string>    
     <!-- clock stuff -->
     <string name="right_clock">Right clock</string>
     <string name="center_clock">Center clock</string>
