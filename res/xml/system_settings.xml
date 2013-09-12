@@ -111,5 +111,13 @@
             android:title="@string/pie_control_title" />
 
     </PreferenceCategory>
-
+    
+    <PreferenceScreen
+        android:key="sound_cat"
+        android:title="@string/sound_cat">   
+        <CheckBoxPreference
+            android:key="enable_quiettime"
+            android:title="@string/enable_quiettime" />
+    </PreferenceScreen>	
+    
 </PreferenceScreen>

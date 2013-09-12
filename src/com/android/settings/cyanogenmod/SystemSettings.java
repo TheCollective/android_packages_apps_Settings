@@ -53,11 +53,13 @@ public class SystemSettings extends SettingsPreferenceFragment  implements
     private static final String KEY_POWER_MENU = "power_menu";
     private static final String KEY_PIE_CONTROL = "pie_control";
     private static final String KEY_EXPANDED_DESKTOP = "expanded_desktop";
+	private static final String PREF_ENABLE_QUIETTIME = "enable_quiettime";
     private static final String KEY_EXPANDED_DESKTOP_NO_NAVBAR = "expanded_desktop_no_navbar";
 
     private PreferenceScreen mNotificationPulse;
     private PreferenceScreen mBatteryPulse;
     private PreferenceScreen mPieControl;
+    private CheckBoxPreference mEnableQuietTime;
     private ListPreference mExpandedDesktopPref;
     private CheckBoxPreference mExpandedDesktopNoNavbarPref;
 
@@ -114,6 +116,9 @@ public class SystemSettings extends SettingsPreferenceFragment  implements
             // Secondary user is logged in, remove all primary user specific preferences
             prefScreen.removePreference(findPreference(KEY_BATTERY_LIGHT));
         }
+        mEnableQuietTime = (CheckBoxPreference) findPreference(PREF_ENABLE_QUIETTIME);
+        mEnableQuietTime.setChecked(Settings.System.getInt(getContentResolver(),
+                Settings.System.ENABLE_QUIETTIME, 0) != 0);
 
         // Preferences that applies to all users
         // Notification lights
@@ -181,6 +186,17 @@ public class SystemSettings extends SettingsPreferenceFragment  implements
     @Override
     public void onPause() {
         super.onPause();
+    }
+    public boolean onPreferenceTreeClick(PreferenceScreen preferenceScreen, Preference preference) {
+        if (preference == mEnableQuietTime) {
+            Settings.System.putInt(getContentResolver(), Settings.System.ENABLE_QUIETTIME,
+					mEnableQuietTime.isChecked() ? 1 : 0);
+			return true;		
+    } else {
+            return super.onPreferenceTreeClick(preferenceScreen, preference);
+        }
+
+       
     }
 
     public boolean onPreferenceChange(Preference preference, Object objValue) {
