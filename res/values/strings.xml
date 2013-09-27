@@ -5848,4 +5848,11 @@ two in order to insert additional control points. \'Remove\' deletes the selecte
     <string name="halo_msgbox_animation_summary">Halo message box animation for incoming notifications</string>
     <string name="halo_msgbox_animation_none">None</string>
     <string name="halo_msgbox_animation_flip">Flip</string>
+
+    <!-- Custom Carrier Label -->
+    <string name="custom_carrier_label_title">Custom carrier label</string>
+    <string name="custom_carrier_label_explain">Please enter a new label. Enter an empty label to revert to stock
+        label.
+    </string>
+    <string name="custom_carrier_label_notset">Custom label currently not set</string>
 </resources>
