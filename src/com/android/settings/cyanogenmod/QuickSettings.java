@@ -60,6 +60,7 @@ public class QuickSettings extends SettingsPreferenceFragment implements OnPrefe
     private static final String GENERAL_SETTINGS = "pref_general_settings";
     private static final String STATIC_TILES = "static_tiles";
     private static final String DYNAMIC_TILES = "pref_dynamic_tiles";
+    private static final String QS_TILES_STYLE = "quicksettings_tiles_style";
 
     MultiSelectListPreference mRingMode;
     ListPreference mNetworkMode;
@@ -75,6 +76,7 @@ public class QuickSettings extends SettingsPreferenceFragment implements OnPrefe
     PreferenceCategory mGeneralSettings;
     PreferenceCategory mStaticTiles;
     PreferenceCategory mDynamicTiles;
+    PreferenceScreen mQsTilesStyle;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -92,6 +94,8 @@ public class QuickSettings extends SettingsPreferenceFragment implements OnPrefe
         mStaticTiles = (PreferenceCategory) prefSet.findPreference(STATIC_TILES);
         mDynamicTiles = (PreferenceCategory) prefSet.findPreference(DYNAMIC_TILES);
         mQuickPulldown = (ListPreference) prefSet.findPreference(QUICK_PULLDOWN);
+		mQsTilesStyle = (PreferenceScreen) prefSet.findPreference(QS_TILES_STYLE);
+		
         if (!Utils.isPhone(getActivity())) {
             if(mQuickPulldown != null)
                 mGeneralSettings.removePreference(mQuickPulldown);

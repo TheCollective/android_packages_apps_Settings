@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- Copyright (C) 2007 The Android Open Source Project
      Copyright (C) 2013 The CyanogenMod Project
-
+     Copyright (C) 2012-2013 SlimRoms Project
      Licensed under the Apache License, Version 2.0 (the "License");
      you may not use this file except in compliance with the License.
      You may obtain a copy of the License at
@@ -4590,6 +4590,7 @@
     <string name="hex_hint">#FF000000</string>
     <string name="set">Set</string>
     <string name="ics_color">Holo</string>
+    <string name="color_default">Default</string>
     <string name="wizard_next">Next</string>
     <!-- Wizard next button label [CHAR LIMIT=25] -->
 
@@ -5855,4 +5856,18 @@ two in order to insert additional control points. \'Remove\' deletes the selecte
         label.
     </string>
     <string name="custom_carrier_label_notset">Custom label currently not set</string>
+    
+    <!-- QuickSettings style options -->
+    <string name="quicksettings_tiles_style">Quick Settings style</string>
+    <string name="summary_quicksettings_tiles_style">Show or change Quick Settings style options</string>
+    <string name="quicksettings_tiles_style_additional_options">Additional options</string>
+    <string name="tiles_per_row_title">Tiles per row</string>
+    <string name="tiles_per_row_duplicate_landscape_title">Scale landscape quantity</string>
+    <string name="tiles_per_row_duplicate_landscape_summary">Landscape view doubles tiles per row quantity</string>
+    <string name="quick_tiles_bg_color_title">Tiles background color</string>
+    <string name="quick_tiles_bg_pressed_color_title">Tiles pressed background color</string>
+    <string name="quick_tiles_text_color_title">Tiles text color</string>
+    <string name="qs_reset">Reset</string>
+    <string name="qs_style_reset_message">Reset all colors to default?</string>
+    <string name="qs_tiles_custom_color_title">Enable custom quick tiles color</string>
 </resources>
