@@ -27,7 +27,6 @@ import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.net.Uri;
 import android.nfc.NfcAdapter;
 import android.os.Bundle;
 import android.os.SystemProperties;
@@ -47,7 +46,6 @@ import com.android.settings.NsdEnabler;
 
 public class WirelessSettings extends SettingsPreferenceFragment
     implements Preference.OnPreferenceChangeListener {
-
     private static final String TAG = "WirelessSettings";
 
     private static final String KEY_TOGGLE_AIRPLANE = "toggle_airplane";
@@ -72,6 +70,7 @@ public class WirelessSettings extends SettingsPreferenceFragment
     private NfcAdapter mNfcAdapter;
     private NsdEnabler mNsdEnabler;
     private ListPreference mNfcPollingMode;
+
     private ConnectivityManager mCm;
     private TelephonyManager mTm;
 
@@ -100,7 +99,7 @@ public class WirelessSettings extends SettingsPreferenceFragment
         return super.onPreferenceTreeClick(preferenceScreen, preference);
     }
 
-     @Override
+    @Override
     public boolean onPreferenceChange(Preference preference, Object newValue) {
         if (preference == mNfcPollingMode) {
             int newVal = Integer.parseInt((String) newValue);
@@ -113,21 +112,22 @@ public class WirelessSettings extends SettingsPreferenceFragment
     }
 
     private String mManageMobilePlanMessage;
-
+    private static final String CONNECTED_TO_PROVISIONING_NETWORK_ACTION
+            = "com.android.server.connectivityservice.CONNECTED_TO_PROVISIONING_NETWORK_ACTION";
     public void onManageMobilePlanClick() {
         log("onManageMobilePlanClick:");
         mManageMobilePlanMessage = null;
         Resources resources = getActivity().getResources();
 
-        NetworkInfo ni = mCm.getActiveNetworkInfo();
+        NetworkInfo ni = mCm.getProvisioningOrActiveNetworkInfo();
         if (mTm.hasIccCard() && (ni != null)) {
             // Get provisioning URL
             String url = mCm.getMobileProvisioningUrl();
             if (!TextUtils.isEmpty(url)) {
-                // Send user to provisioning webpage
-                Intent intent = new Intent(Intent.ACTION_VIEW);
-                intent.setData(Uri.parse(url));
-                startActivity(intent);
+                Intent intent = new Intent(CONNECTED_TO_PROVISIONING_NETWORK_ACTION);
+                intent.putExtra("EXTRA_URL", url);
+                Context context = getActivity().getBaseContext();
+                context.sendBroadcast(intent);
                 mManageMobilePlanMessage = null;
             } else {
                 // No provisioning URL
@@ -324,7 +324,7 @@ public class WirelessSettings extends SettingsPreferenceFragment
         }
     }
 
-     private void updateNfcPolling() {
+    private void updateNfcPolling() {
         int resId;
         String value = Settings.System.getString(getContentResolver(),
                 Settings.System.NFC_POLLING_MODE);
@@ -393,3 +393,4 @@ public class WirelessSettings extends SettingsPreferenceFragment
         return R.string.help_url_more_networks;
     }
 }
+
