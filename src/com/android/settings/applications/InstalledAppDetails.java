@@ -25,6 +25,7 @@ import com.android.settings.applications.ApplicationsState.AppEntry;
 import android.app.Activity;
 import android.app.ActivityManager;
 import android.app.AlertDialog;
+import android.app.AppOpsManager;
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.app.Fragment;
@@ -145,6 +146,7 @@ public class InstalledAppDetails extends Fragment
     private CompoundButton mPrivacyGuardSwitch;
 
     private PackageMoveObserver mPackageMoveObserver;
+    private AppOpsManager mAppOps;
 
     private boolean mDisableAfterUninstall;
 
@@ -408,16 +410,11 @@ public class InstalledAppDetails extends Fragment
         if (mPrivacyGuardSwitch == null) {
             return;
         }
-
-        mPrivacyGuardSwitch.setChecked(mPm.getPrivacyGuardSetting(mAppEntry.info.packageName));
-
-        // disable privacy guard switch if the app is signed with the platform certificate
-        // to avoid the user shooting himself in the foot
-        if (isThisASystemPackage()) {
-            mPrivacyGuardSwitch.setEnabled(false);
-        } else {
-            mPrivacyGuardSwitch.setOnCheckedChangeListener(this);
-        }
+        mAppOps = (AppOpsManager)getActivity().getSystemService(Context.APP_OPS_SERVICE);
+        boolean isEnabled = mAppOps.getPrivacyGuardSettingForPackage(
+            mAppEntry.info.uid, mAppEntry.info.packageName);
+        mPrivacyGuardSwitch.setChecked(isEnabled);
+        mPrivacyGuardSwitch.setOnCheckedChangeListener(this);
     }
 
     /** Called when the activity is first created. */
@@ -1358,8 +1355,8 @@ public class InstalledAppDetails extends Fragment
     }
 
     private void setPrivacyGuard(boolean enabled) {
-        String packageName = mAppEntry.info.packageName;
-        mPm.setPrivacyGuardSetting(packageName, enabled);
+        mAppOps.setPrivacyGuardSettingForPackage(
+            mAppEntry.info.uid, mAppEntry.info.packageName, enabled);
     }
 
     private int getPremiumSmsPermission(String packageName) {
