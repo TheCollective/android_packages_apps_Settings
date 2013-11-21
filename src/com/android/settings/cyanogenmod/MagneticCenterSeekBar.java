@@ -36,6 +36,7 @@ public class MagneticCenterSeekBar extends SeekBar {
         super(context, attrs, defStyle);
     }
 
+    @Override
     protected int updateTouchProgress(int lastProgress, int newProgress) {
         int centerProgress = getMax() / 2;
         int inThreshold = (int) (CENTER_SNAP_IN_THRESHOLD * getMax());

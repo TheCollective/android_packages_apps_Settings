@@ -13,26 +13,6 @@ import com.koushikdutta.superuser.PolicyFragmentInternal;
 import com.koushikdutta.superuser.SettingsNativeFragment;
 
 public class PolicyNativeFragment extends com.koushikdutta.superuser.PolicyNativeFragment {
-    public static class CMLogNativeFragment extends LogNativeFragment {
-        @Override
-        public View onCreateView(LayoutInflater inflater,
-                ViewGroup container, Bundle savedInstanceState) {
-            View view = super.onCreateView(inflater, container, savedInstanceState);
-            adjustListPadding(getInternal().getListView());
-            return view;
-        }
-    }
-
-    public static class CMSettingsNativeFragment extends SettingsNativeFragment {
-        @Override
-        public View onCreateView(LayoutInflater inflater,
-                ViewGroup container, Bundle savedInstanceState) {
-            View view = super.onCreateView(inflater, container, savedInstanceState);
-            adjustListPadding(getInternal().getListView());
-            return view;
-        }
-    }
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = super.onCreateView(inflater, container, savedInstanceState);
@@ -45,12 +25,28 @@ public class PolicyNativeFragment extends com.koushikdutta.superuser.PolicyNativ
         return new FragmentInternal(this) {
             @Override
             protected LogNativeFragment createLogNativeFragment() {
-                return new CMLogNativeFragment();
+                return new LogNativeFragment() {
+                    @Override
+                    public View onCreateView(LayoutInflater inflater,
+                            ViewGroup container, Bundle savedInstanceState) {
+                        View view = super.onCreateView(inflater, container, savedInstanceState);
+                        adjustListPadding(getInternal().getListView());
+                        return view;
+                    }
+                };
             }
 
             @Override
             protected SettingsNativeFragment createSettingsNativeFragment() {
-                return new CMSettingsNativeFragment();
+                return new SettingsNativeFragment() {
+                    @Override
+                    public View onCreateView(LayoutInflater inflater,
+                            ViewGroup container, Bundle savedInstanceState) {
+                        View view = super.onCreateView(inflater, container, savedInstanceState);
+                        adjustListPadding(getInternal().getListView());
+                        return view;
+                    }
+                };
             };
         };
     }

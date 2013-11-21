@@ -82,6 +82,8 @@
         <attr name="fillColorSecondary" format="color" />
     </declare-styleable>
 
+    <attr name="apnPreferenceStyle" format="reference" />
+
     <declare-styleable name="CubicSplinePreviewView">
         <attr name="backgroundColor" format="color" />
         <attr name="foregroundColor" format="color" />
@@ -91,16 +93,5 @@
         <attr name="strokeWidth" format="dimension" />
         <attr name="markerSize" format="dimension" />
         <attr name="margin" format="dimension" />
-    </declare-styleable>
-
-    <declare-styleable name="ImageListPreference">
-        <attr name="summaryImage" format="reference" />
-        <attr name="entryImages" format="reference" />
-    </declare-styleable>
-
-    <declare-styleable name="SeekBarPreference">
-        <attr name="min" format="integer" />
-        <attr name="unitsLeft" format="string" />
-        <attr name="unitsRight" format="string" />
     </declare-styleable>
 </resources>

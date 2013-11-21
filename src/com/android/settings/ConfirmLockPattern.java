@@ -76,6 +76,12 @@ public class ConfirmLockPattern extends PreferenceActivity {
         return modIntent;
     }
 
+    @Override
+    protected boolean isValidFragment(String fragmentName) {
+        if (ConfirmLockPatternFragment.class.getName().equals(fragmentName)) return true;
+        return false;
+    }
+
     public static class ConfirmLockPatternFragment extends Fragment {
 
         // how long we wait to clear a wrong pattern
@@ -131,7 +137,6 @@ public class ConfirmLockPattern extends PreferenceActivity {
             }
 
             mLockPatternView.setTactileFeedbackEnabled(mLockPatternUtils.isTactileFeedbackEnabled());
-            mLockPatternView.setLockPatternSize(mLockPatternUtils.getLockPatternSize());
             mLockPatternView.setOnPatternListener(mConfirmExistingLockPatternListener);
             updateStage(Stage.NeedToUnlock);
 
@@ -263,7 +268,7 @@ public class ConfirmLockPattern extends PreferenceActivity {
 
                     Intent intent = new Intent();
                     intent.putExtra(ChooseLockSettingsHelper.EXTRA_KEY_PASSWORD,
-                                    mLockPatternUtils.patternToString(pattern));
+                                    LockPatternUtils.patternToString(pattern));
 
                     getActivity().setResult(Activity.RESULT_OK, intent);
                     getActivity().finish();

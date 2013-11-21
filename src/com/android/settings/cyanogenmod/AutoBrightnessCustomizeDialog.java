@@ -54,6 +54,7 @@ import java.util.ArrayList;
 import java.util.Locale;
 
 import com.android.settings.R;
+import com.android.settings.widget.CubicSplinePreviewView;
 
 public class AutoBrightnessCustomizeDialog extends AlertDialog
         implements DialogInterface.OnClickListener, DialogInterface.OnDismissListener {

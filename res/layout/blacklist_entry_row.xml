@@ -28,8 +28,8 @@
         android:layout_weight="1"
         android:gravity="center_vertical"
         android:orientation="vertical"
-        android:paddingLeft="10dip"
-        android:paddingRight="10dip">
+        android:paddingStart="10dip"
+        android:paddingEnd="10dip">
 
         <TextView android:id="@+id/number"
             style="?android:attr/textAppearanceMedium"

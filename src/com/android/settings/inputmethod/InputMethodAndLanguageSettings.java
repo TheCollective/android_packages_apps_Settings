@@ -20,10 +20,12 @@ import com.android.settings.R;
 import com.android.settings.Settings.KeyboardLayoutPickerActivity;
 import com.android.settings.Settings.SpellCheckersSettingsActivity;
 import com.android.settings.SettingsPreferenceFragment;
+import com.android.settings.UserDictionarySettings;
 import com.android.settings.Utils;
 import com.android.settings.VoiceInputOutputSettings;
 
 import android.app.Activity;
+import android.app.Fragment;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
@@ -38,6 +40,8 @@ import android.os.Handler;
 import android.preference.CheckBoxPreference;
 import android.preference.ListPreference;
 import android.preference.Preference;
+import android.preference.Preference.OnPreferenceChangeListener;
+import android.preference.Preference.OnPreferenceClickListener;
 import android.preference.PreferenceCategory;
 import android.preference.PreferenceScreen;
 import android.provider.Settings;
@@ -46,6 +50,7 @@ import android.text.TextUtils;
 import android.view.InputDevice;
 import android.view.inputmethod.InputMethodInfo;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.BaseAdapter;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -60,12 +65,6 @@ public class InputMethodAndLanguageSettings extends SettingsPreferenceFragment
     private static final String KEY_CURRENT_INPUT_METHOD = "current_input_method";
     private static final String KEY_INPUT_METHOD_SELECTOR = "input_method_selector";
     private static final String KEY_USER_DICTIONARY_SETTINGS = "key_user_dictionary_settings";
-    private static final String KEY_IME_SWITCHER = "status_bar_ime_switcher";
-    private static final String KEY_VOLUME_KEY_CURSOR_CONTROL = "volume_key_cursor_control";
-    private static final String KEY_POINTER_SETTINGS_CATEGORY = "pointer_settings_category";
-    private static final String KEY_STYLUS_ICON_ENABLED = "stylus_icon_enabled";
-    private static final String KEY_STYLUS_GESTURES = "stylus_gestures";
-
     // false: on ICS or later
     private static final boolean SHOW_INPUT_METHOD_SWITCHER_SETTINGS = false;
 
@@ -77,28 +76,35 @@ public class InputMethodAndLanguageSettings extends SettingsPreferenceFragment
         "auto_replace", "auto_caps", "auto_punctuate",
     };
 
-    private CheckBoxPreference mStylusIconEnabled;
-    private CheckBoxPreference mStatusBarImeSwitcher;
     private int mDefaultInputMethodSelectorVisibility = 0;
     private ListPreference mShowInputMethodSelectorPref;
     private PreferenceCategory mKeyboardSettingsCategory;
     private PreferenceCategory mHardKeyboardCategory;
     private PreferenceCategory mGameControllerCategory;
     private Preference mLanguagePref;
-    private PreferenceScreen mStylusGestures;
     private final ArrayList<InputMethodPreference> mInputMethodPreferenceList =
             new ArrayList<InputMethodPreference>();
     private final ArrayList<PreferenceScreen> mHardKeyboardPreferenceList =
             new ArrayList<PreferenceScreen>();
     private InputManager mIm;
     private InputMethodManager mImm;
-    private List<InputMethodInfo> mImis;
     private boolean mIsOnlyImeSettings;
     private Handler mHandler;
-    @SuppressWarnings("unused")
     private SettingsObserver mSettingsObserver;
     private Intent mIntentWaitingForResult;
-    private ListPreference mVolumeKeyCursorControl;
+    private InputMethodSettingValuesWrapper mInputMethodSettingValues;
+
+    private final OnPreferenceChangeListener mOnImePreferenceChangedListener =
+            new OnPreferenceChangeListener() {
+                @Override
+                public boolean onPreferenceChange(Preference arg0, Object arg1) {
+                    InputMethodSettingValuesWrapper.getInstance(
+                            arg0.getContext()).refreshAllInputMethodAndSubtypes();
+                    ((BaseAdapter)getPreferenceScreen().getRootAdapter()).notifyDataSetChanged();
+                    updateInputMethodPreferenceViews();
+                    return true;
+                }
+            };
 
     @Override
     public void onCreate(Bundle icicle) {
@@ -150,7 +156,7 @@ public class InputMethodAndLanguageSettings extends SettingsPreferenceFragment
 
         // Build IME preference category.
         mImm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-        mImis = mImm.getInputMethodList();
+        mInputMethodSettingValues = InputMethodSettingValuesWrapper.getInstance(getActivity());
 
         mKeyboardSettingsCategory.removeAll();
         if (!mIsOnlyImeSettings) {
@@ -160,46 +166,9 @@ public class InputMethodAndLanguageSettings extends SettingsPreferenceFragment
             mKeyboardSettingsCategory.addPreference(currentIme);
         }
 
-        mInputMethodPreferenceList.clear();
-        final int N = (mImis == null ? 0 : mImis.size());
-        for (int i = 0; i < N; ++i) {
-            final InputMethodInfo imi = mImis.get(i);
-            final InputMethodPreference pref = getInputMethodPreference(imi, N);
-            mInputMethodPreferenceList.add(pref);
-        }
-
-        if (!mInputMethodPreferenceList.isEmpty()) {
-            Collections.sort(mInputMethodPreferenceList);
-            for (int i = 0; i < N; ++i) {
-                mKeyboardSettingsCategory.addPreference(mInputMethodPreferenceList.get(i));
-            }
-        }
-
         // Build hard keyboard and game controller preference categories.
         mIm = (InputManager)getActivity().getSystemService(Context.INPUT_SERVICE);
         updateInputDevices();
-
-        // Enable or disable mStatusBarImeSwitcher based on boolean value: config_show_cmIMESwitcher
-        final Preference keyImeSwitcherPref = findPreference(KEY_IME_SWITCHER);
-        if (keyImeSwitcherPref != null) {
-            if (!getResources().getBoolean(com.android.internal.R.bool.config_show_cmIMESwitcher)) {
-                getPreferenceScreen().removePreference(keyImeSwitcherPref);
-            } else {
-                mStatusBarImeSwitcher = (CheckBoxPreference) keyImeSwitcherPref;
-            }
-        }
-
-        mStylusGestures = (PreferenceScreen) findPreference(KEY_STYLUS_GESTURES);
-        mStylusIconEnabled = (CheckBoxPreference) findPreference(KEY_STYLUS_ICON_ENABLED);
-        // remove stylus preference for non stylus devices
-        if (!getResources().getBoolean(com.android.internal.R.bool.config_stylusGestures)) {
-            PreferenceCategory pointerSettingsCategory = (PreferenceCategory)
-                    findPreference(KEY_POINTER_SETTINGS_CATEGORY);
-            if (pointerSettingsCategory != null) {
-                pointerSettingsCategory.removePreference(mStylusGestures);
-                pointerSettingsCategory.removePreference(mStylusIconEnabled);
-            }
-        }
 
         // Spell Checker
         final Intent intent = new Intent(Intent.ACTION_MAIN);
@@ -208,18 +177,6 @@ public class InputMethodAndLanguageSettings extends SettingsPreferenceFragment
                 "spellcheckers_settings"));
         if (scp != null) {
             scp.setFragmentIntent(this, intent);
-        }
-
-        mVolumeKeyCursorControl = (ListPreference) findPreference(KEY_VOLUME_KEY_CURSOR_CONTROL);
-        if(mVolumeKeyCursorControl != null) {
-            if (Utils.hasVolumeRocker(getActivity())) {
-                mVolumeKeyCursorControl.setOnPreferenceChangeListener(this);
-                mVolumeKeyCursorControl.setValue(Integer.toString(Settings.System.getInt(getActivity()
-                        .getContentResolver(), Settings.System.VOLUME_KEY_CURSOR_CONTROL, 0)));
-                mVolumeKeyCursorControl.setSummary(mVolumeKeyCursorControl.getEntry());
-            } else {
-                getPreferenceScreen().removePreference(mVolumeKeyCursorControl);
-            }
         }
 
         mHandler = new Handler();
@@ -237,31 +194,41 @@ public class InputMethodAndLanguageSettings extends SettingsPreferenceFragment
 
     private void updateUserDictionaryPreference(Preference userDictionaryPreference) {
         final Activity activity = getActivity();
-        final TreeSet<String> localeList = UserDictionaryList.getUserDictionaryLocalesSet(activity);
-        if (null == localeList) {
+        final TreeSet<String> localeSet = UserDictionaryList.getUserDictionaryLocalesSet(activity);
+        if (null == localeSet) {
             // The locale list is null if and only if the user dictionary service is
             // not present or disabled. In this case we need to remove the preference.
             getPreferenceScreen().removePreference(userDictionaryPreference);
-        } else if (localeList.size() <= 1) {
-            final Intent intent =
-                    new Intent(UserDictionaryList.USER_DICTIONARY_SETTINGS_INTENT_ACTION);
-            userDictionaryPreference.setTitle(R.string.user_dict_single_settings_title);
-            userDictionaryPreference.setIntent(intent);
-            userDictionaryPreference.setFragment(
-                    com.android.settings.UserDictionarySettings.class.getName());
-            // If the size of localeList is 0, we don't set the locale parameter in the
-            // extras. This will be interpreted by the UserDictionarySettings class as
-            // meaning "the current locale".
-            // Note that with the current code for UserDictionaryList#getUserDictionaryLocalesSet()
-            // the locale list always has at least one element, since it always includes the current
-            // locale explicitly. @see UserDictionaryList.getUserDictionaryLocalesSet().
-            if (localeList.size() == 1) {
-                final String locale = (String)localeList.toArray()[0];
-                userDictionaryPreference.getExtras().putString("locale", locale);
-            }
         } else {
-            userDictionaryPreference.setTitle(R.string.user_dict_multiple_settings_title);
-            userDictionaryPreference.setFragment(UserDictionaryList.class.getName());
+            userDictionaryPreference.setOnPreferenceClickListener(
+                    new OnPreferenceClickListener() {
+                        @Override
+                        public boolean onPreferenceClick(Preference arg0) {
+                            // Redirect to UserDictionarySettings if the user needs only one
+                            // language.
+                            final Bundle extras = new Bundle();
+                            final Class<? extends Fragment> targetFragment;
+                            if (localeSet.size() <= 1) {
+                                if (!localeSet.isEmpty()) {
+                                    // If the size of localeList is 0, we don't set the locale
+                                    // parameter in the extras. This will be interpreted by the
+                                    // UserDictionarySettings class as meaning
+                                    // "the current locale". Note that with the current code for
+                                    // UserDictionaryList#getUserDictionaryLocalesSet()
+                                    // the locale list always has at least one element, since it
+                                    // always includes the current locale explicitly.
+                                    // @see UserDictionaryList.getUserDictionaryLocalesSet().
+                                    extras.putString("locale", localeSet.first());
+                                }
+                                targetFragment = UserDictionarySettings.class;
+                            } else {
+                                targetFragment = UserDictionaryList.class;
+                            }
+                            startFragment(InputMethodAndLanguageSettings.this,
+                                    targetFragment.getCanonicalName(), -1, extras);
+                            return true;
+                        }
+                    });
         }
     }
 
@@ -310,16 +277,6 @@ public class InputMethodAndLanguageSettings extends SettingsPreferenceFragment
             }
         }
 
-        if (mStatusBarImeSwitcher != null) {
-            mStatusBarImeSwitcher.setChecked(Settings.System.getInt(getActivity().getContentResolver(),
-                    Settings.System.STATUS_BAR_IME_SWITCHER, 1) != 0);
-        }
-
-        if (mStylusIconEnabled != null) {
-            mStylusIconEnabled.setChecked(Settings.System.getInt(getActivity().getContentResolver(),
-                    Settings.System.STYLUS_ICON_ENABLED, 0) == 1);
-        }
-
         // Hard keyboard
         if (!mHardKeyboardPreferenceList.isEmpty()) {
             for (int i = 0; i < sHardKeyboardKeys.length; ++i) {
@@ -332,10 +289,14 @@ public class InputMethodAndLanguageSettings extends SettingsPreferenceFragment
 
         updateInputDevices();
 
-        // IME
+        // Refresh internal states in mInputMethodSettingValues to keep the latest
+        // "InputMethodInfo"s and "InputMethodSubtype"s
+        mInputMethodSettingValues.refreshAllInputMethodAndSubtypes();
+        // TODO: Consolidate the logic to InputMethodSettingsWrapper
         InputMethodAndSubtypeUtil.loadInputMethodSubtypeList(
-                this, getContentResolver(), mImis, null);
-        updateActiveInputMethodsSummary();
+                this, getContentResolver(),
+                mInputMethodSettingValues.getInputMethodList(), null);
+        updateInputMethodPreferenceViews();
     }
 
     @Override
@@ -348,8 +309,10 @@ public class InputMethodAndLanguageSettings extends SettingsPreferenceFragment
         if (SHOW_INPUT_METHOD_SWITCHER_SETTINGS) {
             mShowInputMethodSelectorPref.setOnPreferenceChangeListener(null);
         }
+        // TODO: Consolidate the logic to InputMethodSettingsWrapper
         InputMethodAndSubtypeUtil.saveInputMethodSubtypeList(
-                this, getContentResolver(), mImis, !mHardKeyboardPreferenceList.isEmpty());
+                this, getContentResolver(), mInputMethodSettingValues.getInputMethodList(),
+                !mHardKeyboardPreferenceList.isEmpty());
     }
 
     @Override
@@ -373,14 +336,7 @@ public class InputMethodAndLanguageSettings extends SettingsPreferenceFragment
         if (Utils.isMonkeyRunning()) {
             return false;
         }
-        if (preference == mStatusBarImeSwitcher) {
-            Settings.System.putInt(getActivity().getContentResolver(),
-                Settings.System.STATUS_BAR_IME_SWITCHER, mStatusBarImeSwitcher.isChecked() ? 1 : 0);
-            return true;
-        } else if (preference == mStylusIconEnabled) {
-            Settings.System.putInt(getActivity().getContentResolver(),
-                Settings.System.STYLUS_ICON_ENABLED, mStylusIconEnabled.isChecked() ? 1 : 0);
-        } else if (preference instanceof PreferenceScreen) {
+        if (preference instanceof PreferenceScreen) {
             if (preference.getFragment() != null) {
                 // Fragment will be handled correctly by the super class.
             } else if (KEY_CURRENT_INPUT_METHOD.equals(preference.getKey())) {
@@ -447,22 +403,37 @@ public class InputMethodAndLanguageSettings extends SettingsPreferenceFragment
                 }
             }
         }
-        if (preference == mVolumeKeyCursorControl) {
-            String volumeKeyCursorControl = (String) value;
-            int val = Integer.parseInt(volumeKeyCursorControl);
-            Settings.System.putInt(getActivity().getContentResolver(),
-                    Settings.System.VOLUME_KEY_CURSOR_CONTROL, val);
-            int index = mVolumeKeyCursorControl.findIndexOfValue(volumeKeyCursorControl);
-            mVolumeKeyCursorControl.setSummary(mVolumeKeyCursorControl.getEntries()[index]);
-            return true;
-        }
         return false;
     }
 
-    private void updateActiveInputMethodsSummary() {
-        for (Preference pref : mInputMethodPreferenceList) {
-            if (pref instanceof InputMethodPreference) {
-                ((InputMethodPreference)pref).updateSummary();
+    private void updateInputMethodPreferenceViews() {
+        synchronized (mInputMethodPreferenceList) {
+            // Clear existing "InputMethodPreference"s
+            for (final InputMethodPreference imp : mInputMethodPreferenceList) {
+                mKeyboardSettingsCategory.removePreference(imp);
+            }
+            mInputMethodPreferenceList.clear();
+            final List<InputMethodInfo> imis = mInputMethodSettingValues.getInputMethodList();
+            final int N = (imis == null ? 0 : imis.size());
+            for (int i = 0; i < N; ++i) {
+                final InputMethodInfo imi = imis.get(i);
+                final InputMethodPreference pref = getInputMethodPreference(imi);
+                pref.setOnImePreferenceChangeListener(mOnImePreferenceChangedListener);
+                mInputMethodPreferenceList.add(pref);
+            }
+
+            if (!mInputMethodPreferenceList.isEmpty()) {
+                Collections.sort(mInputMethodPreferenceList);
+                for (int i = 0; i < N; ++i) {
+                    mKeyboardSettingsCategory.addPreference(mInputMethodPreferenceList.get(i));
+                }
+            }
+
+            // update views status
+            for (Preference pref : mInputMethodPreferenceList) {
+                if (pref instanceof InputMethodPreference) {
+                    ((InputMethodPreference) pref).updatePreferenceViews();
+                }
             }
         }
         updateCurrentImeName();
@@ -473,8 +444,8 @@ public class InputMethodAndLanguageSettings extends SettingsPreferenceFragment
         if (context == null || mImm == null) return;
         final Preference curPref = getPreferenceScreen().findPreference(KEY_CURRENT_INPUT_METHOD);
         if (curPref != null) {
-            final CharSequence curIme = InputMethodAndSubtypeUtil.getCurrentInputMethodName(
-                    context, getContentResolver(), mImm, mImis, getPackageManager());
+            final CharSequence curIme =
+                    mInputMethodSettingValues.getCurrentInputMethodName(context);
             if (!TextUtils.isEmpty(curIme)) {
                 synchronized(this) {
                     curPref.setSummary(curIme);
@@ -483,7 +454,7 @@ public class InputMethodAndLanguageSettings extends SettingsPreferenceFragment
         }
     }
 
-    private InputMethodPreference getInputMethodPreference(InputMethodInfo imi, int imiSize) {
+    private InputMethodPreference getInputMethodPreference(InputMethodInfo imi) {
         final PackageManager pm = getPackageManager();
         final CharSequence label = imi.loadLabel(pm);
         // IME settings
@@ -497,7 +468,8 @@ public class InputMethodAndLanguageSettings extends SettingsPreferenceFragment
         }
 
         // Add a check box for enabling/disabling IME
-        InputMethodPreference pref = new InputMethodPreference(this, intent, mImm, imi, imiSize);
+        final InputMethodPreference pref =
+                new InputMethodPreference(this, intent, mImm, imi);
         pref.setKey(imi.getId());
         pref.setTitle(label);
         return pref;

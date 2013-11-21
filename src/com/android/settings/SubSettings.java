@@ -16,31 +16,30 @@
 
 package com.android.settings;
 
+import android.app.Fragment;
 import android.app.FragmentManager;
+import android.util.Log;
 import android.view.MenuItem;
+
+import com.android.settings.ChooseLockGeneric.ChooseLockGenericFragment;
 
 /**
  * Stub class for showing sub-settings; we can't use the main Settings class
  * since for our app it is a special singleTask class.
  */
 public class SubSettings extends Settings {
-
     @Override
     public boolean onNavigateUp() {
-        finish();
+        if (!popFragment()) {
+            finish();
+        }
         return true;
     }
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                if (popFragment()) {
-                    return true;
-                }
-                break;
-        }
 
-        return super.onOptionsItemSelected(item);
+    @Override
+    protected boolean isValidFragment(String fragmentName) {
+        Log.d("SubSettings", "Launching fragment " + fragmentName);
+        return true;
     }
 
     private boolean popFragment() {

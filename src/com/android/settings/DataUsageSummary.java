@@ -141,12 +141,12 @@ import com.android.settings.widget.ChartDataUsageView.DataUsageChartListener;
 import com.android.settings.widget.PieChartView;
 import com.google.android.collect.Lists;
 
+import libcore.util.Objects;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
-
-import libcore.util.Objects;
 
 /**
  * Panel showing data usage history across various networks, including options
@@ -277,6 +277,16 @@ public class DataUsageSummary extends Fragment {
         mPolicyEditor.read();
 
         try {
+            if (!mNetworkService.isBandwidthControlEnabled()) {
+                Log.w(TAG, "No bandwidth control; leaving");
+                getActivity().finish();
+            }
+        } catch (RemoteException e) {
+            Log.w(TAG, "No bandwidth control; leaving");
+            getActivity().finish();
+        }
+
+        try {
             mStatsSession = mStatsService.openSession();
         } catch (RemoteException e) {
             throw new RuntimeException(e);
@@ -312,15 +322,10 @@ public class DataUsageSummary extends Fragment {
         // on parent container for inset.
         final boolean shouldInset = mListView.getScrollBarStyle()
                 == View.SCROLLBARS_OUTSIDE_OVERLAY;
-        if (shouldInset) {
-            mInsetSide = view.getResources().getDimensionPixelOffset(
-                    com.android.internal.R.dimen.preference_fragment_padding_side);
-        } else {
-            mInsetSide = 0;
-        }
+        mInsetSide = 0;
 
         // adjust padding around tabwidget as needed
-        prepareCustomPreferencesList(container, view, mListView, true);
+        prepareCustomPreferencesList(container, view, mListView, false);
 
         mTabHost.setup();
         mTabHost.setOnTabChangedListener(mTabListener);
@@ -1183,8 +1188,8 @@ public class DataUsageSummary extends Fragment {
         final String rangePhrase = formatDateRange(context, start, end);
 
         final int summaryRes;
-        if (TAB_MOBILE.equals(mCurrentTab) || TAB_3G.equals(mCurrentTab)
-                || TAB_4G.equals(mCurrentTab)) {
+        if (TAB_MOBILE.equals(mCurrentTab) || TAB_3G.equals(mCurrentApp)
+                || TAB_4G.equals(mCurrentApp)) {
             summaryRes = R.string.data_usage_total_during_range_mobile;
         } else {
             summaryRes = R.string.data_usage_total_during_range;
@@ -2195,7 +2200,7 @@ public class DataUsageSummary extends Fragment {
     }
 
     /**
-     * Test if device has a mobile data radio with subscription in ready state.
+     * Test if device has a mobile data radio with SIM in ready state.
      */
     public static boolean hasReadyMobileRadio(Context context) {
         if (TEST_RADIOS) {
@@ -2203,9 +2208,10 @@ public class DataUsageSummary extends Fragment {
         }
 
         final ConnectivityManager conn = ConnectivityManager.from(context);
+        final TelephonyManager tele = TelephonyManager.from(context);
 
-        // require both supported network and subscription
-        return conn.isNetworkSupported(TYPE_MOBILE) && hasSubscription(context);
+        // require both supported network and ready SIM
+        return conn.isNetworkSupported(TYPE_MOBILE) && tele.getSimState() == SIM_STATE_READY;
     }
 
     /**
@@ -2269,14 +2275,6 @@ public class DataUsageSummary extends Fragment {
     }
 
     /**
-     * Test if device has either a SIM card or a phone number (for SIM-less CDMA).
-     */
-    private static boolean hasSubscription(Context context) {
-        final TelephonyManager tele = TelephonyManager.from(context);
-        return tele.getSimState() == SIM_STATE_READY || !TextUtils.isEmpty(tele.getLine1Number());
-    }
-
-    /**
      * Inflate a {@link Preference} style layout, adding the given {@link View}
      * widget into {@link android.R.id#widget_frame}.
      */
@@ -2330,7 +2328,8 @@ public class DataUsageSummary extends Fragment {
         // build combined list of all limited networks
         final ArrayList<CharSequence> limited = Lists.newArrayList();
 
-        if (hasSubscription(context)) {
+        final TelephonyManager tele = TelephonyManager.from(context);
+        if (tele.getSimState() == SIM_STATE_READY) {
             final String subscriberId = getActiveSubscriberId(context);
             if (mPolicyEditor.hasLimitedPolicy(buildTemplateMobileAll(subscriberId))) {
                 limited.add(getText(R.string.data_usage_list_mobile));

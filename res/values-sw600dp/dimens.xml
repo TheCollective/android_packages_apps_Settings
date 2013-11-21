@@ -24,7 +24,7 @@
     <dimen name="content_margin_left">16dip</dimen>
     <dimen name="description_margin_top">26dip</dimen>
     <dimen name="crypt_clock_size">120sp</dimen>
-    <dimen name="setup_title_size">60sp</dimen>
+    <dimen name="setup_title_size">60dp</dimen>
     <item type="dimen" name="setup_title_height">20%</item>
     <item type="dimen" name="setup_border_width">10%</item>
     <dimen name="setup_margin_bottom">0dip</dimen>
@@ -38,11 +38,4 @@
     <dimen name="keyguard_appwidget_picker_margin_left">2dip</dimen>
     <dimen name="keyguard_appwidget_picker_margin_right">2dip</dimen>
     <integer name="keyguard_appwidget_picker_cols">2</integer>
-
-    <!-- Diameter of outer shape drawable shown in navbar search. Should be 1/2 of above value -->
-    <dimen name="navbar_search_outerring_radius">215dp</dimen>
-    <!-- Diameter of outer shape drawable shown in navbar search-->
-    <dimen name="navbar_search_outerring_diameter">430dp</dimen>
-    <!-- Height of search panel including navigation bar height -->
-    <dimen name="navbar_search_panel_height">280dip</dimen>
 </resources>

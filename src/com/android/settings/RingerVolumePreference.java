@@ -20,12 +20,15 @@ import static android.os.BatteryManager.BATTERY_STATUS_UNKNOWN;
 
 import com.android.internal.telephony.TelephonyIntents;
 
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.BroadcastReceiver;
 import android.content.ContentResolver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.DialogInterface;
 import android.media.AudioManager;
 import android.media.AudioSystem;
 import android.net.Uri;
@@ -34,6 +37,7 @@ import android.os.Looper;
 import android.os.Message;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.preference.CheckBoxPreference;
 import android.preference.VolumePreference;
 import android.provider.Settings;
 import android.provider.Settings.System;
@@ -57,6 +61,11 @@ public class RingerVolumePreference extends VolumePreference {
     private static final int MSG_RINGER_MODE_CHANGED = 101;
 
     private SeekBarVolumizer [] mSeekBarVolumizer;
+    private CheckBox mSafeHeadsetVolume;
+
+    // To track whether a confirmation dialog was clicked.
+    private boolean mDialogClicked;
+    private Dialog mWaiverDialog;
 
     // These arrays must all match in length and order
     private static final int[] SEEKBAR_ID = new int[] {
@@ -78,6 +87,13 @@ public class RingerVolumePreference extends VolumePreference {
         R.id.ringer_mute_button,
         R.id.notification_mute_button,
         R.id.alarm_mute_button
+    };
+
+    private static final int[] SEEKBAR_SECTION_ID = new int[] {
+        R.id.media_section,
+        R.id.ringer_section,
+        R.id.notification_section,
+        R.id.alarm_section
     };
 
     private static final int[] SEEKBAR_MUTED_RES_ID = new int[] {
@@ -150,7 +166,7 @@ public class RingerVolumePreference extends VolumePreference {
         setStreamType(AudioManager.STREAM_RING);
 
         setDialogLayoutResource(R.layout.preference_dialog_ringervolume);
-        //setDialogIcon(R.drawable.ic_settings_sound);
+        setDialogTitle(null);
 
         mSeekBarVolumizer = new SeekBarVolumizer[SEEKBAR_ID.length];
 
@@ -189,6 +205,7 @@ public class RingerVolumePreference extends VolumePreference {
         final CheckBox linkCheckBox = (CheckBox) view.findViewById(R.id.link_ring_and_volume);
         final CheckBox linkMuteStates = (CheckBox) view.findViewById(R.id.link_mutes);
         final CheckBox volumeKeysControlRingStream = (CheckBox) view.findViewById(R.id.volume_keys_control_ring_stream);
+        mSafeHeadsetVolume = (CheckBox) view.findViewById(R.id.safe_headset_volume);
 
         final View ringerSection = view.findViewById(R.id.ringer_section);
         final View notificationSection = view.findViewById(R.id.notification_section);
@@ -281,6 +298,72 @@ public class RingerVolumePreference extends VolumePreference {
             linkVolumesSection.setVisibility(View.GONE);
         }
 
+        // Load safe headset setting
+        boolean safeMediaVolumeEnabled = getContext().getResources().getBoolean(
+                com.android.internal.R.bool.config_safe_media_volume_enabled);
+        mSafeHeadsetVolume.setChecked(Settings.System.getInt(getContext().getContentResolver(),
+                Settings.System.SAFE_HEADSET_VOLUME, safeMediaVolumeEnabled ? 1 : 0) != 0);
+        mSafeHeadsetVolume.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (!isChecked) {
+                    // User is trying to disable the feature, display the waiver
+                    mDialogClicked = false;
+                    if (mWaiverDialog != null) {
+                        dismissDialog();
+                    }
+                    AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                    builder.setMessage(R.string.cyanogenmod_waiver_body);
+                    builder.setTitle(R.string.cyanogenmod_waiver_title);
+                    builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            if (dialog == mWaiverDialog) {
+                                if (!mDialogClicked) {
+                                    mSafeHeadsetVolume.setChecked(true);
+                                }
+                                mWaiverDialog = null;
+                            }
+                        }
+                    });
+
+                    builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            if (dialog == mWaiverDialog) {
+                                if (which == DialogInterface.BUTTON_POSITIVE) {
+                                    mDialogClicked = true;
+                                    Settings.System.putInt(getContext().getContentResolver(),
+                                            Settings.System.SAFE_HEADSET_VOLUME, 0);
+                                }
+                            }
+                        }
+                    });
+
+                    mWaiverDialog = builder.show();
+                    mWaiverDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+
+                        @Override
+                        public void onDismiss(DialogInterface dialog) {
+                            // Assuming that onClick gets called first
+                            if (dialog == mWaiverDialog) {
+                                if (!mDialogClicked) {
+                                    mSafeHeadsetVolume.setChecked(true);
+                                }
+                                mWaiverDialog = null;
+                            }
+                        }
+                    });
+                } else {
+                    Settings.System.putInt(getContext().getContentResolver(),
+                            Settings.System.SAFE_HEADSET_VOLUME, 1);
+                }
+            }
+        });
+
         // Load initial states from AudioManager
         updateSlidersAndMutedStates();
 
@@ -298,6 +381,41 @@ public class RingerVolumePreference extends VolumePreference {
                 }
             };
             getContext().registerReceiver(mRingModeChangedReceiver, filter);
+        }
+
+        boolean useMasterVolume = getContext().getResources().
+                getBoolean(com.android.internal.R.bool.config_useMasterVolume);
+        if (useMasterVolume) {
+            // If config_useMasterVolume is true, all streams are treated as STREAM_MASTER.
+            // So hide all except a stream.
+            int id;
+            if (Utils.isVoiceCapable(getContext())) {
+                id = R.id.ringer_section;
+            } else {
+                id = R.id.media_section;
+            }
+            for (int i = 0; i < SEEKBAR_SECTION_ID.length; i++) {
+                if (SEEKBAR_SECTION_ID[i] != id) {
+                    view.findViewById(SEEKBAR_SECTION_ID[i]).setVisibility(View.GONE);
+                }
+            }
+        } else {
+            // Disable either ringer+notifications or notifications
+            int id;
+            if (!Utils.isVoiceCapable(getContext())) {
+                id = R.id.ringer_section;
+            } else {
+                id = R.id.notification_section;
+            }
+            View hideSection = view.findViewById(id);
+            hideSection.setVisibility(View.GONE);
+        }
+    }
+
+    private void dismissDialog() {
+        if (mWaiverDialog != null) {
+            mWaiverDialog.dismiss();
+            mWaiverDialog = null;
         }
     }
 

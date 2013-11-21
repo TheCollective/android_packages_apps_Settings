@@ -24,13 +24,11 @@ import android.content.ContentResolver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.ActivityInfo;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.pm.ResolveInfo;
 import android.content.pm.UserInfo;
-import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.content.res.Resources.NotFoundException;
 import android.database.Cursor;
@@ -61,7 +59,6 @@ import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.DisplayInfo;
-import android.view.Surface;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
@@ -120,7 +117,7 @@ public class Utils {
     private static final int DEVICE_TABLET = 2;
 
     // Device type reference
-    private static int mDeviceType = -1;
+    private static int sDeviceType = -1;
 
     /**
      * Finds a matching activity for a preference's intent. If a matching
@@ -350,7 +347,7 @@ public class Utils {
     /**
      * Returns the WIFI IP Addresses, if any, taking into account IPv4 and IPv6 style addresses.
      * @param context the application context
-     * @return the formatted and comma-separated IP addresses, or null if none.
+     * @return the formatted and newline-separated IP addresses, or null if none.
      */
     public static String getWifiIpAddresses(Context context) {
         ConnectivityManager cm = (ConnectivityManager)
@@ -363,7 +360,7 @@ public class Utils {
      * Returns the default link's IP addresses, if any, taking into account IPv4 and IPv6 style
      * addresses.
      * @param context the application context
-     * @return the formatted and comma-separated IP addresses, or null if none.
+     * @return the formatted and newline-separated IP addresses, or null if none.
      */
     public static String getDefaultIpAddresses(Context context) {
         ConnectivityManager cm = (ConnectivityManager)
@@ -374,14 +371,14 @@ public class Utils {
 
     private static String formatIpAddresses(LinkProperties prop) {
         if (prop == null) return null;
-        Iterator<InetAddress> iter = prop.getAddresses().iterator();
+        Iterator<InetAddress> iter = prop.getAllAddresses().iterator();
         // If there are no entries, return null
         if (!iter.hasNext()) return null;
         // Concatenate all available addresses, comma separated
         String addresses = "";
         while (iter.hasNext()) {
             addresses += iter.next().getHostAddress();
-            if (iter.hasNext()) addresses += ", ";
+            if (iter.hasNext()) addresses += "\n";
         }
         return addresses;
     }
@@ -406,17 +403,22 @@ public class Utils {
         }
     }
 
+    public static boolean isBatteryPresent(Intent batteryChangedIntent) {
+        return batteryChangedIntent.getBooleanExtra(BatteryManager.EXTRA_PRESENT, true);
+    }
+
     public static String getBatteryPercentage(Intent batteryChangedIntent) {
-        int level = batteryChangedIntent.getIntExtra("level", 0);
-        int scale = batteryChangedIntent.getIntExtra("scale", 100);
+        int level = batteryChangedIntent.getIntExtra(BatteryManager.EXTRA_LEVEL, 0);
+        int scale = batteryChangedIntent.getIntExtra(BatteryManager.EXTRA_SCALE, 100);
         return String.valueOf(level * 100 / scale) + "%";
     }
 
     public static String getBatteryStatus(Resources res, Intent batteryChangedIntent) {
         final Intent intent = batteryChangedIntent;
 
-        int plugType = intent.getIntExtra("plugged", 0);
-        int status = intent.getIntExtra("status", BatteryManager.BATTERY_STATUS_UNKNOWN);
+        int plugType = intent.getIntExtra(BatteryManager.EXTRA_PLUGGED, 0);
+        int status = intent.getIntExtra(BatteryManager.EXTRA_STATUS,
+                BatteryManager.BATTERY_STATUS_UNKNOWN);
         String statusString;
         if (status == BatteryManager.BATTERY_STATUS_CHARGING) {
             statusString = res.getString(R.string.battery_info_status_charging);
@@ -463,8 +465,7 @@ public class Utils {
             ((PreferenceFrameLayout.LayoutParams) child.getLayoutParams()).removeBorders = true;
 
             final Resources res = list.getResources();
-            final int paddingSide = res.getDimensionPixelSize(
-                    com.android.internal.R.dimen.preference_fragment_padding_side);
+            final int paddingSide = res.getDimensionPixelSize(R.dimen.settings_side_margin);
             final int paddingBottom = res.getDimensionPixelSize(
                     com.android.internal.R.dimen.preference_fragment_padding_bottom);
 
@@ -657,70 +658,37 @@ public class Utils {
                 .getUsers().size() > 1;
     }
 
-    private static int getScreenType(Context con) {
-        if (mDeviceType == -1) {
-            WindowManager wm = (WindowManager)con.getSystemService(Context.WINDOW_SERVICE);
+    private static int getScreenType(Context context) {
+        if (sDeviceType == -1) {
+            WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
             DisplayInfo outDisplayInfo = new DisplayInfo();
             wm.getDefaultDisplay().getDisplayInfo(outDisplayInfo);
             int shortSize = Math.min(outDisplayInfo.logicalHeight, outDisplayInfo.logicalWidth);
-            int shortSizeDp = shortSize * DisplayMetrics.DENSITY_DEFAULT / outDisplayInfo.logicalDensityDpi;
+            int shortSizeDp = shortSize * DisplayMetrics.DENSITY_DEFAULT
+                    / outDisplayInfo.logicalDensityDpi;
             if (shortSizeDp < 600) {
                 // 0-599dp: "phone" UI with a separate status & navigation bar
-                mDeviceType =  DEVICE_PHONE;
+                sDeviceType =  DEVICE_PHONE;
             } else if (shortSizeDp < 720) {
                 // 600-719dp: "phone" UI with modifications for larger screens
-                mDeviceType = DEVICE_HYBRID;
+                sDeviceType = DEVICE_HYBRID;
             } else {
                 // 720dp: "tablet" UI with a single combined status & navigation bar
-                mDeviceType = DEVICE_TABLET;
+                sDeviceType = DEVICE_TABLET;
             }
         }
-        return mDeviceType;
+        return sDeviceType;
     }
 
-    public static boolean isPhone(Context con) {
-        return getScreenType(con) == DEVICE_PHONE;
+    public static boolean isPhone(Context context) {
+        return getScreenType(context) == DEVICE_PHONE;
     }
 
-    public static boolean isHybrid(Context con) {
-        return getScreenType(con) == DEVICE_HYBRID;
+    public static boolean isHybrid(Context context) {
+        return getScreenType(context) == DEVICE_HYBRID;
     }
 
-    public static boolean isTablet(Context con) {
-        return getScreenType(con) == DEVICE_TABLET;
-    }
-
-    /* returns whether the device has volume rocker or not. */
-    public static boolean hasVolumeRocker(Context con) {
-        return con.getResources().getBoolean(R.bool.has_volume_rocker);
-    }
-
-    /**
-     * Locks the activity orientation to the current device orientation
-     * @param act
-     */
-    public static void lockCurrentOrientation(Activity act) {
-        int currentRotation = act.getWindowManager().getDefaultDisplay().getRotation();
-        int frozenRotation = 0;
-        int orientation = act.getResources().getConfiguration().orientation;
-        switch(currentRotation) {
-            case Surface.ROTATION_0:
-                frozenRotation = orientation == Configuration.ORIENTATION_LANDSCAPE
-                    ? ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE : ActivityInfo.SCREEN_ORIENTATION_PORTRAIT;
-                break;
-            case Surface.ROTATION_90:
-                frozenRotation = orientation == Configuration.ORIENTATION_PORTRAIT
-                    ? ActivityInfo.SCREEN_ORIENTATION_REVERSE_PORTRAIT : ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE;
-                break;
-            case Surface.ROTATION_180:
-                frozenRotation = orientation == Configuration.ORIENTATION_LANDSCAPE
-                    ? ActivityInfo.SCREEN_ORIENTATION_REVERSE_LANDSCAPE : ActivityInfo.SCREEN_ORIENTATION_REVERSE_PORTRAIT;
-                break;
-            case Surface.ROTATION_270:
-                frozenRotation = orientation == Configuration.ORIENTATION_PORTRAIT
-                    ? ActivityInfo.SCREEN_ORIENTATION_PORTRAIT : ActivityInfo.SCREEN_ORIENTATION_REVERSE_LANDSCAPE;
-                break;
-        }
-        act.setRequestedOrientation(frozenRotation);
+    public static boolean isTablet(Context context) {
+        return getScreenType(context) == DEVICE_TABLET;
     }
 }

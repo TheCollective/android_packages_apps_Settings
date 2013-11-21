@@ -19,6 +19,7 @@ package com.android.settings.deviceinfo;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
+import android.content.ActivityNotFoundException;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -176,7 +177,9 @@ public class Memory extends SettingsPreferenceFragment {
     public void onPrepareOptionsMenu(Menu menu) {
         final MenuItem usb = menu.findItem(R.id.storage_usb);
         UserManager um = (UserManager)getActivity().getSystemService(Context.USER_SERVICE);
-        usb.setVisible(!um.hasUserRestriction(UserManager.DISALLOW_USB_FILE_TRANSFER));
+        boolean usbItemVisible = !isMassStorageEnabled()
+                && !um.hasUserRestriction(UserManager.DISALLOW_USB_FILE_TRANSFER);
+        usb.setVisible(usbItemVisible);
     }
 
     @Override
@@ -221,7 +224,11 @@ public class Memory extends SettingsPreferenceFragment {
             if (intent != null) {
                 // Don't go across app boundary if monkey is running
                 if (!Utils.isMonkeyRunning()) {
-                    startActivity(intent);
+                    try {
+                        startActivity(intent);
+                    } catch (ActivityNotFoundException anfe) {
+                        Log.w(TAG, "No activity found for intent " + intent);
+                    }
                 }
                 return true;
             }

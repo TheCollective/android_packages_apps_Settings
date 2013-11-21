@@ -122,7 +122,7 @@ public class NFCProfile extends Activity {
 
             Toast.makeText(
                     this,
-                    String.format(getResources().getString(R.string.profile_selected), p.getName()),
+                    getString(R.string.profile_selected, p.getName()),
                     Toast.LENGTH_LONG).show();
             NFCProfileUtils.vibrate(this);
         }

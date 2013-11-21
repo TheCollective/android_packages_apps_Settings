@@ -20,7 +20,7 @@
     android:layout_height="match_parent">
     <fragment
         android:id="@+id/privacy_guard_prefs"
-        android:name="com.android.settings.cyanogenmod.privacyguard.PrivacyGuardPrefs"
+        android:name="com.android.settings.privacyguard.PrivacyGuardPrefs"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
     <View

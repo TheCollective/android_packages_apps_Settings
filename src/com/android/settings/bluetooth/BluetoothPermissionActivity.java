@@ -28,7 +28,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
-import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Button;
 import android.widget.CompoundButton.OnCheckedChangeListener;
@@ -55,16 +54,16 @@ public class BluetoothPermissionActivity extends AlertActivity implements
     private BluetoothDevice mDevice;
     private String mReturnPackage = null;
     private String mReturnClass = null;
-    private int mRequestType;
 
-    private CheckBox mRememberChoice;
-    private boolean mRememberChoiceValue = false;
-
+    private int mRequestType = 0;
     private BroadcastReceiver mReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
             if (action.equals(BluetoothDevice.ACTION_CONNECTION_ACCESS_CANCEL)) {
+                int requestType = intent.getIntExtra(BluetoothDevice.EXTRA_ACCESS_REQUEST_TYPE,
+                                               BluetoothDevice.REQUEST_TYPE_PHONEBOOK_ACCESS);
+                if (requestType != mRequestType) return;
                 BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
                 if (mDevice.equals(device)) dismissDialog();
             }
@@ -95,13 +94,16 @@ public class BluetoothPermissionActivity extends AlertActivity implements
         mRequestType = i.getIntExtra(BluetoothDevice.EXTRA_ACCESS_REQUEST_TYPE,
                                      BluetoothDevice.REQUEST_TYPE_PHONEBOOK_ACCESS);
 
+        if(DEBUG) Log.i(TAG, "onCreate() Request type: " + mRequestType);
+
         if (mRequestType == BluetoothDevice.REQUEST_TYPE_PROFILE_CONNECTION) {
-            showConnectionDialog();
+            showDialog(getString(R.string.bluetooth_connection_permission_request), mRequestType);
         } else if (mRequestType == BluetoothDevice.REQUEST_TYPE_PHONEBOOK_ACCESS) {
-            showPhonebookDialog();
+            showDialog(getString(R.string.bluetooth_phonebook_request), mRequestType);
         } else if (mRequestType == BluetoothDevice.REQUEST_TYPE_MESSAGE_ACCESS) {
-            showMasDialog();
-        } else {
+            showDialog(getString(R.string.bluetooth_map_request), mRequestType);
+        }
+        else {
             Log.e(TAG, "Error: bad request type: " + mRequestType);
             finish();
             return;
@@ -111,144 +113,95 @@ public class BluetoothPermissionActivity extends AlertActivity implements
         mReceiverRegistered = true;
     }
 
-    private void showConnectionDialog() {
+
+    private void showDialog(String title, int requestType)
+    {
         final AlertController.AlertParams p = mAlertParams;
         p.mIconId = android.R.drawable.ic_dialog_info;
-        p.mTitle = getString(R.string.bluetooth_connection_permission_request);
-        p.mView = createConnectionDialogView();
+        p.mTitle = title;
+        if(DEBUG) Log.i(TAG, "showDialog() Request type: " + mRequestType + " this: " + this);
+        switch(requestType)
+        {
+        case BluetoothDevice.REQUEST_TYPE_PROFILE_CONNECTION:
+            p.mView = createConnectionDialogView();
+            break;
+        case BluetoothDevice.REQUEST_TYPE_PHONEBOOK_ACCESS:
+            p.mView = createPhonebookDialogView();
+            break;
+        case BluetoothDevice.REQUEST_TYPE_MESSAGE_ACCESS:
+            p.mView = createMapDialogView();
+            break;
+        }
         p.mPositiveButtonText = getString(R.string.yes);
         p.mPositiveButtonListener = this;
         p.mNegativeButtonText = getString(R.string.no);
         p.mNegativeButtonListener = this;
         mOkButton = mAlert.getButton(DialogInterface.BUTTON_POSITIVE);
         setupAlert();
-    }
 
-    private void showPhonebookDialog() {
-        final AlertController.AlertParams p = mAlertParams;
-        p.mIconId = android.R.drawable.ic_dialog_info;
-        p.mTitle = getString(R.string.bluetooth_phonebook_request);
-        p.mView = createPhonebookDialogView();
-        p.mPositiveButtonText = getString(android.R.string.yes);
-        p.mPositiveButtonListener = this;
-        p.mNegativeButtonText = getString(android.R.string.no);
-        p.mNegativeButtonListener = this;
-        mOkButton = mAlert.getButton(DialogInterface.BUTTON_POSITIVE);
-        setupAlert();
     }
-
-    private void showMasDialog() {
-        final AlertController.AlertParams p = mAlertParams;
-        p.mIconId = android.R.drawable.ic_dialog_info;
-        p.mTitle = getString(R.string.bluetooth_mas_request);
-        p.mView = createMasDialogView();
-        p.mPositiveButtonText = getString(android.R.string.yes);
-        p.mPositiveButtonListener = this;
-        p.mNegativeButtonText = getString(android.R.string.no);
-        p.mNegativeButtonListener = this;
-        mOkButton = mAlert.getButton(DialogInterface.BUTTON_POSITIVE);
-        setupAlert();
+    @Override
+    public void onBackPressed() {
+        /*we need an answer so ignore back button presses during auth */
+        if(DEBUG) Log.i(TAG, "Back button pressed! ignoring");
+        return;
     }
-
-    private String createConnectionDisplayText() {
+    private String createRemoteName()
+    {
         String mRemoteName = mDevice != null ? mDevice.getAliasName() : null;
 
         if (mRemoteName == null) mRemoteName = getString(R.string.unknown);
-        String mMessage1 = getString(R.string.bluetooth_connection_dialog_text,
-                mRemoteName);
-        return mMessage1;
+        return mRemoteName;
     }
 
-    private String createPhonebookDisplayText() {
-        String mRemoteName = mDevice != null ? mDevice.getAliasName() : null;
-
-        if (mRemoteName == null) mRemoteName = getString(R.string.unknown);
-        String mMessage1 = getString(R.string.bluetooth_pb_acceptance_dialog_text,
-                                     mRemoteName, mRemoteName);
-        return mMessage1;
-    }
-
-    private String createMasDisplayText() {
-        String mRemoteName = mDevice != null ? mDevice.getAliasName() : null;
-
-        if (mRemoteName == null) mRemoteName = getString(R.string.unknown);
-        String mMessage1 = getString(R.string.bluetooth_mas_acceptance_dialog_text,
-                                     mRemoteName, mRemoteName);
-        return mMessage1;
-    }
-
+    // TODO(edjee): createConnectionDialogView, createPhonebookDialogView and createMapDialogView
+    // are similar. Refactor them into one method.
+    // Also, the string resources bluetooth_remember_choice and bluetooth_pb_remember_choice should
+    // be removed.
     private View createConnectionDialogView() {
-        mView = getLayoutInflater().inflate(R.layout.bluetooth_connection_access, null);
+        String mRemoteName = createRemoteName();
+        mView = getLayoutInflater().inflate(R.layout.bluetooth_access, null);
         messageView = (TextView)mView.findViewById(R.id.message);
-        messageView.setText(createConnectionDisplayText());
+        messageView.setText(getString(R.string.bluetooth_connection_dialog_text,
+                mRemoteName));
         return mView;
     }
 
     private View createPhonebookDialogView() {
-        mView = getLayoutInflater().inflate(R.layout.bluetooth_pb_access, null);
+        String mRemoteName = createRemoteName();
+        mView = getLayoutInflater().inflate(R.layout.bluetooth_access, null);
         messageView = (TextView)mView.findViewById(R.id.message);
-        messageView.setText(createPhonebookDisplayText());
-        mRememberChoice = (CheckBox)mView.findViewById(R.id.bluetooth_pb_remember_choice);
-        mRememberChoice.setChecked(false);
-        mRememberChoice.setOnCheckedChangeListener(new OnCheckedChangeListener() {
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked) {
-                    mRememberChoiceValue = true;
-                } else {
-                    mRememberChoiceValue = false;
-                }
-            }
-            });
+        messageView.setText(getString(R.string.bluetooth_pb_acceptance_dialog_text,
+                mRemoteName, mRemoteName));
         return mView;
     }
 
-    private View createMasDialogView() {
-        mView = getLayoutInflater().inflate(R.layout.bluetooth_mas_access, null);
+    private View createMapDialogView() {
+        String mRemoteName = createRemoteName();
+        mView = getLayoutInflater().inflate(R.layout.bluetooth_access, null);
         messageView = (TextView)mView.findViewById(R.id.message);
-        messageView.setText(createMasDisplayText());
-        mRememberChoice = (CheckBox)mView.findViewById(R.id.bluetooth_mas_remember_choice);
-        mRememberChoice.setChecked(false);
-        mRememberChoice.setOnCheckedChangeListener(new OnCheckedChangeListener() {
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked) {
-                    mRememberChoiceValue = true;
-                } else {
-                    mRememberChoiceValue = false;
-                }
-            }
-            });
+        messageView.setText(getString(R.string.bluetooth_map_acceptance_dialog_text,
+                mRemoteName, mRemoteName));
         return mView;
     }
 
     private void onPositive() {
-        if (DEBUG) Log.d(TAG, "onPositive mRememberChoiceValue: " + mRememberChoiceValue);
-
-        saveChoiceIfNeeded(CachedBluetoothDevice.PERMISSION_ACCESS_ALLOWED);
+        if (DEBUG) Log.d(TAG, "onPositive");
+        savePermissionChoice(mRequestType, CachedBluetoothDevice.ACCESS_ALLOWED);
+        // TODO(edjee): Now that we always save the user's choice,
+        // we can get rid of BluetoothDevice#EXTRA_ALWAYS_ALLOWED.
         sendIntentToReceiver(BluetoothDevice.ACTION_CONNECTION_ACCESS_REPLY, true,
-                             BluetoothDevice.EXTRA_ALWAYS_ALLOWED, mRememberChoiceValue);
+                             BluetoothDevice.EXTRA_ALWAYS_ALLOWED, true);
         finish();
     }
 
     private void onNegative() {
-        if (DEBUG) Log.d(TAG, "onNegative mRememberChoiceValue: " + mRememberChoiceValue);
-
-        saveChoiceIfNeeded(CachedBluetoothDevice.PERMISSION_ACCESS_REJECTED);
+        if (DEBUG) Log.d(TAG, "onNegative");
+        savePermissionChoice(mRequestType, CachedBluetoothDevice.ACCESS_REJECTED);
         sendIntentToReceiver(BluetoothDevice.ACTION_CONNECTION_ACCESS_REPLY, false,
                              null, false // dummy value, no effect since last param is null
                              );
         finish();
-    }
-
-    private void saveChoiceIfNeeded(int permission) {
-        if (!mRememberChoiceValue) {
-            return;
-        }
-
-        if (mRequestType == BluetoothDevice.REQUEST_TYPE_PHONEBOOK_ACCESS) {
-            getCachedBluetoothDevice().setPhonebookPermissionChoice(permission);
-        } else if (mRequestType == BluetoothDevice.REQUEST_TYPE_MESSAGE_ACCESS) {
-            getCachedBluetoothDevice().setMessagePermissionChoice(permission);
-        }
     }
 
     private void sendIntentToReceiver(final String intentName, final boolean allowed,
@@ -258,6 +211,8 @@ public class BluetoothPermissionActivity extends AlertActivity implements
         if (mReturnPackage != null && mReturnClass != null) {
             intent.setClassName(mReturnPackage, mReturnClass);
         }
+        if(DEBUG) Log.i(TAG, "sendIntentToReceiver() Request type: " + mRequestType +
+                " mReturnPackage" + mReturnPackage + " mReturnClass" + mReturnClass);
 
         intent.putExtra(BluetoothDevice.EXTRA_CONNECTION_ACCESS_RESULT,
                         allowed ? BluetoothDevice.CONNECTION_ACCESS_YES :
@@ -267,6 +222,7 @@ public class BluetoothPermissionActivity extends AlertActivity implements
             intent.putExtra(extraName, extraValue);
         }
         intent.putExtra(BluetoothDevice.EXTRA_DEVICE, mDevice);
+        intent.putExtra(BluetoothDevice.EXTRA_ACCESS_REQUEST_TYPE, mRequestType);
         sendBroadcast(intent, android.Manifest.permission.BLUETOOTH_ADMIN);
     }
 
@@ -297,16 +253,22 @@ public class BluetoothPermissionActivity extends AlertActivity implements
         return true;
     }
 
-    private CachedBluetoothDevice getCachedBluetoothDevice() {
+    private void savePermissionChoice(int permissionType, int permissionChoice) {
         LocalBluetoothManager bluetoothManager = LocalBluetoothManager.getInstance(this);
         CachedBluetoothDeviceManager cachedDeviceManager =
             bluetoothManager.getCachedDeviceManager();
         CachedBluetoothDevice cachedDevice = cachedDeviceManager.findDevice(mDevice);
-        if (cachedDevice == null) {
+        if (DEBUG) Log.d(TAG, "savePermissionChoice permissionType: " + permissionType);
+        if (cachedDevice == null ) {
             cachedDevice = cachedDeviceManager.addDevice(bluetoothManager.getBluetoothAdapter(),
                                                          bluetoothManager.getProfileManager(),
                                                          mDevice);
         }
-        return cachedDevice;
+        if(permissionType == BluetoothDevice.REQUEST_TYPE_PHONEBOOK_ACCESS){
+            cachedDevice.setPhonebookPermissionChoice(permissionChoice);
+        }else if (permissionType == BluetoothDevice.REQUEST_TYPE_MESSAGE_ACCESS){
+            cachedDevice.setMessagePermissionChoice(permissionChoice);
+        }
     }
+
 }

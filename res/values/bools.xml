@@ -32,7 +32,4 @@
 
     <!-- Whether to show a preference item for regulatory information in About phone -->
     <bool name="config_show_regulatory_info">false</bool>
-
-    <!-- Display additional System Settings - Device Parts -->
-    <bool name="has_advanced_settings">true</bool>
 </resources>

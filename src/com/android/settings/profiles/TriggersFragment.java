@@ -120,7 +120,7 @@ public class TriggersFragment extends SettingsPreferenceFragment implements Acti
                     WifiTriggerAPPreference accessPoint =
                             new WifiTriggerAPPreference(getActivity(), config);
                     int state = mProfile.getTrigger(Profile.TriggerType.WIFI, accessPoint.getSSID());
-                    initPreference(accessPoint, state, res, R.drawable.ic_wifi_signal_4);
+                    initPreference(accessPoint, state, res, R.drawable.ic_wifi_signal_4_dark);
                     prefs.add(accessPoint);
                 }
             } else {
@@ -128,7 +128,7 @@ public class TriggersFragment extends SettingsPreferenceFragment implements Acti
                 for (ProfileTrigger trigger : triggers) {
                     WifiTriggerAPPreference accessPoint =
                             new WifiTriggerAPPreference(getActivity(), trigger.getName());
-                    initPreference(accessPoint, trigger.getState(), res, R.drawable.ic_wifi_signal_4);
+                    initPreference(accessPoint, trigger.getState(), res, R.drawable.ic_wifi_signal_4_dark);
                     prefs.add(accessPoint);
                 }
             }
