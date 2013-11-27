@@ -93,6 +93,17 @@
             android:title="@string/enable_adb"
             android:summary="@string/enable_adb_summary"/>
 
+        <com.android.settings.HostnamePreference
+            android:key="device_hostname"
+            android:title="@string/device_hostname"
+            android:dialogTitle="@string/device_hostname"
+            android:positiveButtonText="@string/wifi_save"
+            android:negativeButtonText="@string/wifi_cancel"
+            android:selectAllOnFocus="true"
+            android:imeOptions="actionDone"
+            android:inputType="textNoSuggestions"
+            android:persistent="false" />
+
         <CheckBoxPreference
             android:key="adb_notify"
             android:title="@string/adb_notify"
@@ -298,6 +309,11 @@
             android:title="@string/show_all_anrs"
             android:summary="@string/show_all_anrs_summary"/>
 
-     </PreferenceCategory>
+        <CheckBoxPreference
+            android:key="kill_app_longpress_back"
+            android:title="@string/kill_app_longpress_back"
+            android:summary="@string/kill_app_longpress_back_summary"/>
+
+    </PreferenceCategory>
 
 </PreferenceScreen>
