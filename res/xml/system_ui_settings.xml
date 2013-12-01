@@ -50,4 +50,11 @@
         android:fragment="com.android.settings.cyanogenmod.PropModder"
         android:title="@string/propmodder_title" />
 
+     <!-- HALO -->
+    <PreferenceScreen
+        android:id="@+id/halo_settings"
+        android:fragment="com.android.settings.cyanogenmod.Halo"
+        android:icon="@drawable/ic_settings_halo" 
+        android:title="@string/halo_settings_title" />
+
 </PreferenceScreen>
