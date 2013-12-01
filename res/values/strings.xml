@@ -4918,11 +4918,7 @@
     <string name="wizard_next">Next</string>
     <!-- Wizard next button label [CHAR LIMIT=25] -->
 
-    <!-- Shortcut picker -->
-    <string name="use_custom_app_title">Use custom application</string>
-    <string name="use_custom_app_summary">Use custom application instead of the recent applications dialog</string>
-    <string name="group_applications">Applications</string>
-
+   
     <!-- Propmodder -->
     <string name="propmodder_title">Propmodder</string>
     <string name="buildprop_title">/system/build.prop mods</string>
