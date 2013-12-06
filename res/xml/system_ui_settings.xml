@@ -56,5 +56,12 @@
         android:fragment="com.android.settings.cyanogenmod.Halo"
         android:icon="@drawable/ic_settings_halo" 
         android:title="@string/halo_settings_title" />
+	
+    <!-- sidebar -->
+    <PreferenceScreen
+            android:key="app_sidebar"
+            android:fragment="com.android.settings.cyanogenmod.AppSidebar"
+            android:icon="@drawable/ic_appbar"
+            android:title="@string/app_sidebar_title" />
 
 </PreferenceScreen>

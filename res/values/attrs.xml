@@ -101,4 +101,11 @@
         <attr name="defaultValue" format="float" />
         <attr name="digits" format="integer" />
     </declare-styleable>
+
+    <!-- appbar -->
+    <declare-styleable name="SeekBarPreference">
+        <attr name="minAB" format="integer" />
+        <attr name="unitsLeft" format="string" />
+        <attr name="unitsRight" format="string" />
+    </declare-styleable>
 </resources>
