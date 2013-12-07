@@ -68,6 +68,7 @@ public class DisplaySettings extends SettingsPreferenceFragment implements
     private static final String KEY_SCREEN_SAVER = "screensaver";
     private static final String KEY_WIFI_DISPLAY = "wifi_display";
     private static final String KEY_ADAPTIVE_BACKLIGHT = "adaptive_backlight";
+    private static final String KEY_ADVANCED_DISPLAY_SETTINGS = "advanced_display_settings";
 
     private static final String CATEGORY_LIGHTS = "lights_prefs";
     private static final String KEY_NOTIFICATION_PULSE = "notification_pulse";
@@ -149,10 +150,13 @@ public class DisplaySettings extends SettingsPreferenceFragment implements
         }
 
         mAdaptiveBacklight = (CheckBoxPreference) findPreference(KEY_ADAPTIVE_BACKLIGHT);
-        if (!AdaptiveBacklight.isSupported()) {
+        if (!isAdaptiveBacklightSupported()) {
             getPreferenceScreen().removePreference(mAdaptiveBacklight);
             mAdaptiveBacklight = null;
         }
+
+        Utils.updatePreferenceToSpecificActivityFromMetaDataOrRemove(getActivity(),
+                getPreferenceScreen(), KEY_ADVANCED_DISPLAY_SETTINGS);
 
         boolean hasNotificationLed = res.getBoolean(
                 com.android.internal.R.bool.config_intrusiveNotificationLed);
@@ -437,7 +441,7 @@ public class DisplaySettings extends SettingsPreferenceFragment implements
      * @param ctx A valid context
      */
     public static void restore(Context ctx) {
-        if (AdaptiveBacklight.isSupported()) {
+        if (isAdaptiveBacklightSupported()) {
             final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
             final boolean enabled = prefs.getBoolean(KEY_ADAPTIVE_BACKLIGHT, true);
             if (!AdaptiveBacklight.setEnabled(enabled)) {
@@ -445,6 +449,15 @@ public class DisplaySettings extends SettingsPreferenceFragment implements
             } else {
                 Log.d(TAG, "Adaptive backlight settings restored.");
             }
+        }
+    }
+
+    private static boolean isAdaptiveBacklightSupported() {
+        try {
+            return AdaptiveBacklight.isSupported();
+        } catch (NoClassDefFoundError e) {
+            // Hardware abstraction framework not installed
+            return false;
         }
     }
 }

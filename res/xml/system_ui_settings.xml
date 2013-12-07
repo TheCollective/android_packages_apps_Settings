@@ -20,6 +20,11 @@
     xmlns:settings="http://schemas.android.com/apk/res/com.android.settings">
 
     <PreferenceScreen
+        android:key="status_bar"
+        android:fragment="com.android.settings.cyanogenmod.StatusBar"
+        android:title="@string/status_bar_title" />
+
+    <PreferenceScreen
         android:key="quick_settings_panel"
         android:fragment="com.android.settings.quicksettings.QuickSettings"
         android:title="@string/quick_settings_panel_title" />
@@ -28,7 +33,19 @@
         android:key="notification_drawer"
         android:fragment="com.android.settings.cyanogenmod.NotificationDrawer"
         android:title="@string/notification_drawer_title" />
-	
+
+    <ListPreference
+            android:key="expanded_desktop"
+            android:title="@string/power_menu_expanded_desktop"
+            android:entries="@array/expanded_desktop_entries"
+            android:entryValues="@array/expanded_desktop_values"
+            android:persistent="false" />
+
+    <CheckBoxPreference
+            android:key="expanded_desktop_no_navbar"
+            android:title="@string/power_menu_expanded_desktop"
+            android:persistent="true" />
+
     <PreferenceCategory
         android:key="navigation_bar"
         android:title="@string/navigation_bar_category" >
