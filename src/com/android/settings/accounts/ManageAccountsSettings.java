@@ -60,6 +60,11 @@ public class ManageAccountsSettings extends AccountPreferenceBase
     public static final String KEY_ACCOUNT_TYPE = "account_type";
     public static final String KEY_ACCOUNT_LABEL = "account_label";
 
+    // Action name for the broadcast intent when the Google account preferences page is launching
+    // the location settings.
+    private static final String LAUNCHING_LOCATION_SETTINGS =
+            "com.android.settings.accounts.LAUNCHING_LOCATION_SETTINGS";
+
     private static final int MENU_SYNC_NOW_ID = Menu.FIRST;
     private static final int MENU_SYNC_CANCEL_ID    = Menu.FIRST + 1;
 
@@ -366,6 +371,13 @@ public class ManageAccountsSettings extends AccountPreferenceBase
         public boolean onPreferenceClick(Preference preference) {
             ((PreferenceActivity) getActivity()).startPreferencePanel(
                     mClass, null, mTitleRes, null, null, 0);
+            // Hack: announce that the Google account preferences page is launching the location
+            // settings
+            if (mClass.equals(LocationSettings.class.getName())) {
+                Intent intent = new Intent(LAUNCHING_LOCATION_SETTINGS);
+                getActivity().sendBroadcast(
+                        intent, android.Manifest.permission.WRITE_SECURE_SETTINGS);
+            }
             return true;
         }
     }
