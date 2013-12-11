@@ -26,6 +26,7 @@ import android.preference.CheckBoxPreference;
 import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceScreen;
+import android.preference.SwitchPreference;
 import android.provider.Settings;
 
 import com.android.settings.R;
@@ -34,6 +35,7 @@ import com.android.settings.SettingsPreferenceFragment;
 public class Halo extends SettingsPreferenceFragment
         implements Preference.OnPreferenceChangeListener {
 
+    private static final String KEY_HALO_ENABLED = "halo_enabled"; 
     private static final String KEY_HALO_STATE = "halo_state";
     private static final String KEY_HALO_HIDE = "halo_hide";
     private static final String KEY_HALO_REVERSED = "halo_reversed";
@@ -55,6 +57,7 @@ public class Halo extends SettingsPreferenceFragment
     private CheckBoxPreference mHaloNinja;
     private CheckBoxPreference mHaloMsgBox;
     private CheckBoxPreference mHaloUnlockPing;
+    private SwitchPreference mHaloEnabled;
 
     private Context mContext;
     private INotificationManager mNotificationManager;
@@ -70,6 +73,11 @@ public class Halo extends SettingsPreferenceFragment
         mNotificationManager = INotificationManager.Stub.asInterface(
                 ServiceManager.getService(Context.NOTIFICATION_SERVICE));
 
+	mHaloEnabled = (SwitchPreference) prefSet.findPreference(KEY_HALO_ENABLED);
+        mHaloEnabled.setChecked(Settings.System.getInt(getActivity()
+                .getContentResolver(), Settings.System.HALO_ENABLED,
+                0) == 1);
+        mHaloEnabled.setOnPreferenceChangeListener(this); 
         mHaloState = (ListPreference) prefSet.findPreference(KEY_HALO_STATE);
         mHaloState.setValue(String.valueOf((isHaloPolicyBlack() ? "1" : "0")));
         mHaloState.setOnPreferenceChangeListener(this);
@@ -165,12 +173,21 @@ public class Halo extends SettingsPreferenceFragment
             Settings.System.putInt(mContext.getContentResolver(),
                     Settings.System.HALO_UNLOCK_PING, mHaloUnlockPing.isChecked()
                     ? 1 : 0);
+        } else if (preference == mHaloEnabled) {
+             Settings.System.putInt(mContext.getContentResolver(),
+                    Settings.System.HALO_ENABLED, mHaloEnabled.isChecked()
+                    ? 1 : 0);
         } 
         return super.onPreferenceTreeClick(preferenceScreen, preference);
     }
 
     public boolean onPreferenceChange(Preference preference, Object newValue) {
-        if (preference == mHaloSize) {
+	    if (preference == mHaloEnabled) {
+            Settings.System.putInt(getActivity().getContentResolver(),
+                    Settings.System.HALO_ENABLED,
+                    (Boolean) newValue ? 1 : 0);
+            return true;
+        } else if (preference == mHaloSize) {
             float haloSize = Float.valueOf((String) newValue);
             Settings.System.putFloat(getActivity().getContentResolver(),
                     Settings.System.HALO_SIZE, haloSize);

@@ -36,7 +36,6 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import com.android.settings.util.Helpers;
 import com.android.settings.R;
 import com.android.settings.SettingsPreferenceFragment;
 import com.android.settings.Utils;
@@ -198,7 +197,6 @@ public class BatteryIconStyle extends SettingsPreferenceFragment
                     Settings.System.STATUS_BAR_BATTERY, statusBarBattery);
             mStatusBarBattery.setSummary(mStatusBarBattery.getEntries()[index]);
             createCustomView();
-			Helpers.restartSystemUI();
             return true;
         } else if (preference == mBatteryColor) {
             String hex = ColorPickerPreference.convertToARGB(Integer

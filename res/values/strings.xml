@@ -5143,6 +5143,8 @@
     <string name="halo_size_gigantic">Gigantic</string>
     <string name="halo_size_monster">Monster</string>
 
+    <string name="halo_enabled_title">Enable HALO</string>
+    <string name="halo_enabled_summary">Completely enable or disable HALO</string>
     <string name="halo_notification_count_title">Notification count</string>
     <string name="halo_notification_count_summary">Display notification counts on Halo</string>
     <string name="halo_notification_count_none">None</string>
