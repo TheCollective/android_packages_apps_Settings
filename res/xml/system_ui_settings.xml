@@ -65,6 +65,7 @@
     <PreferenceScreen
         android:id="@+id/propmodder"
         android:fragment="com.android.settings.cyanogenmod.PropModder"
+        android:icon="@drawable/ic_propmodder"
         android:title="@string/propmodder_title" />
 
      <!-- HALO -->
