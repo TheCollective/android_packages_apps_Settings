@@ -38,6 +38,11 @@
             android:key="quiet_hours"
             android:fragment="com.android.settings.cyanogenmod.QuietHours"
             android:title="@string/quiet_hours_title" />
+	    
+    <CheckBoxPreference
+            android:key="enable_quiettime"
+            android:title="@string/enable_quiettime"	    
+            android:summary="@string/enable_quiettime_summary" />
 
     <PreferenceCategory
             android:key="category_calls_and_notification"
