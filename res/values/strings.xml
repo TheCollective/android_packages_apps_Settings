@@ -587,8 +587,7 @@
 
     <!-- Button label for generic cancel action -->
     <string name="cancel">Cancel</string>
-    <string name="enable_quiettime">Enable QuietTime</string>
-    <string name="enable_quiettime_summary">Set time that sound is turned on when it is muted</string>
+
     <!-- Title of the Settings activity shown within the application itself. -->
     <string name="settings_label">Settings</string>
     <!-- Title of the Settings activity shown in the Launcher. [CHAR LIMIT=20] -->
