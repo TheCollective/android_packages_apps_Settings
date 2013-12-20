@@ -22,16 +22,19 @@
     <PreferenceScreen
         android:key="status_bar"
         android:fragment="com.android.settings.cyanogenmod.StatusBar"
+        android:icon="@drawable/ic_statusbar"
         android:title="@string/status_bar_title" />
 
     <PreferenceScreen
         android:key="quick_settings_panel"
         android:fragment="com.android.settings.quicksettings.QuickSettings"
+        android:icon="@drawable/ic_qsp"
         android:title="@string/quick_settings_panel_title" />
 
     <PreferenceScreen
         android:key="notification_drawer"
         android:fragment="com.android.settings.cyanogenmod.NotificationDrawer"
+        android:icon="@drawable/ic_notifications"
         android:title="@string/notification_drawer_title" />
 
     <ListPreference
