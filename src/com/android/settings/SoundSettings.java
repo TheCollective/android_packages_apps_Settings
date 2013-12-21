@@ -82,7 +82,7 @@ public class SoundSettings extends SettingsPreferenceFragment implements
     private static final String KEY_DOCK_SOUNDS = "dock_sounds";
     private static final String KEY_DOCK_AUDIO_MEDIA_ENABLED = "dock_audio_media_enabled";
     private static final String KEY_QUIET_HOURS = "quiet_hours";
-
+    private static final String KEY_ENABLE_QUIETTIME = "enable_quiettime";
     private static final String KEY_POWER_NOTIFICATIONS = "power_notifications";
     private static final String KEY_POWER_NOTIFICATIONS_VIBRATE = "power_notifications_vibrate";
     private static final String KEY_POWER_NOTIFICATIONS_RINGTONE = "power_notifications_ringtone";
@@ -110,7 +110,7 @@ public class SoundSettings extends SettingsPreferenceFragment implements
     private Preference mRingtonePreference;
     private Preference mNotificationPreference;
     private PreferenceScreen mQuietHours;
-
+    private CheckBoxPreference mEnableQuietTime;
     private Runnable mRingtoneLookupRunnable;
 
     private AudioManager mAudioManager;
@@ -244,6 +244,9 @@ public class SoundSettings extends SettingsPreferenceFragment implements
                 }
             }
         }
+        mEnableQuietTime = (CheckBoxPreference) findPreference(KEY_ENABLE_QUIETTIME);
+        mEnableQuietTime.setChecked(Settings.System.getInt(getContentResolver(),
+                Settings.System.ENABLE_QUIETTIME, 0) != 0);
 
         mRingtoneLookupRunnable = new Runnable() {
             public void run() {
@@ -363,6 +366,9 @@ public class SoundSettings extends SettingsPreferenceFragment implements
         if (preference == mVibrateWhenRinging) {
             Settings.System.putInt(getContentResolver(), Settings.System.VIBRATE_WHEN_RINGING,
                     mVibrateWhenRinging.isChecked() ? 1 : 0);
+		 } else if (preference == mEnableQuietTime) {
+            Settings.System.putInt(getContentResolver(), Settings.System.ENABLE_QUIETTIME,
+					mEnableQuietTime.isChecked() ? 1 : 0);
         } else if (preference == mDtmfTone) {
             Settings.System.putInt(getContentResolver(), Settings.System.DTMF_TONE_WHEN_DIALING,
                     mDtmfTone.isChecked() ? 1 : 0);
