@@ -15,6 +15,8 @@ import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
 import com.android.settings.R;
 
+import android.provider.Settings;
+
 public class SeekBarPreference extends Preference implements OnSeekBarChangeListener {
     
     private final String TAG = getClass().getName();
